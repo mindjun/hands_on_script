@@ -4,7 +4,7 @@ import pdb
 pdb.set_trace()
 
 # Connect to the database
-connection = pymysql.connect(host='172.16.49.91',
+connection = pymysql.connect(host='*',
                              user='root',
                              password='root',
                              db='hive',
