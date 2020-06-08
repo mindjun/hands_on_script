@@ -85,7 +85,7 @@ class BinarySortTree(object):
         # 遍历中使用列表作为栈，来保存先后走过的路径
         if rt is None:
             rt = self._root
-        stack = list()
+        stack = []
         # 中序遍历
         # 将rt入栈，若rt的左孩子不为空，将其入栈，并将rt的左孩子设为当前rt
         #          若左孩子为空，取出栈顶元素，访问，然后将栈顶元素的右孩子设为当前节点
@@ -214,8 +214,9 @@ class BinarySortTree(object):
             rt = self._root
         qu = Queue()
         qu.put(rt)
-        while qu.qsize() != 0:
-            node = qu.get()
+        while not qu.empty():
+        # while qu.qsize() != 0:
+            node = qu.get_nowait()
             yield node
             if node.left:
                 qu.put(node.left)
