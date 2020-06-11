@@ -65,7 +65,6 @@ print(min_distance('abcd', 'eebcc'))
 #             return 1 if x < _i else 0
 #         while True:
 #             part_1 = pow(10, len_str)
-
 # https://www.cnblogs.com/duanxz/p/9662862.html
 def count(n, x):
     cnt, k, i = 0, n, 1
