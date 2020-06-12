@@ -4,6 +4,7 @@ import random
 from copy import deepcopy
 from collections import Counter, defaultdict
 from functools import wraps
+from typing import List
 
 
 class SingleTon(object):
@@ -606,3 +607,54 @@ class Solution:
 
 
 print(Solution().jump([2, 3, 1, 1, 4]))
+
+
+# 计算 1 至 n 中数字 x 出现的次数 x in range(0, 10)
+# def count(n, x):
+#     res, i = 0, 1
+#
+#     def helper(_n, _i):
+#         len_str = len(str(_n))
+#         if _i < 10:
+#             return 1 if x < _i else 0
+#         while True:
+#             part_1 = pow(10, len_str)
+# https://www.cnblogs.com/duanxz/p/9662862.html
+def count(n, x):
+    cnt, k, i = 0, n, 1
+    while True:
+        cnt += int(k / 10) * i
+        cur = k % 10
+        if cur > x:
+            cnt += i
+        elif cur == x:
+            # 2500 -- 2593 ==> 94
+            cnt += n % i + 1
+        i *= 10
+        k = int(n / i)
+        if k < 10:
+            break
+    return cnt
+
+
+print(count(2593, 5))
+
+# leetcode 739
+# https://leetcode-cn.com/problems/daily-temperatures/
+# 使用单点递增栈
+class Solution:
+    def dailyTemperatures(self, T: List[int]) -> List[int]:
+        res = [0 for _ in range(len(T))]
+        stack = list()
+
+        for i in range(len(T))[::-1]:
+            while stack and T[i] >= T[stack[-1]]:
+                stack.pop()
+            res[i] = stack[-1] - i if stack else 0
+            stack.append(i)
+        return res
+
+
+temperatures = [73, 74, 75, 71, 69, 72, 76, 73]
+# [1, 1, 4, 2, 1, 1, 0, 0]
+print(Solution().dailyTemperatures(temperatures))
