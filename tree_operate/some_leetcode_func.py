@@ -28,7 +28,45 @@ class TreeNode(object):
 
 # https://leetcode-cn.com/problems/serialize-and-deserialize-binary-tree/
 # 二叉树的序列化与反序列化
-class Codec(object):
+class Codec:
+    def serialize(self, root):
+        """Encodes a tree to a single string.
+
+        :type root: TreeNode
+        :rtype: str
+        """
+
+        def dfs(node):
+            if node:
+                node_list.append(node.val)
+                dfs(node.left)
+                dfs(node.right)
+            else:
+                node_list.append("#")
+
+        node_list = []
+        dfs(root)
+        return ",".join([str(i) for i in node_list])
+
+    def deserialize(self, data):
+        """Decodes your encoded data to tree.
+        :type data: str
+        :rtype: TreeNode
+        """
+
+        def dfs():
+            v = next(node_list)
+            if v == "#":
+                return None
+            node = TreeNode(int(v))
+            node.left = dfs()
+            node.right = dfs()
+            return node
+        node_list = iter(data.split(","))
+        return dfs()
+
+
+class SelfCodec(object):
     def serialize(self, root):
         """
         Encodes a tree to a single string.
