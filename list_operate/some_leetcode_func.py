@@ -71,16 +71,34 @@ def move_zero(nums):
     #     nums.append(0)
     # return nums
 
-    zero_index, has_zero = 0, False
+    # zero_index, has_zero = 0, False
+    # for i in range(len(nums)):
+    #     # 找到第一个不为 0 的下标，如果之前的元素出现了 0，那么交换
+    #     # zero_index 总是小于等于 i
+    #     if nums[i] != 0:
+    #         if has_zero:
+    #             nums[zero_index], nums[i] = nums[i], nums[zero_index]
+    #         zero_index += 1
+    #     else:
+    #         has_zero = True
+    # return nums
+
+    # 找到最后一个不为 0 的地方，将该 index 之后的元素全部替换为 0
+    # last_non_zero = 0
+    # for i in range(len(nums)):
+    #     if nums[i] != 0:
+    #         nums[last_non_zero] = nums[i]
+    #         last_non_zero += 1
+    #
+    # for i in range(last_non_zero, len(nums)):
+    #     nums[i] = 0
+    # return nums
+
+    zero = 0
     for i in range(len(nums)):
-        # 找到第一个不为 0 的下标，如果之前的元素出现了 0，那么交换
-        # zero_index 总是小于等于 i
         if nums[i] != 0:
-            if has_zero:
-                nums[zero_index], nums[i] = nums[i], nums[zero_index]
-            zero_index += 1
-        else:
-            has_zero = True
+            nums[i], nums[zero] = nums[zero], nums[i]
+            zero += 1
     return nums
 
 
