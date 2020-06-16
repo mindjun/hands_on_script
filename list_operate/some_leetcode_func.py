@@ -34,3 +34,52 @@ def remove_duplicates(nums):
 
 
 print(remove_duplicates([1, 2, 2, 3, 4, 5, 5, 6, 6]))
+
+
+# https://leetcode-cn.com/problems/move-zeroes/
+def move_zero(nums):
+    # left, right = 0, len(nums) - 1
+    # while left < right:
+    #     if nums[left] == 0:
+    #         nums[left], nums[left + 1] = nums[left + 1], nums[left]
+    #
+    #     left += 1
+    # return nums
+
+    # left, right = 0, len(nums) - 1
+    # while left < right:
+    #     if nums[left] == 0:
+    #         zero_index = left
+    #         while zero_index < right:
+    #             # 遇到一个零就将这个零移动到最后，同时 right -= 1
+    #             nums[zero_index], nums[zero_index + 1] = nums[zero_index + 1], nums[zero_index]
+    #             zero_index += 1
+    #         right -= 1
+    #     left += 1
+    # return nums
+
+    # zero_index = list()
+    # index = len(nums) - 1
+    # for item in nums[::-1]:
+    #     if item == 0:
+    #         nums.pop(index)
+    #         zero_index.append(index)
+    #     index -= 1
+    #
+    # for _ in zero_index:
+    #     nums.append(0)
+    # return nums
+
+    zero_index, has_zero = 0, False
+    for i in range(len(nums)):
+        if nums[i] != 0:
+            if has_zero:
+                nums[zero_index], nums[i] = nums[i], nums[zero_index]
+            zero_index += 1
+        else:
+            has_zero = True
+    return nums
+
+
+print(move_zero([1, 2, 3, 0, 4, 0, 5, 6, 0, 7, 8]))
+# print(move_zero([0, 0, 1]))

@@ -4,7 +4,6 @@ import random
 from copy import deepcopy
 from collections import Counter, defaultdict
 from functools import wraps
-from typing import List
 
 
 class SingleTon(object):
