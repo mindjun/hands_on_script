@@ -26,6 +26,7 @@ def remove_duplicates(nums):
 
     left = 0
     for right in range(size):
+        # 找到 left 之后第一个不相等的数，并交换不相等的数与 left + 1 下标
         if nums[left] != nums[right]:
             left += 1
             nums[left], nums[right] = nums[right], nums[left]
@@ -72,6 +73,8 @@ def move_zero(nums):
 
     zero_index, has_zero = 0, False
     for i in range(len(nums)):
+        # 找到第一个不为 0 的下标，如果之前的元素出现了 0，那么交换
+        # zero_index 总是小于等于 i
         if nums[i] != 0:
             if has_zero:
                 nums[zero_index], nums[i] = nums[i], nums[zero_index]
