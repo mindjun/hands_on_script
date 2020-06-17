@@ -71,18 +71,52 @@ def move_zero(nums):
     #     nums.append(0)
     # return nums
 
-    zero_index, has_zero = 0, False
+    # zero_index, has_zero = 0, False
+    # for i in range(len(nums)):
+    #     # 找到第一个不为 0 的下标，如果之前的元素出现了 0，那么交换
+    #     # zero_index 总是小于等于 i
+    #     if nums[i] != 0:
+    #         if has_zero:
+    #             nums[zero_index], nums[i] = nums[i], nums[zero_index]
+    #         zero_index += 1
+    #     else:
+    #         has_zero = True
+    # return nums
+
+    # 找到最后一个不为 0 的地方，将该 index 之后的元素全部替换为 0
+    # last_non_zero = 0
+    # for i in range(len(nums)):
+    #     if nums[i] != 0:
+    #         nums[last_non_zero] = nums[i]
+    #         last_non_zero += 1
+    #
+    # for i in range(last_non_zero, len(nums)):
+    #     nums[i] = 0
+    # return nums
+
+    zero = 0
     for i in range(len(nums)):
-        # 找到第一个不为 0 的下标，如果之前的元素出现了 0，那么交换
-        # zero_index 总是小于等于 i
         if nums[i] != 0:
-            if has_zero:
-                nums[zero_index], nums[i] = nums[i], nums[zero_index]
-            zero_index += 1
-        else:
-            has_zero = True
+            nums[i], nums[zero] = nums[zero], nums[i]
+            zero += 1
     return nums
 
 
 print(move_zero([1, 2, 3, 0, 4, 0, 5, 6, 0, 7, 8]))
-# print(move_zero([0, 0, 1]))
+
+
+# https://leetcode-cn.com/problems/best-sightseeing-pair/
+# 输入：[8,1,5,2,6]
+# 输出：11
+# 解释：i = 0, j = 2, A[i] + A[j] + i - j = 8 + 5 + 0 - 2 = 11
+# 因为 A[j] - j 的值是固定的，max(A[i] + A[j] + i - j) ==> max(A[i] + i) + max(A[j] - j)
+def best_value(nums):
+    res = 0
+    pre_num = nums[0] + 0
+    for i in range(1, len(nums)):
+        res = max(res, pre_num + nums[i] - i)
+        pre_num = max(pre_num, nums[i] + i)
+    return res
+
+
+print(best_value([8, 1, 5, 2, 6]))

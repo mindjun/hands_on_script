@@ -48,15 +48,35 @@ def build_tree(root):
     return
 
 
+def build_tree_1(root):
+    temp_data = root.data
+    temp_ch_set = set([ch for ch in temp_data])
+    # if len(temp_ch_set & set([ch for ch in end])) == len(temp_data) - 1:
+    #     new_node = Node(end)
+    #     root.sub_node.append(new_node)
+    #     return True
+
+    while data_list:
+        for word in list(data_list):
+            word_ch_set = set([ch for ch in word])
+            if len(temp_ch_set & word_ch_set) == len(temp_data) - 1:
+                new_node = Node(word)
+                root.sub_node.append(new_node)
+                data_list.remove(word)
+        for sub_node in root.sub_node:
+            build_tree(sub_node)
+    return
+
+
 roo = Node(start)
-build_tree(roo)
+build_tree_1(roo)
 
 
 def my_print(node):
     if not node.sub_node:
         return
 
-    print(node.sub_node)
+    # print(node.sub_node)
     for temp in node.sub_node:
         print(temp.data)
     for temp in node.sub_node:
@@ -92,4 +112,3 @@ def my_print_1(node):
 
 list1 = my_print_1(roo)
 print([item for item in list1])
-
