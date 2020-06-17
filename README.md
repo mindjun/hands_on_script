@@ -1,2 +1,2 @@
-# hands_on-script
+# hands_on_script
 some practice scripts
