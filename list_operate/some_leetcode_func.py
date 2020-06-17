@@ -103,4 +103,20 @@ def move_zero(nums):
 
 
 print(move_zero([1, 2, 3, 0, 4, 0, 5, 6, 0, 7, 8]))
-# print(move_zero([0, 0, 1]))
+
+
+# https://leetcode-cn.com/problems/best-sightseeing-pair/
+# 输入：[8,1,5,2,6]
+# 输出：11
+# 解释：i = 0, j = 2, A[i] + A[j] + i - j = 8 + 5 + 0 - 2 = 11
+# 因为 A[j] - j 的值是固定的，max(A[i] + A[j] + i - j) ==> max(A[i] + i) + max(A[j] - j)
+def best_value(nums):
+    res = 0
+    pre_num = nums[0] + 0
+    for i in range(1, len(nums)):
+        res = max(res, pre_num + nums[i] - i)
+        pre_num = max(pre_num, nums[i] + i)
+    return res
+
+
+print(best_value([8, 1, 5, 2, 6]))
