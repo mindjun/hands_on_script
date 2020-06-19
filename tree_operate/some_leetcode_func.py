@@ -146,7 +146,7 @@ right.right = TreeNode(7)
 _root.right = right
 
 print(Codec().serialize(_root))
-_res = Codec().deserialize('1,2,3,None,None,6,7')
+_res = SelfCodec().deserialize('1,2,3,None,None,6,7')
 print(_res)
 
 
@@ -206,3 +206,52 @@ def min_depth_bfs(root: TreeNode) -> int:
             return depth
         for c in children:
             queue.put((depth + 1, c))
+
+
+def convert_tree_str():
+    tree_str = '1_2__3__4_5__6__7'
+    i, new_tree_str = 0, ''
+    while i < len(tree_str):
+        deep_count = 0
+        flag = 0
+        while tree_str[i] == '_':
+             i += 1
+             flag = 1
+             deep_count += 1
+        new_tree_str = new_tree_str + f'deep_{deep_count}' if deep_count else new_tree_str + tree_str[i]
+        if not flag:
+            i += 1
+    return new_tree_str
+
+
+def build_tree(_tree_str):
+    def helper(tree_str, deep=0):
+        if not tree_str:
+            return None
+        while tree_str[0] == '_':
+            tree_str = tree_str[1:]
+        node_value = ''
+        while tree_str[0].isalnum():
+            node_value = node_value + tree_str[0]
+            tree_str = tree_str[1:]
+
+        root = TreeNode(node_value)
+
+        split_flag = '_' * (deep + 1)
+        split_index = 0
+        for i in range(len(tree_str) - len(split_flag)):
+            a = tree_str[i:i+len(split_flag)]
+            b = tree_str[i+len(split_flag)].isalnum()
+            c = i+len(split_flag)
+            if i != 0 and tree_str[i:i+len(split_flag)] == split_flag and tree_str[i+len(split_flag)].isalnum():
+                split_index = i
+                break
+
+        root.left = helper(tree_str[:split_index], deep + 1)
+        root.right = helper(tree_str[split_index:], deep + 1)
+        return root
+    return helper(_tree_str)
+
+
+print(build_tree('1_2__3__4_5__6__7'))
+
