@@ -4,6 +4,7 @@ import random
 from copy import deepcopy
 from collections import Counter, defaultdict
 from functools import wraps
+from typing import List
 
 
 class SingleTon(object):
@@ -453,6 +454,24 @@ def generate_parenthesis(n):
 
 
 print(generate_parenthesis(3))
+
+
+def generate_parenthesis_v1(n: int) -> List[str]:
+    result = list()
+
+    def helper(left, right, s):
+        if len(s) == 2 * n:
+            result.append(s)
+            return
+
+        if left < n:
+            helper(left + 1, right, s + '(')
+
+        if right < left:
+            helper(left, right + 1, s + ')')
+
+    helper(0, 0, '')
+    return result
 
 
 # 烧饼排序

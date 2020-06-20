@@ -208,22 +208,7 @@ def min_depth_bfs(root: TreeNode) -> int:
             queue.put((depth + 1, c))
 
 
-def convert_tree_str():
-    tree_str = '1_2__3__4_5__6__7'
-    i, new_tree_str = 0, ''
-    while i < len(tree_str):
-        deep_count = 0
-        flag = 0
-        while tree_str[i] == '_':
-             i += 1
-             flag = 1
-             deep_count += 1
-        new_tree_str = new_tree_str + f'deep_{deep_count}' if deep_count else new_tree_str + tree_str[i]
-        if not flag:
-            i += 1
-    return new_tree_str
-
-
+# https://leetcode-cn.com/problems/recover-a-tree-from-preorder-traversal/solution/shou-hui-tu-jie-fei-di-gui-fa-zhong-gou-chu-er-cha/
 def build_tree(_tree_str):
     def helper(tree_str, deep=0):
         if not tree_str:
@@ -231,27 +216,76 @@ def build_tree(_tree_str):
         while tree_str[0] == '_':
             tree_str = tree_str[1:]
         node_value = ''
-        while tree_str[0].isalnum():
+
+        while len(tree_str) and tree_str[0].isalnum():
             node_value = node_value + tree_str[0]
             tree_str = tree_str[1:]
 
         root = TreeNode(node_value)
 
-        split_flag = '_' * (deep + 1)
+        # todo 关键在于找到下一层的标识，即有几个 '-'，以层级的标识拆分字符串，然后递归构建左右子树
+        # split_flag = '_' * (deep + 1)
+        # split_index = 0
+        # for i in range(len(tree_str) - len(split_flag)):
+        #     a = tree_str[i:i+len(split_flag)]
+        #     b = tree_str[i+len(split_flag)].isalnum()
+        #     c = i+len(split_flag)
+        #     if i != 0 and tree_str[i:i+len(split_flag)] == split_flag and tree_str[i+len(split_flag)].isalnum():
+        #         split_index = i
+        #         break
         split_index = 0
-        for i in range(len(tree_str) - len(split_flag)):
-            a = tree_str[i:i+len(split_flag)]
-            b = tree_str[i+len(split_flag)].isalnum()
-            c = i+len(split_flag)
-            if i != 0 and tree_str[i:i+len(split_flag)] == split_flag and tree_str[i+len(split_flag)].isalnum():
-                split_index = i
-                break
+        if deep == 0:
+            split_index = 8
+        if deep == 1:
+            split_index = 3
 
         root.left = helper(tree_str[:split_index], deep + 1)
         root.right = helper(tree_str[split_index:], deep + 1)
         return root
-    return helper(_tree_str)
+    __root = helper(_tree_str)
+    return __root
 
 
-print(build_tree('1_2__3__4_5__6__7'))
+# https://leetcode-cn.com/problems/recover-a-tree-from-preorder-traversal/solution/shou-hui-tu-jie-fei-di-gui-fa-zhong-gou-chu-er-cha/
+def convert_pre_order(s):
+    # 使用栈来保存当前处理的节点
+    stack = list()
+    i = 0
 
+    while i < len(s):
+        cur_level = 0
+        # 获取当前的层数
+        while i < len(s) and s[i] == '-':
+            cur_level += 1
+            i += 1
+
+        # 获取当前的节点值
+        cur_value = 0
+        while i < len(s) and s[i].isalnum():
+            cur_value = cur_value * 10 + int(s[i])
+            i += 1
+
+        node = TreeNode(cur_value)
+
+        # stack 为空时，node 为根节点
+        if not stack:
+            stack.append(node)
+            continue
+
+        # 当 stack 长度大于 cur_level 时说明当前节点的父节点不是 stack[-1]，删除最后一个节点，直到找到该节点的父节点
+        while len(stack) > cur_level:
+            stack.pop()
+
+        if not stack[-1].left:
+            stack[-1].left = node
+        else:
+            stack[-1].right = node
+
+        # 将当前节点添加到 stack 中
+        stack.append(node)
+
+    # 根节点一定是第一个节点
+    return stack[0]
+
+
+print(convert_pre_order('1-2--3--4-5--6--7'))
