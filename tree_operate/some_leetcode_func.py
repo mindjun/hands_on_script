@@ -233,6 +233,7 @@ def build_tree(_tree_str):
         #     if i != 0 and tree_str[i:i+len(split_flag)] == split_flag and tree_str[i+len(split_flag)].isalnum():
         #         split_index = i
         #         break
+        # 以下 split_index 仅针对 1-2--3--4-5--6--7
         split_index = 0
         if deep == 0:
             split_index = 8
