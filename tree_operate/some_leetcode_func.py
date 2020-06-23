@@ -1,3 +1,5 @@
+
+
 # N 叉树的前序遍历
 # https://leetcode-cn.com/problems/n-ary-tree-preorder-traversal/
 def pre_order(root):
@@ -162,10 +164,10 @@ def max_depth(root: TreeNode) -> int:
                 if node:
                     new_level.extend([node.left, node.right])
             level = new_level
-            depth += 1
-        # 当最底层节点加入到 new_level 之后 depth 加了 1，但是这已经是最底层了，下一次循环的时候 level 是空
-        # 所以最后的结果返回的时候需要 -1
-        return depth - 1
+            # 当 level 不为空的时候才增加 depth
+            if level:
+                depth += 1
+        return depth
     return 0
 
     # 递归解法
@@ -243,6 +245,7 @@ def build_tree(_tree_str):
         root.left = helper(tree_str[:split_index], deep + 1)
         root.right = helper(tree_str[split_index:], deep + 1)
         return root
+
     __root = helper(_tree_str)
     return __root
 
