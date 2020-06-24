@@ -48,6 +48,10 @@ def find_xiaoming1(_root, _stack, _name='xiaoming'):
 
 
 res = list()
+print(find_xiaoming(r, res))
+print(res)
+
+res = list()
 _res1 = find_xiaoming1(r, res)
 print([i.val for i in _res1[0]])
 

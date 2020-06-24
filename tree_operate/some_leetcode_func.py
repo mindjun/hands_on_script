@@ -1,3 +1,5 @@
+
+
 # N 叉树的前序遍历
 # https://leetcode-cn.com/problems/n-ary-tree-preorder-traversal/
 def pre_order(root):
@@ -146,7 +148,7 @@ right.right = TreeNode(7)
 _root.right = right
 
 print(Codec().serialize(_root))
-_res = Codec().deserialize('1,2,3,None,None,6,7')
+_res = SelfCodec().deserialize('1,2,3,None,None,6,7')
 print(_res)
 
 
@@ -162,10 +164,10 @@ def max_depth(root: TreeNode) -> int:
                 if node:
                     new_level.extend([node.left, node.right])
             level = new_level
-            depth += 1
-        # 当最底层节点加入到 new_level 之后 depth 加了 1，但是这已经是最底层了，下一次循环的时候 level 是空
-        # 所以最后的结果返回的时候需要 -1
-        return depth - 1
+            # 当 level 不为空的时候才增加 depth
+            if level:
+                depth += 1
+        return depth
     return 0
 
     # 递归解法
@@ -206,3 +208,88 @@ def min_depth_bfs(root: TreeNode) -> int:
             return depth
         for c in children:
             queue.put((depth + 1, c))
+
+
+# https://leetcode-cn.com/problems/recover-a-tree-from-preorder-traversal/solution/shou-hui-tu-jie-fei-di-gui-fa-zhong-gou-chu-er-cha/
+def build_tree(_tree_str):
+    def helper(tree_str, deep=0):
+        if not tree_str:
+            return None
+        while tree_str[0] == '_':
+            tree_str = tree_str[1:]
+        node_value = ''
+
+        while len(tree_str) and tree_str[0].isalnum():
+            node_value = node_value + tree_str[0]
+            tree_str = tree_str[1:]
+
+        root = TreeNode(node_value)
+
+        # todo 关键在于找到下一层的标识，即有几个 '-'，以层级的标识拆分字符串，然后递归构建左右子树
+        # split_flag = '_' * (deep + 1)
+        # split_index = 0
+        # for i in range(len(tree_str) - len(split_flag)):
+        #     a = tree_str[i:i+len(split_flag)]
+        #     b = tree_str[i+len(split_flag)].isalnum()
+        #     c = i+len(split_flag)
+        #     if i != 0 and tree_str[i:i+len(split_flag)] == split_flag and tree_str[i+len(split_flag)].isalnum():
+        #         split_index = i
+        #         break
+        # 以下 split_index 仅针对 1-2--3--4-5--6--7
+        split_index = 0
+        if deep == 0:
+            split_index = 8
+        if deep == 1:
+            split_index = 3
+
+        root.left = helper(tree_str[:split_index], deep + 1)
+        root.right = helper(tree_str[split_index:], deep + 1)
+        return root
+
+    __root = helper(_tree_str)
+    return __root
+
+
+# https://leetcode-cn.com/problems/recover-a-tree-from-preorder-traversal/solution/shou-hui-tu-jie-fei-di-gui-fa-zhong-gou-chu-er-cha/
+def convert_pre_order(s):
+    # 使用栈来保存当前处理的节点
+    stack = list()
+    i = 0
+
+    while i < len(s):
+        cur_level = 0
+        # 获取当前的层数
+        while i < len(s) and s[i] == '-':
+            cur_level += 1
+            i += 1
+
+        # 获取当前的节点值
+        cur_value = 0
+        while i < len(s) and s[i].isalnum():
+            cur_value = cur_value * 10 + int(s[i])
+            i += 1
+
+        node = TreeNode(cur_value)
+
+        # stack 为空时，node 为根节点
+        if not stack:
+            stack.append(node)
+            continue
+
+        # 当 stack 长度大于 cur_level 时说明当前节点的父节点不是 stack[-1]，删除最后一个节点，直到找到该节点的父节点
+        while len(stack) > cur_level:
+            stack.pop()
+
+        if not stack[-1].left:
+            stack[-1].left = node
+        else:
+            stack[-1].right = node
+
+        # 将当前节点添加到 stack 中
+        stack.append(node)
+
+    # 根节点一定是第一个节点
+    return stack[0]
+
+
+print(convert_pre_order('1-2--3--4-5--6--7'))

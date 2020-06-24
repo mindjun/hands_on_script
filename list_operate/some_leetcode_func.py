@@ -94,6 +94,7 @@ def move_zero(nums):
     #     nums[i] = 0
     # return nums
 
+    # zero 记录出现 0 的下标
     zero = 0
     for i in range(len(nums)):
         if nums[i] != 0:
@@ -120,3 +121,35 @@ def best_value(nums):
 
 
 print(best_value([8, 1, 5, 2, 6]))
+
+
+# https://leetcode-cn.com/problems/3sum-closest/
+def three_sum_closest(nums, target):
+    nums.sort()
+    size = len(nums)
+    best = float('-inf')
+
+    for i in range(size):
+        if i > 0 and nums[i] == nums[i - 1]:
+            continue
+
+        j, k = i + 1, size - 1
+        # 降级为二维，用左右双指针进行求解
+        while j < k:
+            s = nums[i] + nums[j] + nums[k]
+            if s == target:
+                return target
+            elif s > target:
+                k -= 1
+            # s < target
+            else:
+                j += 1
+            # 更新 best
+            if abs(s - target) < abs(best - target):
+                best = s
+    return best
+
+
+_nums = [-1, 0, 1, 1, 55]
+_target = 3
+print(three_sum_closest(_nums, _target))
