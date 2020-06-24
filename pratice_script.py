@@ -21,12 +21,30 @@ def reverse_int(i):
         is_negative = True
 
     reverse = int(math.fabs(i))
+    reverse_1 = reverse
     result_list = list()
     while reverse > 10:
         result_list.append(reverse % 10)
         reverse = reverse // 10
-
     result_list.append(reverse)
+
+    if is_negative > 10:
+        length = len(str(i))
+    else:
+        length = len(str(i)) - 1
+
+    res = 0
+    res1 = 0
+    while length >= 0:
+        temp = reverse_1 % 10
+        res += temp * pow(10, length - 1)
+        if length != 0:
+            res1 = res1 * 10 + temp
+        reverse_1 = reverse_1 // 10
+        length -= 1
+    print(res)
+    print(res1)
+
     return result_list
 
 
@@ -55,7 +73,20 @@ def two_sun(list1, target):
     return ()
 
 
+def two_sum(nums, target):
+    left, right = 0, len(nums) - 1
+    while left <= right:
+        if nums[left] + nums[right] > target:
+            right -= 1
+        elif nums[left] + nums[right] < target:
+            left += 1
+        else:
+            return left, right
+    return ()
+
+
 print(two_sun([2, 7, 11, 15], 9))
+print(two_sum([2, 7, 11, 15], 7))
 
 
 def find_second_large_num(list1):
@@ -87,9 +118,9 @@ def adjust_heap(list1, i, size):
     while i < size / 2:
         left, right = i * 2 + 1, i * 2 + 2
         min_item = i
-        if left < len(list1) and list1[left] < list1[min_item]:
+        if left < size and list1[left] < list1[min_item]:
             min_item = left
-        if right < len(list1) and list1[right] < list1[min_item]:
+        if right < size and list1[right] < list1[min_item]:
             min_item = right
         if min_item == i:
             return
@@ -102,13 +133,6 @@ def build_heap(list1):
     size = len(list1)
     for i in range(0, size // 2)[::-1]:
         adjust_heap(list1, i, size)
-
-
-# _list = list(range(10, 20))
-# random.shuffle(_list)
-# print(_list)
-# print(build_heap(_list))
-# print(_list)
 
 
 def top_n_min(n, list1):
@@ -124,9 +148,16 @@ def top_n_min(n, list1):
     return result
 
 
+# _list = list(range(10, 20))
+# random.shuffle(_list)
+# print(_list)
+# print(build_heap(_list))
+# print(_list)
+
+
 _list = [random.randint(10, 100) for _ in range(20)]
-print(_list)
-print(top_n_min(3, _list))
+print(f'heap sort info : {_list}')
+print(f'heap sort top 3 min is : {top_n_min(3, _list)}')
 
 
 def quick_sort(list1, l, r):
@@ -193,7 +224,7 @@ def next_greater_element(list1):
     return result
 
 
-print(next_greater_element([2, 1, 2, 4, 3]))
+print(f'next_greater_element {next_greater_element([2, 1, 2, 4, 3])}')
 
 
 def is_sub_sequence(s, t):
@@ -310,7 +341,7 @@ def max_slide_windows(list1, size):
     return result
 
 
-print(max_slide_windows(list1=[1, 3, -1, -3, 5, 3, 6, 7], size=3))
+print(f'max_slide_windows ', max_slide_windows(list1=[1, 3, -1, -3, 5, 3, 6, 7], size=3))
 
 
 # 回溯算法
@@ -472,6 +503,9 @@ def generate_parenthesis_v1(n: int) -> List[str]:
 
     helper(0, 0, '')
     return result
+
+
+print(generate_parenthesis_v1(3))
 
 
 # 烧饼排序
@@ -656,3 +690,47 @@ def count(n, x):
 
 
 print(count(2593, 5))
+
+
+# 输入: a = "1010", b = "1011"
+# 输出: "10101"
+
+def get_res(a, b):
+    len_a, len_b = len(a), len(b)
+    if len_a > len_b:
+        b = b.zfill(len_a)
+    else:
+        a = a.zfill(len_b)
+
+    flag, res = '0', ''
+    for i, j in zip(a[::-1], b[::-1]):
+        if i == '1' and j == '1':
+            res = flag + res
+            flag = '1'
+        elif i == '0' and j == '0':
+            res = flag + res
+            flag = '0'
+        #  (i == '0' and j == '1') or (i == '1' and j == '0')
+        else:
+            if flag == '1':
+                res = '0' + res
+            else:
+                res = '1' + res
+    if flag == '1':
+        res = '1' + res
+    return res
+
+
+print(get_res(a="11", b="1"))
+
+
+def add_binary(a, b) -> str:
+    x, y = int(a, 2), int(b, 2)
+    while y:
+        answer = x ^ y
+        carry = (x & y) << 1
+        x, y = answer, carry
+    return bin(x)[2:]
+
+
+print(add_binary(a="1010", b="1011"))
