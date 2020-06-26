@@ -293,3 +293,35 @@ def convert_pre_order(s):
 
 
 print(convert_pre_order('1-2--3--4-5--6--7'))
+
+
+def build_tree_from_pre_in_order(pre_nums, in_nums):
+    """
+    根据前序遍历和中序遍历结果，重建二叉树
+    每次递归，取出前序遍历的第一个节点，使用该节点将中序数组分为左子树的中序数组和右子树的中序数组，然后再分别根据左右中序数组得到左右前序数组，进入下一次递归
+    :param pre_nums:
+    :param in_nums:
+    :return:
+    """
+    if not pre_nums or not in_nums:
+        return None
+    root = TreeNode(pre_nums[0])
+    in_index = in_nums.index(pre_nums[0])
+
+    # 新的中序节点
+    left_part = in_nums[:in_index]
+    right_part = in_nums[in_index+1:]
+
+    # 新的前序节点
+    left_pre = [i for i in pre_nums if i in left_part]
+    right_pre = [i for i in pre_nums if i in right_part]
+
+    root.left = build_tree_from_pre_in_order(left_pre, left_part)
+    root.right = build_tree_from_pre_in_order(right_pre, right_part)
+    return root
+
+
+_pre_nums = [1, 2, 4, 7, 3, 5, 6, 8]
+_in_nums = [4, 7, 2, 1, 5, 3, 8, 6]
+_root = build_tree_from_pre_in_order(_pre_nums, _in_nums)
+print(_root)
