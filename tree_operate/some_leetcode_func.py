@@ -20,10 +20,10 @@ def pre_order(root):
 
 # Definition for a binary tree node.
 class TreeNode(object):
-    def __init__(self, x):
+    def __init__(self, x, left=None, right=None):
         self.val = x
-        self.left = None
-        self.right = None
+        self.left = left
+        self.right = right
 
 
 # https://leetcode-cn.com/problems/serialize-and-deserialize-binary-tree/
@@ -142,10 +142,10 @@ class SelfCodec(object):
 
 _root = TreeNode(1)
 _root.left = TreeNode(2)
-right = TreeNode(3)
-right.left = TreeNode(6)
-right.right = TreeNode(7)
-_root.right = right
+_right = TreeNode(3)
+_right.left = TreeNode(6)
+_right.right = TreeNode(7)
+_root.right = _right
 
 print(Codec().serialize(_root))
 _res = SelfCodec().deserialize('1,2,3,None,None,6,7')
@@ -325,3 +325,55 @@ _pre_nums = [1, 2, 4, 7, 3, 5, 6, 8]
 _in_nums = [4, 7, 2, 1, 5, 3, 8, 6]
 _root = build_tree_from_pre_in_order(_pre_nums, _in_nums)
 print(_root)
+
+
+# https://leetcode-cn.com/problems/symmetric-tree/
+def is_symmetric(root):
+    """
+    判断二叉树是否镜像对称
+    :param root:
+    :return:
+    """
+    if not root:
+        return True
+
+    __root = root
+    stack, node_list = list(), list()
+    # 中序遍历
+    while stack or root:
+        while root:
+            stack.append(root)
+            root = root.left
+        root = stack.pop()
+        node_list.append(root)
+        root = root.right
+
+    # 根据 __root 将 node_list 分为左右两个列表，如果是镜像对称，那么左右列表倒序应该是相等的
+    root_index = 0
+    for i in range(len(node_list)):
+        if node_list[i] == __root:
+            root_index = i
+            break
+    if root_index == 0 or root_index > len(node_list) // 2:
+        return False
+    left, right = node_list[:root_index], node_list[root_index + 1:]
+    return [n.val for n in left] == [n.val for n in right][::-1]
+
+
+# 递归实现
+def is_symmetric_(root):
+    def helper(left, right):
+        if not left and not right:
+            return True
+
+        if not left or not right:
+            return False
+
+        return left.val == right.val and helper(left.right, right.left) and helper(left.left, right.right)
+
+    return helper(root, root)
+
+
+_root = TreeNode(1, left=TreeNode(2, left=TreeNode(3), right=TreeNode(4)),
+                 right=TreeNode(2, left=TreeNode(4), right=TreeNode(3)))
+is_symmetric(_root)

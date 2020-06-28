@@ -1,3 +1,7 @@
+import bisect
+from typing import List
+
+
 # https://leetcode-cn.com/problems/container-with-most-water/
 def max_area(height):
     area = 0
@@ -153,3 +157,55 @@ def three_sum_closest(nums, target):
 _nums = [-1, 0, 1, 1, 55]
 _target = 3
 print(three_sum_closest(_nums, _target))
+
+
+# https://leetcode-cn.com/problems/minimum-size-subarray-sum/
+def min_length(nums, s):
+    # left, right, min_len = 0, 0, len(nums) + 1
+    # while right < len(nums) + 1:
+    #     # 每次都计算 sum 增加了时间复杂度
+    #     while sum(nums[left:right]) >= s:
+    #         # 因为算 sum 的时候取 [left, right)， 所以这里 right - left 就好，不需要 + 1
+    #         min_len = min(min_len, (right - left))
+    #         left += 1
+    #     right += 1
+    # return 0 if min_len == len(nums) + 1 else min_len
+
+    left, right, temp_sum, min_len = 0, 0, 0, len(nums) + 1
+    while right < len(nums):
+        while temp_sum < s and right < len(nums):
+            temp_sum += nums[right]
+            right += 1
+
+        while temp_sum >= s and left < len(nums):
+            temp_sum -= nums[left]
+            left += 1
+        # 注意，这里应该是 right - left + 1
+        min_len = min(right - left + 1, min_len)
+
+    return 0 if min_len == len(nums) + 1 else min_len
+
+
+print(min_length([2, 3, 1, 2, 4, 3], 7))
+
+
+# 官方题解，前缀和 + 二分查找 O(n log n)
+class Solution:
+    def minSubArrayLen(self, s: int, nums: List[int]) -> int:
+        if not nums:
+            return 0
+
+        n = len(nums)
+        ans = n + 1
+        sums = [0]
+        for i in range(n):
+            sums.append(sums[-1] + nums[i])
+
+        for i in range(1, n + 1):
+            target = s + sums[i - 1]
+            # 左边界的二分查找
+            bound = bisect.bisect_left(sums, target)
+            if bound != len(sums):
+                ans = min(ans, bound - (i - 1))
+
+        return 0 if ans == n + 1 else ans
