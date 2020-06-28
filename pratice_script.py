@@ -689,7 +689,7 @@ def count(n, x):
     return cnt
 
 
-print(count(2593, 5))
+print(f'2593 中 5 出现 {count(2593, 5)} 次')
 
 
 # 输入: a = "1010", b = "1011"

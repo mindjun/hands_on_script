@@ -68,6 +68,7 @@ def find_path(matrix, target_str):
         has_path = False
         # 当 index 到达最后一位的时候，直接返回
         if index == len(target_str) - 1 and matrix[x][y] == target_str[index]:
+            result.append((matrix[x][y], (x, y)))
             return True
 
         if 0 <= x < size_x and 0 <= y < size_y and matrix[x][y] == target_str[index] and not visited[x][y]:
@@ -77,19 +78,54 @@ def find_path(matrix, target_str):
             if not has_path:
                 index -= 1
                 visited[x][y] = 0
+            else:
+                result.append((matrix[x][y], (x, y)))
         return has_path
 
     size_x, size_y = len(matrix), len(matrix[0])
     target_index = 0
+    result = list()
     visited = [[0 for _ in range(size_y)] for _ in range(size_x)]
     for i in range(size_x):
         for j in range(size_y):
             if helper(i, j, target_index):
-                return True
-    return False
+                return True, result
+    return False, result
 
 
 _matrix = [['a', 'b', 't', 'g'],
            ['c', 'f', 'c', 's'],
            ['j', 'd', 'e', 'h']]
-print(find_path(_matrix, 'bfcd'))
+print(find_path(_matrix, 'bfce'))
+
+
+# 剪绳子
+def max_product_area_after_cutting(length):
+    if length < 2:
+        return 0
+    if length == 2:
+        return 1
+    if length == 3:
+        return 2
+
+    # todo dp 初始化的时候为啥是 ？？
+    # 长度为 1 面积为 1
+    # 长度为 2 面积为 1 * 2
+    # 长度为 3 面积为 3
+    dp = [0 for _ in range(length + 1)]
+    dp[0] = 0
+    dp[1] = 1
+    dp[2] = 2
+    dp[3] = 3
+
+    for i in range(4, length + 1):
+        temp_max = 0
+        for j in range(1, i):
+            product_area = dp[j] * dp[i - j]
+            temp_max = max(temp_max, product_area)
+        dp[i] = temp_max
+    print(dp)
+    return dp[length]
+
+
+print(max_product_area_after_cutting(8))
