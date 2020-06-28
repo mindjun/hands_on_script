@@ -38,6 +38,16 @@ def sudoku():
         if i >= 1 and j >= 1:
             if board[i-1][j-1] == ch:
                 return False
+            if board[i-1][j] == ch:
+                return False
+            if board[i][j-1] == ch:
+                return False
+
+        if i + 1 < m and j + 1 < n:
+            if board[i][j+1] == ch:
+                return False
+            if board[i+1][j] == ch:
+                return False
 
         for index in range(9):
             # 判断行
