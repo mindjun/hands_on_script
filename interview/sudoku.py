@@ -1,8 +1,10 @@
 """
+回溯法
 解数独问题
 """
 
 
+# https://leetcode-cn.com/problems/sudoku-solver/solution/dfshui-su-python-c-java-by-coldme-2/
 def sudoku():
     board = [['.' for _ in range(9)] for _ in range(9)]
     m, n = 9, 9
@@ -10,14 +12,14 @@ def sudoku():
     def back_track(i, j):
         if j == n:
             # 从下一行开始
-            return back_track(i+1, 0)
+            return back_track(i + 1, 0)
 
         if i == m:
             # 找到一个可行解，触发 base case
             return True
 
         if board[i][j] != '.':
-            back_track(i, j+1)
+            back_track(i, j + 1)
             return
 
         for ch in '123456789':
@@ -33,30 +35,24 @@ def sudoku():
         # 遍历结束，找不到可行解
         return False
 
-    def is_valid(i, j, ch):
-        # todo 判断 3 * 3 的方框空间
-        if i >= 1 and j >= 1:
-            if board[i-1][j-1] == ch:
+    def is_valid(row, col, ch):
+        """
+        判断是否能在 row， col 这个位置放入 ch 字符
+        """
+        if row == 3 and col == 4:
+            print(f'index is {(row, col)}')
+        for i in range(9):
+            # 判断行是否存在重复
+            if board[row][i] == ch:
                 return False
-            if board[i-1][j] == ch:
+            # 判断列是否存在重复
+            if board[i][col] == ch:
                 return False
-            if board[i][j-1] == ch:
+            if row == 3 and col == 4:
+                print(f'-- ceil is {(row // 3 * 3 + i // 3, col // 3 * 3 + i % 3)}')
+            # 判断 3 x 3 方框是否存在重复
+            if board[row // 3 * 3 + i // 3][col // 3 * 3 + i % 3] == ch:
                 return False
-
-        if i + 1 < m and j + 1 < n:
-            if board[i][j+1] == ch:
-                return False
-            if board[i+1][j] == ch:
-                return False
-
-        for index in range(9):
-            # 判断行
-            if board[i][index] == ch:
-                return False
-            # 判断列
-            if board[index][j] == ch:
-                return False
-
         return True
 
     back_track(0, 0)
