@@ -21,6 +21,7 @@ def duplication_in_array(nums):
     return -1
 
 
+# 判断下标与下标对应数字是否相等
 _nums = [2, 3, 1, 0, 2, 5, 3]
 print(duplication_in_array(_nums))
 print(duplication_in_array(list(range(10))[::-1]))

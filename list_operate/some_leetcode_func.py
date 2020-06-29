@@ -1,4 +1,6 @@
+import random
 import bisect
+import heapq
 from typing import List
 
 
@@ -209,3 +211,88 @@ class Solution:
                 ans = min(ans, bound - (i - 1))
 
         return 0 if ans == n + 1 else ans
+
+
+# https://leetcode-cn.com/problems/kth-largest-element-in-an-array/
+# 快速排序的思想，在快排中，每一次就是将 target 找到他应该在位置，只是这里换成了下标 index
+# https://leetcode-cn.com/problems/kth-largest-element-in-an-array/solution/partitionfen-er-zhi-zhi-you-xian-dui-lie-java-dai-/
+def find_kth_largest(nums, k):
+    """
+    找到数组中第 k 大的元素
+    """
+    # 最简单的方法，排序后直接返回
+    # return sorted(nums)[-k]
+
+    # target 代表第 target 小的元素，即代表第 k 大的元素
+    size = len(nums)
+    target = size - k
+    right, left = size - 1, 0
+
+    while True:
+        index = partition(left, right, nums)
+        # 正好在 target 的位置
+        if index == target:
+            return nums[target]
+        elif index < target:
+            # 查找 index+1 --> right
+            left = index + 1
+        else:
+            # index > target
+            # 查找 left --> index - 1
+            right = index - 1
+
+
+def partition(_left, _right, nums):
+    # 随机取一个值，避免 nums 出现正序或者倒序时 O(n^2) 的时间复杂度
+    random_index = random.randint(_left, _right)
+    nums[random_index], nums[_left] = nums[_left], nums[random_index]
+
+    pivot = nums[_left]
+
+    # j = _left
+    # for i in range(_left+1, _right + 1):
+    #     # 当 index 为 i 的数小于 pivot 时，交换 j+1 和 i 的数字
+    #     # 可以理解为将小于 pivot 的数字移动到 j 下标的左边
+    #     # 即找到 pivot 应该在的位置，类似与插入排序
+    #     if nums[i] < pivot:
+    #         j += 1
+    #         nums[i], nums[j] = nums[j], nums[i]
+    # nums[_left], nums[j] = nums[j], nums[_left]
+    # return j
+
+    # 也可以使用双指针进行数组的分治
+    lt = _left + 1
+    rt = _right
+    while True:
+        while lt <= rt and nums[lt] < pivot:
+            lt += 1
+        while lt <= rt and nums[rt] > pivot:
+            rt -= 1
+
+        if lt > rt:
+            break
+        nums[lt], nums[rt] = nums[rt], nums[lt]
+        lt += 1
+        rt -= 1
+    nums[_left], nums[rt] = nums[rt], nums[_left]
+    return rt
+
+
+# 使用最小堆来求解，维护以为长度为 k 的最小堆，取堆顶的元素即可
+def find_kth_largest_with_heap(nums, k):
+    temp_list = nums[:k]
+    # heapq 默认是小顶堆
+    heapq.heapify(temp_list)
+
+    size = len(nums)
+    for index in range(k, size):
+        top = temp_list[0]
+        # 只要 index 元素大于堆顶元素，就进行替换
+        if nums[index] > top:
+            # heapq.heapreplace(temp_list, nums[index]) ==>  temp_list[0] = nums[index] && heapq.heapify(temp_list)
+            heapq.heapreplace(temp_list, nums[index])
+    # 最后堆顶的元素就是第 k 大的元素
+    return temp_list[0]
+
+
+print(find_kth_largest_with_heap([3, 2, 3, 1, 2, 4, 5, 5, 6], 4))
