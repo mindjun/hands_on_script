@@ -377,3 +377,33 @@ def is_symmetric_(root):
 _root = TreeNode(1, left=TreeNode(2, left=TreeNode(3), right=TreeNode(4)),
                  right=TreeNode(2, left=TreeNode(4), right=TreeNode(3)))
 is_symmetric(_root)
+
+
+# https://leetcode-cn.com/problems/flip-equivalent-binary-trees/
+# 翻转等价二叉树
+def flip_equiv(root1, root2):
+    if root1 is root2:
+        return True
+    if not root1 or not root2 or root1.val != root2.val:
+        return False
+
+    return (flip_equiv(root1.left, root2.left) and flip_equiv(root1.right, root2.right) or
+            flip_equiv(root1.left, root2.right) and flip_equiv(root1.right, root2.left))
+
+
+# https://leetcode-cn.com/problems/flip-equivalent-binary-trees/solution/shen-du-you-xian-bian-li-by-15011272359-2/
+# dfs 深度优先遍历每一个节点
+def dfs_flip_equiv(root_1: TreeNode, root_2: TreeNode) -> bool:
+    def dfs(root1, root2):
+        if not root1 and not root2:
+            return True
+        if not root1 or not root2 or root1.val != root2.val:
+            return False
+
+        if dfs(root1.left, root2.right) and dfs(root1.right, root2.left):
+            return True
+        if dfs(root1.left, root2.left) and dfs(root1.right, root2.right):
+            return True
+        return False
+
+    return dfs(root_1, root_2)
