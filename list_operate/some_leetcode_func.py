@@ -33,6 +33,7 @@ def remove_duplicates(nums):
     left = 0
     for right in range(size):
         # 找到 left 之后第一个不相等的数，并交换不相等的数与 left + 1 下标
+        # left 所在的位置就是没有重复数字的最后一个下标
         if nums[left] != nums[right]:
             left += 1
             nums[left], nums[right] = nums[right], nums[left]
