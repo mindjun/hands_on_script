@@ -297,3 +297,22 @@ def find_kth_largest_with_heap(nums, k):
 
 
 print(find_kth_largest_with_heap([3, 2, 3, 1, 2, 4, 5, 5, 6], 4))
+
+
+# 使用两个栈来实现一个队列
+class CQueue(object):
+    def __init__(self):
+        self.stack1 = list()
+        self.stack2 = list()
+
+    def append_tail(self, value: int) -> None:
+        self.stack1.append(value)
+
+    def delete_head(self) -> int:
+        if not self.stack2:
+            while self.stack1:
+                self.stack2.append(self.stack1.pop())
+        if self.stack2:
+            return self.stack2.pop()
+        else:
+            return -1

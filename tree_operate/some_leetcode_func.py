@@ -1,21 +1,65 @@
+# void traverse(TreeNode root) {
+#     // root 需要做什么？在这做。
+#     // 其他的不用 root 操心，抛给框架
+#     traverse(root.left);
+#     traverse(root.right);
+# }
 
 
 # N 叉树的前序遍历
 # https://leetcode-cn.com/problems/n-ary-tree-preorder-traversal/
 def pre_order(root):
     stack, res = [root], list()
+    # while stack:
+    #     node = stack.pop()
+    #     if not node:
+    #         continue
+    #
+    #     res.append(node.val)
+    #     while node.children:
+    #         # 因为是前序遍历，所以下一次处理的是该节点的第一个自节点，于是将所有孩子倒序后添加到 stack 中
+    #         stack.extend(node.children[::-1])
+    #         node = stack.pop()
+    #         res.append(node.val)
+    # return res
+
+    # 递归
+    def helper(node):
+        if not node:
+            return
+        res.append(node.val)
+        for child in node.children:
+            helper(child)
+    helper(root)
+    return res
+
+
+# N 叉树的后序遍历
+# https://leetcode-cn.com/problems/n-ary-tree-postorder-traversal/
+def post_order(root):
+    res = list()
+
+    # 递归
+    # def helper(node):
+    #     if not node:
+    #         return
+    #     for child in node.children:
+    #         helper(child)
+    #     res.append(node.val)
+    # helper(root)
+    # return res
+
+    # 迭代
+    if not root:
+        return res
+    stack = [root]
     while stack:
         node = stack.pop()
-        if not node:
-            continue
-
+        # 根 右 左 的顺序入栈
         res.append(node.val)
-        while node.children:
-            # 因为是前序遍历，所以下一次处理的是该节点的第一个自节点，于是将所有孩子倒序后添加到 stack 中
-            stack.extend(node.children[::-1])
-            node = stack.pop()
-            res.append(node.val)
-    return res
+        stack.extend(node.children)
+    # 将结果倒序即可
+    return res[::-1]
 
 
 # Definition for a binary tree node.
