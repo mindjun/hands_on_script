@@ -220,7 +220,7 @@ def max_depth(root: TreeNode) -> int:
 
 
 # 二叉树的最小深度，使用 dfs 求解
-def min_depth(root: TreeNode) -> int:
+def _min_depth(root: TreeNode) -> int:
     if not root:
         return 0
 
@@ -231,7 +231,19 @@ def min_depth(root: TreeNode) -> int:
     depth = float('inf')
     for c in children:
         if c:
-            depth = min(min_depth(c), depth)
+            depth = min(_min_depth(c), depth)
+    return depth + 1
+
+
+# 递归求解
+def min_depth(root):
+    if not root:
+        return 0
+    left_depth = min_depth(root.left)
+    right_depth = min_depth(root.right)
+    # 如果左子树深度、右子树深度均不为0，则用min取其中最小值
+    # 如果有一个为0，取其中非0的数；都为0，取0
+    depth = min(left_depth, right_depth) if left_depth and right_depth else left_depth or right_depth
     return depth + 1
 
 

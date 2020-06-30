@@ -221,7 +221,7 @@ def check_is_loop_in_linked_and_find_entry(head):
     return False
 
 
-def sort_list(head):
+def sort_linked(head):
     """
     归并排序
     :param head:
@@ -234,8 +234,9 @@ def sort_list(head):
         slow = slow.next
         fast = fast.next.next
 
+    # 这里就是拆分为两部分的过程
     mid, slow.next = slow.next, None
-    left, right = sort_list(head), sort_list(mid)
+    left, right = sort_linked(head), sort_linked(mid)
     result = temp_head = Node(0)
 
     while left and right:
@@ -251,7 +252,7 @@ def sort_list(head):
     return result.next
 
 
-def sort_list1(_head, _end=None):
+def sort_linked1(_head, _end=None):
     """
     快速排序
     :param _head:
