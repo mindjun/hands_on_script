@@ -71,7 +71,7 @@ class TreeNode(object):
         self.right = right
 
     def __str__(self):
-        return f'TreeNode <{self.val}>'
+        return f'TreeNode < {self.val} >'
 
 
 # https://leetcode-cn.com/problems/serialize-and-deserialize-binary-tree/
@@ -480,6 +480,7 @@ def all_possible_fbt(n):
             res.append(_root)
 
 
+# https://leetcode-cn.com/problems/all-possible-full-binary-trees/
 class Solution:
     # 子问题：构造一棵满二叉树
     def allPossibleFBT(self, N: int) -> List[TreeNode]:
@@ -536,6 +537,25 @@ def path_sum(root, sum_):
 
 _root = TreeNode(10, left=TreeNode(6, left=TreeNode(5, right=TreeNode(9)), right=TreeNode(2)),
                  right=TreeNode(7, left=TreeNode(1), right=TreeNode(8)))
-res = path_sum(_root, 18)
-print(res)
+_res = path_sum(_root, 18)
+print(_res)
+
+
+# https://leetcode-cn.com/problems/path-sum-iii/
+# 路径总和
+def path_sum_count(root, sum_):
+    def dfs(node, path):
+        if not node:
+            return 0
+        path = [p + node.val for p in path]
+        # 因为当前 node 的值可能就等于 sum_，所以先加入到 path 中
+        path.append(node.val)
+
+        result = 0
+        result += len([i for i in path if i == sum_])
+
+        return result + dfs(node.left, path) + dfs(node.right, path)
+
+    return dfs(root, [])
+
 
