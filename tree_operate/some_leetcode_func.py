@@ -644,3 +644,26 @@ def lowest_common_ancestor(root, p, q):
         return root
 
     return left or right or None
+
+
+def layer_travel(root):
+    from collections import defaultdict
+    result = defaultdict(list)
+
+    def helper(node, deep):
+        if not node:
+            return
+        result[deep].append(node.val)
+        helper(node.left, deep + 1)
+        helper(node.right, deep + 1)
+
+    helper(root, 0)
+    print(result)
+    for i in result.keys():
+        if i % 2 == 1:
+            result[i] = result[i][::-1]
+    return list(result.values())
+    # print(result)
+
+
+print(layer_travel(_root))
