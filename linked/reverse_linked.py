@@ -283,7 +283,39 @@ def sort_linked1(_head, _end=None):
     return _head
 
 
+def remove_duplicate(head):
+    """
+    删除重复的节点
+    重复的节点连接在一起的 ？
+    :param head:
+    :return:
+    """
+    # node = head
+    # while head and head.next:
+    #     if head.data == head.next.data:
+    #         head.next = head.next.next
+    #     head = head.next
+    # return node
+
+    h1, h2 = head, head
+    _res = h1
+    while h2 and h2.next:
+        if h2.data != h2.next.data:
+            h2 = h2.next
+            h1.next = h2
+            h1 = h1.next
+        else:
+            h2 = h2.next
+    return _res
+
+
 if __name__ == '__main__':
+    _h = Node(1, Node(1, Node(3, Node(4, Node(4, Node(6, Node(3)))))))
+    remove_res = remove_duplicate(_h)
+    while remove_res:
+        print(remove_res.data)
+        remove_res = remove_res.next
+
     import copy
     h = Node(1, Node(2, Node(3, Node(4, Node(5, Node(6, Node(7)))))))
 
