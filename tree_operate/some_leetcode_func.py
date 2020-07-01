@@ -1,21 +1,66 @@
+# void traverse(TreeNode root) {
+#     // root 需要做什么？在这做。
+#     // 其他的不用 root 操心，抛给框架
+#     traverse(root.left);
+#     traverse(root.right);
+# }
+from typing import List
 
 
 # N 叉树的前序遍历
 # https://leetcode-cn.com/problems/n-ary-tree-preorder-traversal/
 def pre_order(root):
     stack, res = [root], list()
+    # while stack:
+    #     node = stack.pop()
+    #     if not node:
+    #         continue
+    #
+    #     res.append(node.val)
+    #     while node.children:
+    #         # 因为是前序遍历，所以下一次处理的是该节点的第一个自节点，于是将所有孩子倒序后添加到 stack 中
+    #         stack.extend(node.children[::-1])
+    #         node = stack.pop()
+    #         res.append(node.val)
+    # return res
+
+    # 递归
+    def helper(node):
+        if not node:
+            return
+        res.append(node.val)
+        for child in node.children:
+            helper(child)
+    helper(root)
+    return res
+
+
+# N 叉树的后序遍历
+# https://leetcode-cn.com/problems/n-ary-tree-postorder-traversal/
+def post_order(root):
+    res = list()
+
+    # 递归
+    # def helper(node):
+    #     if not node:
+    #         return
+    #     for child in node.children:
+    #         helper(child)
+    #     res.append(node.val)
+    # helper(root)
+    # return res
+
+    # 迭代
+    if not root:
+        return res
+    stack = [root]
     while stack:
         node = stack.pop()
-        if not node:
-            continue
-
+        # 根 右 左 的顺序入栈
         res.append(node.val)
-        while node.children:
-            # 因为是前序遍历，所以下一次处理的是该节点的第一个自节点，于是将所有孩子倒序后添加到 stack 中
-            stack.extend(node.children[::-1])
-            node = stack.pop()
-            res.append(node.val)
-    return res
+        stack.extend(node.children)
+    # 将结果倒序即可
+    return res[::-1]
 
 
 # Definition for a binary tree node.
@@ -24,6 +69,9 @@ class TreeNode(object):
         self.val = x
         self.left = left
         self.right = right
+
+    def __str__(self):
+        return f'TreeNode < {self.val} >'
 
 
 # https://leetcode-cn.com/problems/serialize-and-deserialize-binary-tree/
@@ -175,7 +223,7 @@ def max_depth(root: TreeNode) -> int:
 
 
 # 二叉树的最小深度，使用 dfs 求解
-def min_depth(root: TreeNode) -> int:
+def _min_depth(root: TreeNode) -> int:
     if not root:
         return 0
 
@@ -186,7 +234,19 @@ def min_depth(root: TreeNode) -> int:
     depth = float('inf')
     for c in children:
         if c:
-            depth = min(min_depth(c), depth)
+            depth = min(_min_depth(c), depth)
+    return depth + 1
+
+
+# 递归求解
+def min_depth(root):
+    if not root:
+        return 0
+    left_depth = min_depth(root.left)
+    right_depth = min_depth(root.right)
+    # 如果左子树深度、右子树深度均不为0，则用min取其中最小值
+    # 如果有一个为0，取其中非0的数；都为0，取0
+    depth = min(left_depth, right_depth) if left_depth and right_depth else left_depth or right_depth
     return depth + 1
 
 
@@ -407,3 +467,95 @@ def dfs_flip_equiv(root_1: TreeNode, root_2: TreeNode) -> bool:
         return False
 
     return dfs(root_1, root_2)
+
+
+# 所有可能的满二叉树
+def all_possible_fbt(n):
+    res = list()
+    root = TreeNode(0)
+
+    # 要么有两个孩子，要么一个都没有
+    def helper(_root, node, count):
+        if count == n - 1:
+            res.append(_root)
+
+
+# https://leetcode-cn.com/problems/all-possible-full-binary-trees/
+class Solution:
+    # 子问题：构造一棵满二叉树
+    def allPossibleFBT(self, N: int) -> List[TreeNode]:
+        res = []
+        if N == 1:
+            return [TreeNode(0)]
+        # 结点个数必须是奇数
+        if N % 2 == 0:
+            return []
+
+        # 左子树分配一个节点
+        left_num = 1
+        # 右子树可以分配到 N - 1 - 1 = N - 2 个节点
+        right_num = N - 2
+
+        while right_num > 0:
+            # 递归构造左子树
+            left_tree = self.allPossibleFBT(left_num)
+            # 递归构造右子树
+            right_tree = self.allPossibleFBT(right_num)
+            # 具体构造过程
+            for i in range(len(left_tree)):
+                for j in range(len(right_tree)):
+                    root = TreeNode(0)
+                    root.left = left_tree[i]
+                    root.right = right_tree[j]
+                    res.append(root)
+            left_num += 2
+            right_num -= 2
+
+        return res
+
+
+# 给定一个二叉树和一个目标和，找到所有从根节点到叶子节点路径总和等于给定目标和的路径。
+# https://zhuanlan.zhihu.com/p/152200298?utm_source=wechat_session&utm_medium=social&utm_oi=582127545428873216
+def path_sum(root, sum_):
+    result = list()
+
+    def dfs(node, path):
+        # 因为是要到叶子节点的总和，所以结束条件为 node 的左右孩子都为空
+        if not node.left and not node.right:
+            # 如果 path 的值加上当前节点的值满足条件，说明找到一个答案
+            if sum(path + [node.val]) == sum_:
+                result.append(list(path + [node.val]))
+        if node.left:
+            # 每次递归时带上当前的 path
+            dfs(node.left, path + [node.val])
+        if node.right:
+            dfs(node.right, path + [node.val])
+
+    dfs(root, [])
+    return result
+
+
+_root = TreeNode(10, left=TreeNode(6, left=TreeNode(5, right=TreeNode(9)), right=TreeNode(2)),
+                 right=TreeNode(7, left=TreeNode(1), right=TreeNode(8)))
+_res = path_sum(_root, 18)
+print(_res)
+
+
+# https://leetcode-cn.com/problems/path-sum-iii/
+# 路径总和
+def path_sum_count(root, sum_):
+    def dfs(node, path):
+        if not node:
+            return 0
+        path = [p + node.val for p in path]
+        # 因为当前 node 的值可能就等于 sum_，所以先加入到 path 中
+        path.append(node.val)
+
+        result = 0
+        result += len([i for i in path if i == sum_])
+
+        return result + dfs(node.left, path) + dfs(node.right, path)
+
+    return dfs(root, [])
+
+

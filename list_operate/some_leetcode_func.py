@@ -33,6 +33,7 @@ def remove_duplicates(nums):
     left = 0
     for right in range(size):
         # 找到 left 之后第一个不相等的数，并交换不相等的数与 left + 1 下标
+        # left 所在的位置就是没有重复数字的最后一个下标
         if nums[left] != nums[right]:
             left += 1
             nums[left], nums[right] = nums[right], nums[left]
@@ -296,3 +297,76 @@ def find_kth_largest_with_heap(nums, k):
 
 
 print(find_kth_largest_with_heap([3, 2, 3, 1, 2, 4, 5, 5, 6], 4))
+
+
+# 使用两个栈来实现一个队列
+class CQueue(object):
+    def __init__(self):
+        self.stack1 = list()
+        self.stack2 = list()
+
+    def append_tail(self, value: int) -> None:
+        self.stack1.append(value)
+
+    def delete_head(self) -> int:
+        if not self.stack2:
+            while self.stack1:
+                self.stack2.append(self.stack1.pop())
+        if self.stack2:
+            return self.stack2.pop()
+        else:
+            return -1
+
+
+# 暴力解法
+# https://leetcode-cn.com/problems/maximum-length-of-repeated-subarray/
+def find_length(a, b):
+    max_length = -1
+
+    for i in range(len(a)):
+        for j in range(len(b)):
+            offset = 0
+            while i + offset < len(a) and j + offset < len(b) and a[i + offset] == b[j + offset]:
+                offset += 1
+            max_length = max(offset, max_length)
+    return max_length
+
+
+# https://leetcode-cn.com/problems/maximum-length-of-repeated-subarray/solution/zui-chang-zhong-fu-zi-shu-zu-by-leetcode-solution/
+class Solution(object):
+    def find_length(self, a: List[int], b: List[int]) -> int:
+        n, m = len(a), len(b)
+        dp = [[0] * (m + 1) for _ in range(n + 1)]
+        ans = 0
+        for i in range(n - 1, -1, -1):
+            for j in range(m - 1, -1, -1):
+                dp[i][j] = dp[i + 1][j + 1] + 1 if a[i] == b[j] else 0
+                ans = max(ans, dp[i][j])
+        return ans
+
+
+print(Solution().find_length([0, 0, 0, 0, 0, 0, 1, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 1, 0, 0]))
+
+
+# 滑动窗口，找到相同的位置，并对齐
+# class Solution:
+#     def findLength(self, A: List[int], B: List[int]) -> int:
+#         def maxLength(addA: int, addB: int, length: int) -> int:
+#             ret = k = 0
+#             for i in range(length):
+#                 if A[addA + i] == B[addB + i]:
+#                     k += 1
+#                     ret = max(ret, k)
+#                 else:
+#                     k = 0
+#             return ret
+#
+#         n, m = len(A), len(B)
+#         ret = 0
+#         for i in range(n):
+#             length = min(m, n - i)
+#             ret = max(ret, maxLength(i, 0, length))
+#         for i in range(m):
+#             length = min(n, m - i)
+#             ret = max(ret, maxLength(0, i, length))
+#         return ret

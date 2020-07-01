@@ -734,3 +734,19 @@ def add_binary(a, b) -> str:
 
 
 print(add_binary(a="1010", b="1011"))
+
+
+def str_str(haystack: str, needle: str):
+    if not needle:
+        return 0
+    i, j = 0, 0
+    for i in range(len(haystack) - len(needle) + 1):
+        for j in range(len(needle) + 1):
+            if j < len(needle) and haystack[i+j] != needle[j]:
+                break
+        if len(needle) == j:
+            return i
+    return -1
+
+
+print(str_str('hello', 'll'))

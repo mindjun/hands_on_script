@@ -80,24 +80,6 @@ class BinarySortTree(object):
             if rt is None:
                 return None
 
-    def __iter__(self, rt=None):
-        # 遍历的非递归实现
-        # 遍历中使用列表作为栈，来保存先后走过的路径
-        if rt is None:
-            rt = self._root
-        stack = []
-        # 中序遍历
-        # 将rt入栈，若rt的左孩子不为空，将其入栈，并将rt的左孩子设为当前rt
-        #          若左孩子为空，取出栈顶元素，访问，然后将栈顶元素的右孩子设为当前节点
-        while stack or rt:
-            while rt:
-                stack.append(rt)
-                rt = rt.left
-            rt = stack.pop()
-            yield rt
-            # 存在节点没有左孩子但是有右孩子的情况
-            rt = rt.right
-
     def reverse_tree_node1(self, rt):
         """
         交换二叉树左右节点，递归实现
@@ -143,6 +125,24 @@ class BinarySortTree(object):
             if node.right:
                 stack.append(node.right)
 
+    def __iter__(self, rt=None):
+        # 遍历的非递归实现
+        # 遍历中使用列表作为栈，来保存先后走过的路径
+        if rt is None:
+            rt = self._root
+        stack = []
+        # 中序遍历
+        # 将rt入栈，若rt的左孩子不为空，将其入栈，并将rt的左孩子设为当前rt
+        #          若左孩子为空，取出栈顶元素，访问，然后将栈顶元素的右孩子设为当前节点
+        while stack or rt:
+            while rt:
+                stack.append(rt)
+                rt = rt.left
+            rt = stack.pop()
+            yield rt
+            # 存在节点没有左孩子但是有右孩子的情况
+            rt = rt.right
+
     def pre_travel(self, rt=None):
         # 前序遍历
         # 访问rt，并将rt入栈
@@ -175,32 +175,42 @@ class BinarySortTree(object):
 
     def post_travel(self, rt=None):
         # 后序遍历
+        if rt is None:
+            rt = self._root
+
         # 将根节点入栈，设置pre为前一次访问的节点
         # 只有当栈顶元素没有左右孩子或者他的左右孩子已经被访问的情况下才能访问该节点
         # 否则依次将改节点的右孩子、左孩子入栈
-        if rt is None:
-            rt = self._root
-        stack = list()
-        stack.append(rt)
-        pre = None
-        while stack:
-            rt = stack[-1]
-            if (rt.left is None and rt.right is None) or (pre is not None and (pre is rt.left or pre is rt.right)):
-                yield rt
-                pre = stack.pop()
-            else:
-                if rt.right:
-                    stack.append(rt.right)
-                if rt.left:
-                    stack.append(rt.left)
+        # stack = list()
+        # stack.append(rt)
+        # pre = None
+        # while stack:
+        #     rt = stack[-1]
+        #     if (rt.left is None and rt.right is None) or (pre is not None and (pre is rt.left or pre is rt.right)):
+        #         yield rt
+        #         pre = stack.pop()
+        #     else:
+        #         if rt.right:
+        #             stack.append(rt.right)
+        #         if rt.left:
+        #             stack.append(rt.left)
 
-        # while rt or stack:
-        #     while rt:
-        #         stack.append(rt)
-        #         rt = rt.right
-        #     rt = stack.pop()
-        #     yield rt
-        #     rt = rt.left
+        stack = list()
+        # 通过 last_visit 来判断右节点是否已经弹出
+        last_visit = None
+        while stack or rt:
+            while rt:
+                stack.append(rt)
+                rt = rt.left
+            # 这里不弹出，先取出来看看
+            node = stack[-1]
+            # 保证根节点在右节点之后弹出
+            if not node.right or node.right == last_visit:
+                stack.pop()
+                yield node
+                last_visit = node
+            else:
+                rt = node.right
 
     def layer_travel(self, rt=None):
         # 层级遍历
@@ -289,8 +299,6 @@ class BinarySortTree(object):
             return
         self.in_order(node.left)
         in_order_list.append(node.data)
-        # print(node.data)
-        # yield node.data
         self.in_order(node.right)
     
     def post_order(self, node):
@@ -299,8 +307,6 @@ class BinarySortTree(object):
         self.post_order(node.left)
         self.post_order(node.right)
         post_order_list.append(node.data)
-        # print(node.data)
-        # yield node.data
 
     def is_valid_bst(self, root=None):
         if not root:
