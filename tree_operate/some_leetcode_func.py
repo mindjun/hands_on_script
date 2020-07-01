@@ -70,6 +70,9 @@ class TreeNode(object):
         self.left = left
         self.right = right
 
+    def __str__(self):
+        return f'TreeNode <{self.val}>'
+
 
 # https://leetcode-cn.com/problems/serialize-and-deserialize-binary-tree/
 # 二叉树的序列化与反序列化
@@ -510,20 +513,29 @@ class Solution:
         return res
 
 
-# class Solution(object):
-#     memo = {0: [], 1: [TreeNode(0)]}
-#
-#     def allPossibleFBT(self, N):
-#         if N not in Solution.memo:
-#             ans = []
-#             for x in range(N):
-#                 y = N - 1 - x
-#                 for left in self.allPossibleFBT(x):
-#                     for right in self.allPossibleFBT(y):
-#                         bns = TreeNode(0)
-#                         bns.left = left
-#                         bns.right = right
-#                         ans.append(bns)
-#             Solution.memo[N] = ans
-#
-#         return Solution.memo[N]
+# 给定一个二叉树和一个目标和，找到所有从根节点到叶子节点路径总和等于给定目标和的路径。
+# https://zhuanlan.zhihu.com/p/152200298?utm_source=wechat_session&utm_medium=social&utm_oi=582127545428873216
+def path_sum(root, sum_):
+    result = list()
+
+    def dfs(node, path):
+        # 因为是要到叶子节点的总和，所以结束条件为 node 的左右孩子都为空
+        if not node.left and not node.right:
+            # 如果 path 的值加上当前节点的值满足条件，说明找到一个答案
+            if sum(path + [node.val]) == sum_:
+                result.append(list(path + [node.val]))
+        if node.left:
+            # 每次递归时带上当前的 path
+            dfs(node.left, path + [node.val])
+        if node.right:
+            dfs(node.right, path + [node.val])
+
+    dfs(root, [])
+    return result
+
+
+_root = TreeNode(10, left=TreeNode(6, left=TreeNode(5, right=TreeNode(9)), right=TreeNode(2)),
+                 right=TreeNode(7, left=TreeNode(1), right=TreeNode(8)))
+res = path_sum(_root, 18)
+print(res)
+
