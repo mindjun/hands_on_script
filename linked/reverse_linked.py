@@ -298,7 +298,7 @@ if __name__ == '__main__':
     print(reverse_res)
 
     # sort list
-    sort_res = sort_list(sort_arg)
+    sort_res = sort_linked(sort_arg)
     sort_result = list()
     while sort_res:
         sort_result.append(sort_res.data)
@@ -309,7 +309,7 @@ if __name__ == '__main__':
 
     # sort list
     h3 = Node(5, Node(1, Node(2, Node(6, Node(4, Node(7, Node(3)))))))
-    sort_res1 = sort_list1(sort_arg1)
+    sort_res1 = sort_linked1(sort_arg1)
     sort_result = list()
     while sort_res1:
         sort_result.append(sort_res1.data)

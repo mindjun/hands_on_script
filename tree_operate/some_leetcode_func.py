@@ -559,3 +559,88 @@ def path_sum_count(root, sum_):
     return dfs(root, [])
 
 
+# https://leetcode-cn.com/problems/check-balance-lcci/
+# 判断树是否是平衡
+def is_balance_tree(root):
+    # 双层递归
+    # def get_max_depth(node):
+    #     return 0 if not node else max(get_max_depth(node.left), get_max_depth(node.right)) + 1
+    # if not root:
+    #     return True
+    # 判断当前 root 节点是否是平衡
+    # if abs(get_max_depth(root.left) - get_max_depth(root.right)) > 1:
+    #     return False
+    # 递归判断 root 的左右子节点是否平衡
+    # return is_balance_tree(root.left) and is_balance_tree(root.right)
+
+    # 使用全局 flag 来标示
+    flag = True
+
+    def is_balance_helper(node):
+        nonlocal flag
+
+        if not node:
+            return 0
+
+        # 计算树深度的同时判断是否是平衡树
+        left_depth = is_balance_helper(root.left) + 1
+        right_depth = is_balance_helper(root.right) + 1
+
+        if abs(left_depth - right_depth) > 1:
+            flag = False
+
+        return max(left_depth, right_depth)
+
+    is_balance_helper(root)
+    return flag
+
+
+# https://leetcode-cn.com/problems/binary-tree-maximum-path-sum/
+# 给定一个非空二叉树，返回其最大路径和。
+class MaxPathSum(object):
+    def __init__(self):
+        self.max_sum = float('-inf')
+
+    def get_max_path_sum(self, root):
+        def helper(node):
+            if not node:
+                return 0
+            # 左子树的和
+            left = max(helper(node.left), 0)
+            # 右子树的和
+            right = max(helper(node.right), 0)
+            # 当前节点的和
+            max_now = node.val + left + right
+            # 更新最大值
+            self.max_sum = max(self.max_sum, max_now)
+            return node.val + max(left, right)
+
+        helper(root)
+        return self.max_sum
+
+    def get_max_path_sum_1(self, root):
+        # todo 节点的值可能小于 0, 所以不能直接返回 0
+        # 左子树最大路径和最大，右子树最大路径和最大，左右子树最大加根节点最大
+        if not root:
+            return 0
+        left = self.get_max_path_sum_1(root.left)
+        right = self.get_max_path_sum_1(root.right)
+        return max(left, right, left+right+root.val)
+
+
+# https://leetcode-cn.com/problems/lowest-common-ancestor-of-a-binary-tree/
+# 分治法，有左子树的公共祖先或者有右子树的公共祖先，就返回子树的祖先，否则返回根节点
+def lowest_common_ancestor(root, p, q):
+    if not root:
+        return root
+    if root.val == p.val or root.val == q.val:
+        return root
+
+    # 递归一定是从最底部开始返回的，所以最先返回的一定是 p q 的最近父节点
+    left = lowest_common_ancestor(root.left, p, q)
+    right = lowest_common_ancestor(root.right, p, q)
+
+    if left and right:
+        return root
+
+    return left or right or None
