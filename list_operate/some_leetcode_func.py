@@ -349,24 +349,94 @@ print(Solution().find_length([0, 0, 0, 0, 0, 0, 1, 0, 0, 0], [0, 0, 0, 0, 0, 0, 
 
 
 # 滑动窗口，找到相同的位置，并对齐
-# class Solution:
-#     def findLength(self, A: List[int], B: List[int]) -> int:
-#         def maxLength(addA: int, addB: int, length: int) -> int:
-#             ret = k = 0
-#             for i in range(length):
-#                 if A[addA + i] == B[addB + i]:
-#                     k += 1
-#                     ret = max(ret, k)
-#                 else:
-#                     k = 0
-#             return ret
+# https://leetcode-cn.com/problems/maximum-length-of-repeated-subarray/solution/zui-chang-zhong-fu-zi-shu-zu-by-leetcode-solution/
+class Solution:
+    def findLength(self, A: List[int], B: List[int]) -> int:
+        def maxLength(addA: int, addB: int, length: int) -> int:
+            ret = k = 0
+            for i in range(length):
+                if A[addA + i] == B[addB + i]:
+                    k += 1
+                    ret = max(ret, k)
+                else:
+                    k = 0
+            return ret
+
+        n, m = len(A), len(B)
+        ret = 0
+        for i in range(n):
+            length = min(m, n - i)
+            ret = max(ret, maxLength(i, 0, length))
+        for i in range(m):
+            length = min(n, m - i)
+            ret = max(ret, maxLength(0, i, length))
+        return ret
+
+
+# 给定一个 n x n 矩阵，其中每行和每列元素均按升序排序，找到矩阵中第 k 小的元素。
+# 请注意，它是排序后的第 k 小元素，而不是第 k 个不同的元素。
+# 示例：
 #
-#         n, m = len(A), len(B)
-#         ret = 0
-#         for i in range(n):
-#             length = min(m, n - i)
-#             ret = max(ret, maxLength(i, 0, length))
-#         for i in range(m):
-#             length = min(n, m - i)
-#             ret = max(ret, maxLength(0, i, length))
-#         return ret
+# matrix = [
+#    [ 1,  5,  9],
+#    [10, 11, 13],
+#    [12, 13, 15]
+# ],
+# k = 8,
+#
+# 返回 13。
+# https://leetcode-cn.com/problems/kth-smallest-element-in-a-sorted-matrix/
+def kth_num(matrix, kth):
+    if not matrix:
+        return 0
+    if kth == 1:
+        return matrix[0][0]
+
+    max_x, max_y = len(matrix), len(matrix[0])
+    pre = matrix[0][0]
+
+    for x in range(1, max_x):
+        for y in range(max_y):
+            if kth != pre:
+                kth -= 1
+
+            if kth == 0:
+                return matrix[x][y]
+
+
+_matrix = [
+   [1,  5,  9],
+   [10, 11, 13],
+   [12, 13, 15]
+]
+_matrix1 = [
+   [1, 2],
+   [1, 3]
+]
+print(kth_num(_matrix1, 2))
+
+
+# class Solution:
+#     def kthSmallest(self, matrix: List[List[int]], k: int) -> int:
+#         n = len(matrix)
+#
+#         def check(mid):
+#             i, j = n - 1, 0
+#             num = 0
+#             while i >= 0 and j < n:
+#                 if matrix[i][j] <= mid:
+#                     num += i + 1
+#                     j += 1
+#                 else:
+#                     i -= 1
+#             return num >= k
+#
+#         left, right = matrix[0][0], matrix[-1][-1]
+#         while left < right:
+#             mid = (left + right) // 2
+#             if check(mid):
+#                 right = mid
+#             else:
+#                 left = mid + 1
+#
+#         return left

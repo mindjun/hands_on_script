@@ -7,6 +7,7 @@ class Node(object):
     def __init__(self, val, ne=None):
         self.data = val
         self.next = ne
+        self.val = val
 
     def set_next(self, node):
         self.next = node
@@ -61,7 +62,7 @@ def reverse_pre_n(head, n):
 
     def reverse_help(_head, _n):
         # 记录 last 之后的那个元素
-        global successor
+        nonlocal successor
         if _n == 1:
             successor = _head.next
             return _head
@@ -70,47 +71,6 @@ def reverse_pre_n(head, n):
         _head.next = successor
         return last
     return reverse_help(head, n)
-
-
-# 以下实现有问题 ?
-# def reverse_range(head, m, n):
-#     """
-#     翻转 n - m 之间的节点
-#     1 ==> 2 ==> 3 ==> 4 ==> 5 ==> None  n=4, m=2
-#     ==> 1 ==> 4 ==> 3 ==> 2 ==> 5 ==> None
-#     :param head:
-#     :param n:
-#     :param m:
-#     :return:
-#     """
-#     def help_func(_head, end_head):
-#         if _head.data == end_head.data:
-#             return
-#         last = help_func(_head.next, end_head)
-#         _head.next.next = _head
-#         _head.next = None
-#         return last, _head
-#
-#     old_head = head
-#     n_head, m_head = head, head
-#     pre_node = head
-#     while m > 1:
-#         pre_node = m_head.data
-#         m_head = m_head.next
-#         m -= 1
-#     next_node = n_head
-#     while n > 1:
-#         n_head = n_head.next
-#         next_node = n_head.data
-#         n -= 1
-#
-#     next_node = Node(next_node)
-#     pre_node = Node(pre_node)
-#
-#     _last, _end_head = help_func(m_head, n_head)
-#     _end_head.next = next_node
-#     pre_node.next = _last
-#     return old_head
 
 
 def reverse_between(head, m, n):
@@ -283,34 +243,75 @@ def sort_linked1(_head, _end=None):
     return _head
 
 
+# https://leetcode-cn.com/problems/remove-duplicates-from-sorted-list/
 def remove_duplicate(head):
     """
     删除重复的节点
-    重复的节点连接在一起的 ？
+    节点已经是升序
     :param head:
     :return:
     """
-    # node = head
-    # while head and head.next:
-    #     if head.data == head.next.data:
-    #         head.next = head.next.next
-    #     head = head.next
-    # return node
-
-    h1, h2 = head, head
-    _res = h1
-    while h2 and h2.next:
-        if h2.data != h2.next.data:
-            h2 = h2.next
-            h1.next = h2
-            h1 = h1.next
+    node = head
+    while head and head.next:
+        if head.data == head.next.data:
+            head.next = head.next.next
         else:
-            h2 = h2.next
-    return _res
+            head = head.next
+    return node
+
+
+# https://leetcode-cn.com/problems/remove-duplicates-from-sorted-list-ii/
+def delete_duplicate(head):
+    """
+    删除所有包含重复数字的节点
+    节点已经是升序
+    :param head:
+    :return:
+    """
+    thead = ListNode('0')
+    thead.next = head
+    node = thead
+    while thead.next:
+        left = right = thead.next
+        # left right 指针不断移动，直到不想等为止
+        while right.next and right.next.val == left.val:
+            right = right.next
+        if left == right:
+            thead = thead.next
+        else:
+            thead.next = right.next
+    return node.next
+
+
+# https://leetcode-cn.com/problems/remove-duplicates-from-sorted-list-ii/
+def delete_duplicate_(head):
+    """
+    删除所有包含重复数字的节点，递归解法
+    节点已经是升序
+    :param head:
+    :return:
+    """
+    if not head:
+        return head
+    # 找到相同的数
+    if head.next and head.val == head.next.val:
+        while head.next and head.val == head.next.val:
+            head = head.next
+        # 从下一个不相同的数开始递归
+        return delete_duplicate_(head.next)
+    else:
+        head.next = delete_duplicate_(head.next)
+    return head
 
 
 if __name__ == '__main__':
-    _h = Node(1, Node(1, Node(3, Node(4, Node(4, Node(6, Node(3)))))))
+    # _h = Node(1, Node(1, Node(3, Node(4, Node(4, Node(6, Node(7)))))))
+    # _h = Node(1, Node(1, Node(2, Node(2, Node(2)))))
+    # [1, 2, 3, 3, 4, 4, 5]
+    _h = Node(1, Node(2, Node(3, Node(3, Node(4, Node(4, Node(5)))))))
+
+    res = delete_duplicate_(_h)
+
     remove_res = remove_duplicate(_h)
     while remove_res:
         print(remove_res.data)
