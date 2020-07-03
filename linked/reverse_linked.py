@@ -14,9 +14,9 @@ class Node(object):
 
 
 class ListNode:
-    def __init__(self, x):
+    def __init__(self, x, _next=None):
         self.val = x
-        self.next = None
+        self.next = _next
 
 
 def reverse_linked(head):
@@ -89,6 +89,33 @@ def reverse_between(head, m, n):
     # 前进到反转的起点触发 base case
     head.next = reverse_between(head.next, m - 1, n - 1)
     return head
+
+
+# https://leetcode-cn.com/problems/reverse-linked-list-ii/
+class Solution(object):
+    """
+    翻转链表的 m-n 个节点
+    """
+    def reverseBetween(self, head: ListNode, m: int, n: int) -> ListNode:
+        if m == 1:
+            return self.reverse_pre_n(head, n)
+        head.next = self.reverseBetween(head.next, m-1, n-1)
+        return head
+
+    def reverse_pre_n(self, head, n):
+        pre, current = None, head
+        while current and n >= 1:
+            temp = current.next
+            current.next = pre
+            pre, current = current, temp
+            n -= 1
+
+        # 将后面的节点接上
+        new_head = pre
+        while pre.next:
+            pre = pre.next
+        pre.next = current
+        return new_head
 
 
 def every_two_reverse(head):
@@ -304,7 +331,42 @@ def delete_duplicate_(head):
     return head
 
 
+# https://leetcode-cn.com/problems/partition-list/
+class Solution1(object):
+    def partition(self, head: ListNode, x: int) -> ListNode:
+        if not head or not head.next:
+            return head
+        # l1, l2 = head, head.next
+        # new_head = l1
+        # while l2:
+        #     if l2.val < x:
+        #         l1 = l1.next
+        #         l1.val, l2.val = l2.val, l1.val
+        #     l2 = l2.next
+        # l1.val, head.val = head.val, l1.val
+        # return new_head
+        part1, part2 = ListNode('None'), ListNode('None')
+        new_head1, new_head2 = part1, part2
+        while head:
+            if head.val < x:
+                part1.next = head
+                part1 = part1.next
+            else:
+                part2.next = head
+                part2 = part2.next
+            head = head.next
+        part1.next = new_head2.next
+        return new_head1.next
+
+
 if __name__ == '__main__':
+    # [1,4,3,2,5,2]
+    _h = ListNode(1, ListNode(4, ListNode(3, ListNode(2, ListNode(5, ListNode(2))))))
+    new = Solution1().partition(_h, 3)
+
+    _h = ListNode(1, ListNode(2, ListNode(3, ListNode(4, ListNode(5, ListNode(6, ListNode(7)))))))
+    rev = Solution().reverseBetween(_h, 3, 5)
+
     # _h = Node(1, Node(1, Node(3, Node(4, Node(4, Node(6, Node(7)))))))
     # _h = Node(1, Node(1, Node(2, Node(2, Node(2)))))
     # [1, 2, 3, 3, 4, 4, 5]
