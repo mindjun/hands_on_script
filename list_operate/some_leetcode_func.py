@@ -474,3 +474,58 @@ def decode_string(s):
 
 print(f'decode_string is {decode_string("10[leetcode]")}')
 assert decode_string("2[abc]3[cd]ef") == "abcabccdcdcdef"
+
+
+# https://leetcode-cn.com/problems/number-of-islands/
+class Solution:
+    def numIslands(self, grid: List[List[str]]) -> int:
+        if not grid:
+            return 0
+
+        count = 0
+        for i in range(len(grid)):
+            for j in range(len(grid[i])):
+                try:
+                    if grid[i][j] == '1' and self.dfs(i, j, grid) >= 1:
+                        count += 1
+                except IndexError as ex:
+                    print(str(ex))
+        return count
+
+    def dfs(self, i, j, grid):
+        if not 0 <= i < len(grid) or not 0 <= j < len(grid[0]):
+            return 0
+
+        if grid[i][j] == '1':
+            # 标示为 0 已经访问过的点
+            grid[i][j] = 0
+            return 1 + self.dfs(i-1, j, grid) + self.dfs(i+1, j, grid) + self.dfs(i, j-1, grid) + self.dfs(i, j+1, grid)
+        else:
+            return 0
+
+
+Solution().numIslands([["1", "1", "0", "0", "0"],
+                       ["1", "1", "0", "0", "0"],
+                       ["0", "0", "1", "0", "0"],
+                       ["0", "0", "0", "1", "1"]])
+
+
+# [2,1,5,6,2,3] ==> 10
+def largest_rectangle_area(heights):
+    if not heights:
+        return 0
+    if len(heights) == 1:
+        return heights[0]
+
+    left, right = 0, len(heights) - 1
+    _max_area = 0
+    while left <= right:
+        _max_area = max(_max_area, (right - left) * min(heights[left], heights[right]))
+        if heights[left] < heights[right]:
+            left += 1
+        else:
+            right -= 1
+    return _max_area
+
+
+print(largest_rectangle_area([2, 1, 5, 6, 2, 3]))
