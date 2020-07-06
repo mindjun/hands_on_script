@@ -386,22 +386,30 @@ class Solution:
 #
 # 返回 13。
 # https://leetcode-cn.com/problems/kth-smallest-element-in-a-sorted-matrix/
-def kth_num(matrix, kth):
-    if not matrix:
-        return 0
-    if kth == 1:
-        return matrix[0][0]
+class Solution(object):
+    def kthSmallest(self, matrix: List[List[int]], k: int) -> int:
+        n = len(matrix)
 
-    max_x, max_y = len(matrix), len(matrix[0])
-    pre = matrix[0][0]
+        def check(mid):
+            i, j = n - 1, 0
+            num = 0
+            while i >= 0 and j < n:
+                if matrix[i][j] <= mid:
+                    num += i + 1
+                    j += 1
+                else:
+                    i -= 1
+            return num >= k
 
-    for x in range(1, max_x):
-        for y in range(max_y):
-            if kth != pre:
-                kth -= 1
+        left, right = matrix[0][0], matrix[-1][-1]
+        while left < right:
+            mid = (left + right) // 2
+            if check(mid):
+                right = mid
+            else:
+                left = mid + 1
 
-            if kth == 0:
-                return matrix[x][y]
+        return left
 
 
 _matrix = [
@@ -413,30 +421,56 @@ _matrix1 = [
    [1, 2],
    [1, 3]
 ]
-print(kth_num(_matrix1, 2))
+print(Solution().kthSmallest(_matrix1, 2))
 
 
-# class Solution:
-#     def kthSmallest(self, matrix: List[List[int]], k: int) -> int:
-#         n = len(matrix)
-#
-#         def check(mid):
-#             i, j = n - 1, 0
-#             num = 0
-#             while i >= 0 and j < n:
-#                 if matrix[i][j] <= mid:
-#                     num += i + 1
-#                     j += 1
-#                 else:
-#                     i -= 1
-#             return num >= k
-#
-#         left, right = matrix[0][0], matrix[-1][-1]
-#         while left < right:
-#             mid = (left + right) // 2
-#             if check(mid):
-#                 right = mid
-#             else:
-#                 left = mid + 1
-#
-#         return left
+# https://leetcode-cn.com/problems/evaluate-reverse-polish-notation/
+def eval_rpm(tokens: List[str]):
+    temp_stack = list()
+    for i in tokens:
+        if i in '+-*/':
+            num1 = temp_stack.pop()
+            num2 = temp_stack.pop()
+            temp_stack.append(int(eval(f'{num2} {i} {num1}')))
+        else:
+            temp_stack.append(i)
+    return int(temp_stack[0])
+
+    # while True:
+    #     if len(tokens) == 1:
+    #         return int(tokens[0])
+    #     for index, item in enumerate(tokens):
+    #         if item in ['+', '-', '*', '/']:
+    #             num1 = tokens[index-1]
+    #             num2 = tokens[index-2]
+    #             tokens[index-2] = str(int(eval(f'{num2} {item} {num1}')))
+    #             tokens.pop(index)
+    #             tokens.pop(index-1)
+    #             break
+
+
+print(f'eval_rpm res is {eval_rpm(["10", "6", "9", "3", "+", "-11", "*", "/", "*", "17", "+", "5", "+"])}')
+
+
+# https://leetcode-cn.com/problems/decode-string/
+def decode_string(s):
+    temp_stack = list()
+    for ch in s:
+        if ch == ']':
+            temp_str = ''
+            while temp_stack[-1] != '[':
+                temp_str = temp_stack.pop() + temp_str
+            # 这时候的最后一个字符一定是 [
+            temp_stack.pop()
+            repeat_str = ''
+            while temp_stack and temp_stack[-1].isnumeric():
+                repeat_str = temp_stack.pop() + repeat_str
+            repeat_num = int(repeat_str)
+            temp_stack.append(repeat_num * temp_str)
+        else:
+            temp_stack.append(ch)
+    return ''.join(temp_stack)
+
+
+print(f'decode_string is {decode_string("10[leetcode]")}')
+assert decode_string("2[abc]3[cd]ef") == "abcabccdcdcdef"

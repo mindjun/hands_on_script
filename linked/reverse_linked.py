@@ -18,6 +18,9 @@ class ListNode:
         self.val = x
         self.next = _next
 
+    def __repr__(self):
+        return f'ListNode <{self.val}>'
+
 
 def reverse_linked(head):
     """
@@ -359,7 +362,51 @@ class Solution1(object):
         return new_head1.next
 
 
+# https://leetcode-cn.com/problems/reorder-list/
+def reorder_linked(head):
+    if not head or not head.next:
+        return head
+    slow, fast = head, head.next
+    while fast and fast.next:
+        slow = slow.next
+        fast = fast.next.next
+    part2 = slow.next
+    node_stack = list()
+    while part2:
+        node_stack.append(part2)
+        part2 = part2.next
+
+    slow.next = None
+    while head and node_stack:
+        temp = head.next
+        head.next = node_stack.pop()
+        head.next.next = temp
+        head = temp
+
+
+# https://leetcode-cn.com/problems/palindrome-linked-list/
+class IsPalindrome(object):
+    def is_palindrome(self, head):
+        self.front_pointer = head
+
+        def check(current_node=head):
+            if current_node is not None:
+                if not check(current_node.next):
+                    return False
+                if self.front_pointer.val != current_node.val:
+                    return False
+                self.front_pointer = self.front_pointer.next
+            return True
+        return check()
+
+
 if __name__ == '__main__':
+    _h = ListNode(1, ListNode(2, ListNode(2, ListNode(1))))
+    IsPalindrome().is_palindrome(_h)
+
+    _h = ListNode(1, ListNode(2, ListNode(3, ListNode(4))))
+    reorder_linked(_h)
+
     # [1,4,3,2,5,2]
     _h = ListNode(1, ListNode(4, ListNode(3, ListNode(2, ListNode(5, ListNode(2))))))
     new = Solution1().partition(_h, 3)
