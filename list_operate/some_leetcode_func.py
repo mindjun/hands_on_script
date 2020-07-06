@@ -349,24 +349,183 @@ print(Solution().find_length([0, 0, 0, 0, 0, 0, 1, 0, 0, 0], [0, 0, 0, 0, 0, 0, 
 
 
 # 滑动窗口，找到相同的位置，并对齐
-# class Solution:
-#     def findLength(self, A: List[int], B: List[int]) -> int:
-#         def maxLength(addA: int, addB: int, length: int) -> int:
-#             ret = k = 0
-#             for i in range(length):
-#                 if A[addA + i] == B[addB + i]:
-#                     k += 1
-#                     ret = max(ret, k)
-#                 else:
-#                     k = 0
-#             return ret
+# https://leetcode-cn.com/problems/maximum-length-of-repeated-subarray/solution/zui-chang-zhong-fu-zi-shu-zu-by-leetcode-solution/
+class Solution:
+    def findLength(self, A: List[int], B: List[int]) -> int:
+        def maxLength(addA: int, addB: int, length: int) -> int:
+            ret = k = 0
+            for i in range(length):
+                if A[addA + i] == B[addB + i]:
+                    k += 1
+                    ret = max(ret, k)
+                else:
+                    k = 0
+            return ret
+
+        n, m = len(A), len(B)
+        ret = 0
+        for i in range(n):
+            length = min(m, n - i)
+            ret = max(ret, maxLength(i, 0, length))
+        for i in range(m):
+            length = min(n, m - i)
+            ret = max(ret, maxLength(0, i, length))
+        return ret
+
+
+# 给定一个 n x n 矩阵，其中每行和每列元素均按升序排序，找到矩阵中第 k 小的元素。
+# 请注意，它是排序后的第 k 小元素，而不是第 k 个不同的元素。
+# 示例：
 #
-#         n, m = len(A), len(B)
-#         ret = 0
-#         for i in range(n):
-#             length = min(m, n - i)
-#             ret = max(ret, maxLength(i, 0, length))
-#         for i in range(m):
-#             length = min(n, m - i)
-#             ret = max(ret, maxLength(0, i, length))
-#         return ret
+# matrix = [
+#    [ 1,  5,  9],
+#    [10, 11, 13],
+#    [12, 13, 15]
+# ],
+# k = 8,
+#
+# 返回 13。
+# https://leetcode-cn.com/problems/kth-smallest-element-in-a-sorted-matrix/
+class Solution(object):
+    def kthSmallest(self, matrix: List[List[int]], k: int) -> int:
+        n = len(matrix)
+
+        def check(mid):
+            i, j = n - 1, 0
+            num = 0
+            while i >= 0 and j < n:
+                if matrix[i][j] <= mid:
+                    num += i + 1
+                    j += 1
+                else:
+                    i -= 1
+            return num >= k
+
+        left, right = matrix[0][0], matrix[-1][-1]
+        while left < right:
+            mid = (left + right) // 2
+            if check(mid):
+                right = mid
+            else:
+                left = mid + 1
+
+        return left
+
+
+_matrix = [
+   [1,  5,  9],
+   [10, 11, 13],
+   [12, 13, 15]
+]
+_matrix1 = [
+   [1, 2],
+   [1, 3]
+]
+print(Solution().kthSmallest(_matrix1, 2))
+
+
+# https://leetcode-cn.com/problems/evaluate-reverse-polish-notation/
+def eval_rpm(tokens: List[str]):
+    temp_stack = list()
+    for i in tokens:
+        if i in '+-*/':
+            num1 = temp_stack.pop()
+            num2 = temp_stack.pop()
+            temp_stack.append(int(eval(f'{num2} {i} {num1}')))
+        else:
+            temp_stack.append(i)
+    return int(temp_stack[0])
+
+    # while True:
+    #     if len(tokens) == 1:
+    #         return int(tokens[0])
+    #     for index, item in enumerate(tokens):
+    #         if item in ['+', '-', '*', '/']:
+    #             num1 = tokens[index-1]
+    #             num2 = tokens[index-2]
+    #             tokens[index-2] = str(int(eval(f'{num2} {item} {num1}')))
+    #             tokens.pop(index)
+    #             tokens.pop(index-1)
+    #             break
+
+
+print(f'eval_rpm res is {eval_rpm(["10", "6", "9", "3", "+", "-11", "*", "/", "*", "17", "+", "5", "+"])}')
+
+
+# https://leetcode-cn.com/problems/decode-string/
+def decode_string(s):
+    temp_stack = list()
+    for ch in s:
+        if ch == ']':
+            temp_str = ''
+            while temp_stack[-1] != '[':
+                temp_str = temp_stack.pop() + temp_str
+            # 这时候的最后一个字符一定是 [
+            temp_stack.pop()
+            repeat_str = ''
+            while temp_stack and temp_stack[-1].isnumeric():
+                repeat_str = temp_stack.pop() + repeat_str
+            repeat_num = int(repeat_str)
+            temp_stack.append(repeat_num * temp_str)
+        else:
+            temp_stack.append(ch)
+    return ''.join(temp_stack)
+
+
+print(f'decode_string is {decode_string("10[leetcode]")}')
+assert decode_string("2[abc]3[cd]ef") == "abcabccdcdcdef"
+
+
+# https://leetcode-cn.com/problems/number-of-islands/
+class Solution:
+    def numIslands(self, grid: List[List[str]]) -> int:
+        if not grid:
+            return 0
+
+        count = 0
+        for i in range(len(grid)):
+            for j in range(len(grid[i])):
+                try:
+                    if grid[i][j] == '1' and self.dfs(i, j, grid) >= 1:
+                        count += 1
+                except IndexError as ex:
+                    print(str(ex))
+        return count
+
+    def dfs(self, i, j, grid):
+        if not 0 <= i < len(grid) or not 0 <= j < len(grid[0]):
+            return 0
+
+        if grid[i][j] == '1':
+            # 标示为 0 已经访问过的点
+            grid[i][j] = 0
+            return 1 + self.dfs(i-1, j, grid) + self.dfs(i+1, j, grid) + self.dfs(i, j-1, grid) + self.dfs(i, j+1, grid)
+        else:
+            return 0
+
+
+Solution().numIslands([["1", "1", "0", "0", "0"],
+                       ["1", "1", "0", "0", "0"],
+                       ["0", "0", "1", "0", "0"],
+                       ["0", "0", "0", "1", "1"]])
+
+
+# [2,1,5,6,2,3] ==> 10
+def largest_rectangle_area(heights):
+    if not heights:
+        return 0
+    if len(heights) == 1:
+        return heights[0]
+
+    left, right = 0, len(heights) - 1
+    _max_area = 0
+    while left <= right:
+        _max_area = max(_max_area, (right - left) * min(heights[left], heights[right]))
+        if heights[left] < heights[right]:
+            left += 1
+        else:
+            right -= 1
+    return _max_area
+
+
+print(largest_rectangle_area([2, 1, 5, 6, 2, 3]))

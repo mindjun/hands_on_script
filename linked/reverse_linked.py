@@ -7,15 +7,19 @@ class Node(object):
     def __init__(self, val, ne=None):
         self.data = val
         self.next = ne
+        self.val = val
 
     def set_next(self, node):
         self.next = node
 
 
 class ListNode:
-    def __init__(self, x):
+    def __init__(self, x, _next=None):
         self.val = x
-        self.next = None
+        self.next = _next
+
+    def __repr__(self):
+        return f'ListNode <{self.val}>'
 
 
 def reverse_linked(head):
@@ -61,7 +65,7 @@ def reverse_pre_n(head, n):
 
     def reverse_help(_head, _n):
         # 记录 last 之后的那个元素
-        global successor
+        nonlocal successor
         if _n == 1:
             successor = _head.next
             return _head
@@ -70,47 +74,6 @@ def reverse_pre_n(head, n):
         _head.next = successor
         return last
     return reverse_help(head, n)
-
-
-# 以下实现有问题 ?
-# def reverse_range(head, m, n):
-#     """
-#     翻转 n - m 之间的节点
-#     1 ==> 2 ==> 3 ==> 4 ==> 5 ==> None  n=4, m=2
-#     ==> 1 ==> 4 ==> 3 ==> 2 ==> 5 ==> None
-#     :param head:
-#     :param n:
-#     :param m:
-#     :return:
-#     """
-#     def help_func(_head, end_head):
-#         if _head.data == end_head.data:
-#             return
-#         last = help_func(_head.next, end_head)
-#         _head.next.next = _head
-#         _head.next = None
-#         return last, _head
-#
-#     old_head = head
-#     n_head, m_head = head, head
-#     pre_node = head
-#     while m > 1:
-#         pre_node = m_head.data
-#         m_head = m_head.next
-#         m -= 1
-#     next_node = n_head
-#     while n > 1:
-#         n_head = n_head.next
-#         next_node = n_head.data
-#         n -= 1
-#
-#     next_node = Node(next_node)
-#     pre_node = Node(pre_node)
-#
-#     _last, _end_head = help_func(m_head, n_head)
-#     _end_head.next = next_node
-#     pre_node.next = _last
-#     return old_head
 
 
 def reverse_between(head, m, n):
@@ -129,6 +92,33 @@ def reverse_between(head, m, n):
     # 前进到反转的起点触发 base case
     head.next = reverse_between(head.next, m - 1, n - 1)
     return head
+
+
+# https://leetcode-cn.com/problems/reverse-linked-list-ii/
+class Solution(object):
+    """
+    翻转链表的 m-n 个节点
+    """
+    def reverseBetween(self, head: ListNode, m: int, n: int) -> ListNode:
+        if m == 1:
+            return self.reverse_pre_n(head, n)
+        head.next = self.reverseBetween(head.next, m-1, n-1)
+        return head
+
+    def reverse_pre_n(self, head, n):
+        pre, current = None, head
+        while current and n >= 1:
+            temp = current.next
+            current.next = pre
+            pre, current = current, temp
+            n -= 1
+
+        # 将后面的节点接上
+        new_head = pre
+        while pre.next:
+            pre = pre.next
+        pre.next = current
+        return new_head
 
 
 def every_two_reverse(head):
@@ -283,7 +273,159 @@ def sort_linked1(_head, _end=None):
     return _head
 
 
+# https://leetcode-cn.com/problems/remove-duplicates-from-sorted-list/
+def remove_duplicate(head):
+    """
+    删除重复的节点
+    节点已经是升序
+    :param head:
+    :return:
+    """
+    node = head
+    while head and head.next:
+        if head.data == head.next.data:
+            head.next = head.next.next
+        else:
+            head = head.next
+    return node
+
+
+# https://leetcode-cn.com/problems/remove-duplicates-from-sorted-list-ii/
+def delete_duplicate(head):
+    """
+    删除所有包含重复数字的节点
+    节点已经是升序
+    :param head:
+    :return:
+    """
+    thead = ListNode('0')
+    thead.next = head
+    node = thead
+    while thead.next:
+        left = right = thead.next
+        # left right 指针不断移动，直到不想等为止
+        while right.next and right.next.val == left.val:
+            right = right.next
+        if left == right:
+            thead = thead.next
+        else:
+            thead.next = right.next
+    return node.next
+
+
+# https://leetcode-cn.com/problems/remove-duplicates-from-sorted-list-ii/
+def delete_duplicate_(head):
+    """
+    删除所有包含重复数字的节点，递归解法
+    节点已经是升序
+    :param head:
+    :return:
+    """
+    if not head:
+        return head
+    # 找到相同的数
+    if head.next and head.val == head.next.val:
+        while head.next and head.val == head.next.val:
+            head = head.next
+        # 从下一个不相同的数开始递归
+        return delete_duplicate_(head.next)
+    else:
+        head.next = delete_duplicate_(head.next)
+    return head
+
+
+# https://leetcode-cn.com/problems/partition-list/
+class Solution1(object):
+    def partition(self, head: ListNode, x: int) -> ListNode:
+        if not head or not head.next:
+            return head
+        # l1, l2 = head, head.next
+        # new_head = l1
+        # while l2:
+        #     if l2.val < x:
+        #         l1 = l1.next
+        #         l1.val, l2.val = l2.val, l1.val
+        #     l2 = l2.next
+        # l1.val, head.val = head.val, l1.val
+        # return new_head
+        part1, part2 = ListNode('None'), ListNode('None')
+        new_head1, new_head2 = part1, part2
+        while head:
+            if head.val < x:
+                part1.next = head
+                part1 = part1.next
+            else:
+                part2.next = head
+                part2 = part2.next
+            head = head.next
+        part1.next = new_head2.next
+        return new_head1.next
+
+
+# https://leetcode-cn.com/problems/reorder-list/
+def reorder_linked(head):
+    if not head or not head.next:
+        return head
+    slow, fast = head, head.next
+    while fast and fast.next:
+        slow = slow.next
+        fast = fast.next.next
+    part2 = slow.next
+    node_stack = list()
+    while part2:
+        node_stack.append(part2)
+        part2 = part2.next
+
+    slow.next = None
+    while head and node_stack:
+        temp = head.next
+        head.next = node_stack.pop()
+        head.next.next = temp
+        head = temp
+
+
+# https://leetcode-cn.com/problems/palindrome-linked-list/
+class IsPalindrome(object):
+    def is_palindrome(self, head):
+        self.front_pointer = head
+
+        def check(current_node=head):
+            if current_node is not None:
+                if not check(current_node.next):
+                    return False
+                if self.front_pointer.val != current_node.val:
+                    return False
+                self.front_pointer = self.front_pointer.next
+            return True
+        return check()
+
+
 if __name__ == '__main__':
+    _h = ListNode(1, ListNode(2, ListNode(2, ListNode(1))))
+    IsPalindrome().is_palindrome(_h)
+
+    _h = ListNode(1, ListNode(2, ListNode(3, ListNode(4))))
+    reorder_linked(_h)
+
+    # [1,4,3,2,5,2]
+    _h = ListNode(1, ListNode(4, ListNode(3, ListNode(2, ListNode(5, ListNode(2))))))
+    new = Solution1().partition(_h, 3)
+
+    _h = ListNode(1, ListNode(2, ListNode(3, ListNode(4, ListNode(5, ListNode(6, ListNode(7)))))))
+    rev = Solution().reverseBetween(_h, 3, 5)
+
+    # _h = Node(1, Node(1, Node(3, Node(4, Node(4, Node(6, Node(7)))))))
+    # _h = Node(1, Node(1, Node(2, Node(2, Node(2)))))
+    # [1, 2, 3, 3, 4, 4, 5]
+    _h = Node(1, Node(2, Node(3, Node(3, Node(4, Node(4, Node(5)))))))
+
+    res = delete_duplicate_(_h)
+
+    remove_res = remove_duplicate(_h)
+    while remove_res:
+        print(remove_res.data)
+        remove_res = remove_res.next
+
     import copy
     h = Node(1, Node(2, Node(3, Node(4, Node(5, Node(6, Node(7)))))))
 
@@ -298,7 +440,7 @@ if __name__ == '__main__':
     print(reverse_res)
 
     # sort list
-    sort_res = sort_list(sort_arg)
+    sort_res = sort_linked(sort_arg)
     sort_result = list()
     while sort_res:
         sort_result.append(sort_res.data)
@@ -309,7 +451,7 @@ if __name__ == '__main__':
 
     # sort list
     h3 = Node(5, Node(1, Node(2, Node(6, Node(4, Node(7, Node(3)))))))
-    sort_res1 = sort_list1(sort_arg1)
+    sort_res1 = sort_linked1(sort_arg1)
     sort_result = list()
     while sort_res1:
         sort_result.append(sort_res1.data)
