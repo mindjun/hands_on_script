@@ -2,6 +2,7 @@ import random
 import bisect
 import heapq
 from typing import List
+import collections
 
 
 # https://leetcode-cn.com/problems/container-with-most-water/
@@ -514,18 +515,103 @@ Solution().numIslands([["1", "1", "0", "0", "0"],
 def largest_rectangle_area(heights):
     if not heights:
         return 0
-    if len(heights) == 1:
-        return heights[0]
-
-    left, right = 0, len(heights) - 1
     _max_area = 0
-    while left <= right:
-        _max_area = max(_max_area, (right - left) * min(heights[left], heights[right]))
-        if heights[left] < heights[right]:
-            left += 1
-        else:
-            right -= 1
+
+    for i in range(len(heights)):
+        height = heights[i]
+        left = right = i
+        while left > 0 and heights[left - 1] >= height:
+            left -= 1
+        while right < len(heights) - 1 and heights[right + 1] >= height:
+            right += 1
+        _max_area = max(_max_area, (right - left + 1) * height)
     return _max_area
 
 
 print(largest_rectangle_area([2, 1, 5, 6, 2, 3]))
+
+
+# https://leetcode-cn.com/problems/largest-rectangle-in-histogram/
+# class Solution {
+#     public int largestRectangleArea(int[] heights) {
+#         // 这里为了代码简便，在柱体数组的头和尾加了两个高度为 0 的柱体。
+#         int[] tmp = new int[heights.length + 2];
+#         System.arraycopy(heights, 0, tmp, 1, heights.length);
+#
+#         Deque<Integer> stack = new ArrayDeque<>();
+#         int area = 0;
+#         for (int i = 0; i < tmp.length; i++) {
+#             // 对栈中柱体来说，栈中的下一个柱体就是其「左边第一个小于自身的柱体」；
+#             // 若当前柱体 i 的高度小于栈顶柱体的高度，说明 i 是栈顶柱体的「右边第一个小于栈顶柱体的柱体」。
+#             // 因此以栈顶柱体为高的矩形的左右宽度边界就确定了，可以计算面积🌶️ ～
+#             while (!stack.isEmpty() && tmp[i] < tmp[stack.peek()]) {
+#                 int h = tmp[stack.pop()];
+#                 area = Math.max(area, (i - stack.peek() - 1) * h);
+#             }
+#             stack.push(i);
+#         }
+#
+#         return area;
+#     }
+# }
+class Solution:
+    def largestRectangleArea(self, heights: List[int]) -> int:
+        stack = []
+        heights = [0] + heights + [0]
+        res = 0
+        for i in range(len(heights)):
+            while stack and heights[stack[-1]] > heights[i]:
+                tmp = stack.pop()
+                res = max(res, (i - stack[-1] - 1) * heights[tmp])
+            stack.append(i)
+        return res
+
+
+print(Solution().largestRectangleArea([2, 1, 5, 6, 2, 3]))
+
+
+# https://leetcode-cn.com/problems/01-matrix/
+# 多源点的 BFS
+def update_matrix(matrix: List[List[int]]) -> List[List[int]]:
+    m, n = len(matrix), len(matrix[0])
+    dist = [[0] * n for _ in range(m)]
+    zeroes_pos = [(i, j) for i in range(m) for j in range(n) if matrix[i][j] == 0]
+    # 将所有的 0 添加进初始队列中
+    q = collections.deque(zeroes_pos)
+    seen = set(zeroes_pos)
+
+    # 广度优先搜索
+    while q:
+        i, j = q.popleft()
+        for ni, nj in [(i - 1, j), (i + 1, j), (i, j - 1), (i, j + 1)]:
+            if 0 <= ni < m and 0 <= nj < n and (ni, nj) not in seen:
+                dist[ni][nj] = dist[i][j] + 1
+                q.append((ni, nj))
+                seen.add((ni, nj))
+
+    return dist
+
+
+__matrix = [[0, 0, 0],
+            [0, 1, 0],
+            [1, 1, 1]]
+print(f'update_matrix  {update_matrix(__matrix)}')
+
+
+# class Solution:
+#     def singleNumber(self, nums: int) -> List[int]:
+#         # difference between two numbers (x and y) which were seen only once
+#         bitmask = 0
+#         for num in nums:
+#             bitmask ^= num
+#
+#         # rightmost 1-bit diff between x and y
+#         diff = bitmask & (-bitmask)
+#
+#         x = 0
+#         for num in nums:
+#             # bitmask which will contain only x
+#             if num & diff:
+#                 x ^= num
+#
+#         return [x, bitmask^x]
