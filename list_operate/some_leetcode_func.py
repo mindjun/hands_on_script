@@ -21,7 +21,7 @@ def max_area(height):
     return area
 
 
-print(max_area([1, 8, 6, 2, 5, 4, 8, 3, 7]))
+print(f'max_area for [1, 8, 6, 2, 5, 4, 8, 3, 7] is {max_area([1, 8, 6, 2, 5, 4, 8, 3, 7])}')
 
 
 # https://leetcode-cn.com/problems/remove-duplicates-from-sorted-array/
@@ -38,6 +38,7 @@ def remove_duplicates(nums):
         if nums[left] != nums[right]:
             left += 1
             nums[left], nums[right] = nums[right], nums[left]
+            print(f'swap <{left}, {right}> for {nums}')
     print(f'remove_duplicates num is {nums}')
     return left + 1
 
@@ -107,11 +108,12 @@ def move_zero(nums):
     for i in range(len(nums)):
         if nums[i] != 0:
             nums[i], nums[zero] = nums[zero], nums[i]
+            print(f'swap <{i}, {zero}> for {nums}')
             zero += 1
     return nums
 
 
-print(move_zero([1, 2, 3, 0, 4, 0, 5, 6, 0, 7, 8]))
+print(f'remove zero for [1, 2, 3, 0, 4, 0, 5, 6, 0, 7, 8] is {move_zero([1, 2, 3, 0, 4, 0, 5, 6, 0, 7, 8])}')
 
 
 # https://leetcode-cn.com/problems/best-sightseeing-pair/
@@ -320,6 +322,7 @@ class CQueue(object):
 
 
 # 暴力解法
+# ##maximum-length-of-repeated-subarray
 # https://leetcode-cn.com/problems/maximum-length-of-repeated-subarray/
 def find_length(a, b):
     max_length = -1
@@ -333,6 +336,7 @@ def find_length(a, b):
     return max_length
 
 
+# ##maximum-length-of-repeated-subarray
 # https://leetcode-cn.com/problems/maximum-length-of-repeated-subarray/solution/zui-chang-zhong-fu-zi-shu-zu-by-leetcode-solution/
 class Solution(object):
     def find_length(self, a: List[int], b: List[int]) -> int:
@@ -350,6 +354,7 @@ print(Solution().find_length([0, 0, 0, 0, 0, 0, 1, 0, 0, 0], [0, 0, 0, 0, 0, 0, 
 
 
 # 滑动窗口，找到相同的位置，并对齐
+# ##maximum-length-of-repeated-subarray
 # https://leetcode-cn.com/problems/maximum-length-of-repeated-subarray/solution/zui-chang-zhong-fu-zi-shu-zu-by-leetcode-solution/
 class Solution:
     def findLength(self, A: List[int], B: List[int]) -> int:
@@ -520,8 +525,10 @@ def largest_rectangle_area(heights):
     for i in range(len(heights)):
         height = heights[i]
         left = right = i
+        # 分别向左和向右找到小于当前高度 height 的第一个值
         while left > 0 and heights[left - 1] >= height:
             left -= 1
+        # 向右找
         while right < len(heights) - 1 and heights[right + 1] >= height:
             right += 1
         _max_area = max(_max_area, (right - left + 1) * height)
@@ -584,6 +591,7 @@ def update_matrix(matrix: List[List[int]]) -> List[List[int]]:
     while q:
         i, j = q.popleft()
         for ni, nj in [(i - 1, j), (i + 1, j), (i, j - 1), (i, j + 1)]:
+            # 所有满足下标要求，并且不在 seen 中的坐标都是值为 1 的点
             if 0 <= ni < m and 0 <= nj < n and (ni, nj) not in seen:
                 dist[ni][nj] = dist[i][j] + 1
                 q.append((ni, nj))
