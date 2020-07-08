@@ -153,16 +153,53 @@ print(f'find_min for [2, 0, 1, 2, 2] is {find_min_ii([2, 0, 1, 2, 2])}')
 # https://leetcode-cn.com/problems/search-in-rotated-sorted-array/
 # 搜索旋转排序数组
 def search_in_rotated_sorted_list(nums, target):
-    start, end = 0, len(nums) - 1
-    while start < end:
-        mid = start + (end - start) // 2
-        if nums[mid] > nums[end]:
-            start = mid + 1
-        else:
-            end = mid
-    # [0 ... start]  升序
-    # [start ... end] 降序
-    if target < nums[start] or (start > 1 and target > nums[start - 1]):
+    if not nums:
         return -1
-    result = binary_search(nums[start:end][::-1] + nums[0:start], target)
-    return result
+    l, r = 0, len(nums) - 1
+    while l <= r:
+        mid = (l + r) // 2
+        if nums[mid] == target:
+            return mid
+        if nums[0] <= nums[mid]:
+            if nums[0] <= target < nums[mid]:
+                r = mid - 1
+            else:
+                l = mid + 1
+        else:
+            if nums[mid] < target <= nums[len(nums) - 1]:
+                l = mid + 1
+            else:
+                r = mid - 1
+    return -1
+
+
+# https://leetcode-cn.com/problems/search-in-rotated-sorted-array-ii/
+def search_in_rotated_sorted_list_ii(nums, target):
+    if not nums:
+        return False
+    l, r = 0, len(nums) - 1
+    start, end = 0, r
+    while l <= r:
+        if nums[l] == nums[r] and nums[l] != target:
+            l += 1
+            r -= 1
+            start += 1
+            end -= 1
+            continue
+        mid = (l + r) // 2
+        if nums[mid] == target:
+            return True
+        if nums[0] <= nums[mid]:
+            if nums[start] <= target < nums[mid]:
+                r = mid - 1
+            else:
+                l = mid
+        else:
+            if nums[mid] < target <= nums[end]:
+                l = mid + 1
+            else:
+                r = mid
+    return False
+
+
+print(search_in_rotated_sorted_list_ii([1, 3, 1, 1, 1], 3))
