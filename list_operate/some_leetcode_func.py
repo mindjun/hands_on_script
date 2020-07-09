@@ -623,3 +623,21 @@ print(f'update_matrix  {update_matrix(__matrix)}')
 #                 x ^= num
 #
 #         return [x, bitmask^x]
+
+
+# https://leetcode-cn.com/problems/longest-consecutive-sequence/submissions/
+def longest_consecutive_sequence(nums):
+    longest = 0
+    num_set = set(nums)
+
+    for num in num_set:
+        if num - 1 not in num_set:
+            current_num = num
+            current_longest = 1
+
+            while num + 1 in num_set:
+                # 因为是连续的序列，所以逐次进行判断
+                current_num += 1
+                current_longest += 1
+            longest = max(longest, current_longest)
+    return longest

@@ -1,5 +1,3 @@
-
-
 # https://leetcode-cn.com/problems/triangle/
 # dfs 解法，leetcode 超过时间限制
 # 给定一个三角形，找出自顶向下的最小路径和。每一步只能移动到下一行中相邻的结点上。
@@ -46,11 +44,11 @@ def minimum_total_dp_top_down(triangle):
         for j in range(len(triangle[i])):
             # 分为上一层没有左边值，没有右边值，正常的三种情况
             if j - 1 < 0:
-                dp[i][j] = dp[i-1][j] + triangle[i][j]
+                dp[i][j] = dp[i - 1][j] + triangle[i][j]
             elif j >= len(triangle[i]) - 1:
-                dp[i][j] = dp[i-1][j-1] + triangle[i][j]
+                dp[i][j] = dp[i - 1][j - 1] + triangle[i][j]
             else:
-                dp[i][j] = min(dp[i-1][j], dp[i-1][j-1]) + triangle[i][j]
+                dp[i][j] = min(dp[i - 1][j], dp[i - 1][j - 1]) + triangle[i][j]
 
     print(f'minimum_total_dp is {dp}')
     return min(dp[-1])
@@ -66,7 +64,7 @@ def minimum_total_with_cache(triangle):
 
         if cache[x][y] != -1:
             return cache[x][y]
-        cache[x][y] = min(dfs(x+1, y), dfs(x+1, y+1)) + triangle[x][y]
+        cache[x][y] = min(dfs(x + 1, y), dfs(x + 1, y + 1)) + triangle[x][y]
         return cache[x][y]
 
     res = dfs(0, 0)
@@ -83,22 +81,77 @@ def minimum_total_dp(triangle):
 
     for i in range(len(triangle) - 1)[::-1]:
         for j in range(len(triangle[i])):
-            dp[i][j] = triangle[i][j] + min(dp[i+1][j], dp[i+1][j+1])
+            dp[i][j] = triangle[i][j] + min(dp[i + 1][j], dp[i + 1][j + 1])
     print(f'minimum_total_dp is {dp}')
     return dp[0][0]
 
 
 triangle_ = [
-        [2],
-      [3, 4],
-     [6, 5, 7],
-   [4, 1, 8, 3]
+    [2],
+    [3, 4],
+    [6, 5, 7],
+    [4, 1, 8, 3]
 ]
 triangle__ = [
-         [1],
-       [-2, -5],
-      [3, 6, 9],
+    [1],
+    [-2, -5],
+    [3, 6, 9],
     [-1, 2, 4, -3]]
+print(minimum_total(triangle__))
 print(minimum_total_with_cache(triangle__))
 print(minimum_total_dp(triangle__))
 print(minimum_total_dp_top_down(triangle__))
+
+
+# https://leetcode-cn.com/problems/minimum-path-sum/
+# 自底向上
+def min_path_sum_cache(nums):
+    cache = [[-1] * (len(nums[0]) + 1) for _ in range(len(nums) + 1)]
+
+    def dfs(x, y):
+        if x == len(nums) - 1 and y == len(nums[-1]) - 1:
+            return nums[-1][-1]
+
+        # x 到达最下边，只能移动 y
+        if x == len(nums) - 1:
+            cache[x][y] = dfs(x, y + 1) + nums[x][y]
+            return cache[x][y]
+        # y 到达最右边，只能移动 x
+        if y == len(nums[x]) - 1:
+            cache[x][y] = dfs(x + 1, y) + nums[x][y]
+            return cache[x][y]
+
+        if cache[x][y] != -1:
+            return cache[x][y]
+
+        cache[x][y] = min(dfs(x + 1, y), dfs(x, y + 1)) + nums[x][y]
+        return cache[x][y]
+
+    # 从 (0, 0) 的位置开始遍历
+    res = dfs(0, 0)
+    print(cache)
+    return res
+
+
+print(min_path_sum_cache([[1, 3, 1], [1, 5, 1], [4, 2, 1]]))
+
+
+def min_path_sum_dp(nums):
+    dp = [[-1] * len(nums[0]) for _ in nums]
+
+    for i in range(0, len(nums))[::-1]:
+        for j in range(0, len(nums[i]))[::-1]:
+            if i == len(nums) - 1 and j != len(nums[i]) - 1:
+                dp[i][j] = nums[i][j] + dp[i][j+1]
+            elif j == len(nums[i]) - 1 and i != len(nums) - 1:
+                dp[i][j] = nums[i][j] + dp[i+1][j]
+            elif i != len(nums) - 1 and j != len(nums[i]) - 1:
+                dp[i][j] = min(dp[i+1][j], dp[i][j+1]) + nums[i][j]
+            else:
+                dp[i][j] = nums[i][j]
+    return dp[0][0]
+
+# 1、state: f[x][y]从起点走到 x,y 的最短路径
+# 2、function: f[x][y] = min(f[x-1][y], f[x][y-1]) + A[x][y]
+# 3、initialization: f[0][0] = A[0][0]、f[i][0] = sum(0,0 -> i,0)、 f[0][i] = sum(0,0 -> 0,i)
+# 4、answer: f[n-1][m-1]
