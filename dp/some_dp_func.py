@@ -89,15 +89,15 @@ def minimum_total_dp(triangle):
 
 
 triangle_ = [
-    [2],
-    [3, 4],
-    [6, 5, 7],
-    [4, 1, 8, 3]
+        [2],
+      [3, 4],
+     [6, 5, 7],
+   [4, 1, 8, 3]
 ]
 triangle__ = [
-    [1],
-    [-2, -5],
-    [3, 6, 9],
+         [1],
+       [-2, -5],
+      [3, 6, 9],
     [-1, 2, 4, -3]]
 print(minimum_total_with_cache(triangle__))
 print(minimum_total_dp(triangle__))
