@@ -136,22 +136,66 @@ def min_path_sum_cache(nums):
 print(min_path_sum_cache([[1, 3, 1], [1, 5, 1], [4, 2, 1]]))
 
 
+# 自顶向下，需要考虑下标越界的情况
 def min_path_sum_dp(nums):
     dp = [[-1] * len(nums[0]) for _ in nums]
+    dp[0][0] = nums[0][0]
 
-    for i in range(0, len(nums))[::-1]:
-        for j in range(0, len(nums[i]))[::-1]:
-            if i == len(nums) - 1 and j != len(nums[i]) - 1:
-                dp[i][j] = nums[i][j] + dp[i][j+1]
-            elif j == len(nums[i]) - 1 and i != len(nums) - 1:
-                dp[i][j] = nums[i][j] + dp[i+1][j]
-            elif i != len(nums) - 1 and j != len(nums[i]) - 1:
-                dp[i][j] = min(dp[i+1][j], dp[i][j+1]) + nums[i][j]
-            else:
-                dp[i][j] = nums[i][j]
-    return dp[0][0]
+    for i in range(len(nums)):
+        for j in range(len(nums[i])):
+            if i == 0 and j == 0:
+                continue
+            if i == 0:
+                dp[i][j] = dp[i][j - 1] + nums[i][j]
+                continue
+            if j == 0:
+                dp[i][j] = dp[i - 1][j] + nums[i][j]
+                continue
+            dp[i][j] = min(dp[i - 1][j], dp[i][j - 1]) + nums[i][j]
+    return dp[-1][-1]
 
-# 1、state: f[x][y]从起点走到 x,y 的最短路径
-# 2、function: f[x][y] = min(f[x-1][y], f[x][y-1]) + A[x][y]
-# 3、initialization: f[0][0] = A[0][0]、f[i][0] = sum(0,0 -> i,0)、 f[0][i] = sum(0,0 -> 0,i)
-# 4、answer: f[n-1][m-1]
+
+path_ = [
+    [1, 3, 1],
+    [1, 5, 1],
+    [4, 2, 1]
+]
+print(min_path_sum_dp(path_))
+
+
+# https://leetcode-cn.com/problems/unique-paths/
+# 回溯的方法，顺便能拿到路径
+def unique_paths_dfs(m, n):
+    path_count = 0
+    path_list = list()
+
+    def dfs(x, y, path):
+        if x == m or y == n:
+            return
+
+        if x == m - 1 and y == n - 1:
+            nonlocal path_count
+            path_count += 1
+            path_list.append(path.copy())
+            return
+
+        path.append((x, y))
+        dfs(x+1, y, path)
+        path.pop()
+
+        path.append((x, y))
+        dfs(x, y+1, path)
+        path.pop()
+
+    dfs(0, 0, [])
+    for _path in path_list:
+        path_str = ''
+        for sub_path in _path:
+            path_str += f'{sub_path} ==> '
+        path_str = path_str + f'{(m-1, n-1)}'
+        print(path_str)
+    return path_count
+
+
+print(unique_paths_dfs(3, 7))
+
