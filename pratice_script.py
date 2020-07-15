@@ -236,26 +236,6 @@ def is_sub_sequence(s, t):
     return i == len(s)
 
 
-def coin_change(coins, amount):
-    dp = [amount + 1 for _ in range(amount + 1)]
-    dp[0] = 0
-    result = defaultdict(list)
-    for n in range(0, amount + 1):
-        for coin in coins:
-            if n - coin < 0:
-                continue
-            # dp[n] = min(dp[n], 1 + dp[n - coin])
-            if dp[n] < 1 + dp[n - coin]:
-                continue
-            else:
-                dp[n] = 1 + dp[n - coin]
-                result[n].append(coin)
-    return dp, result
-
-
-print('coin_change ', coin_change([1, 2, 5], 11))
-
-
 # def sliding_windows(s, t):
 #     need, windows = defaultdict(int), defaultdict(int)
 #     for c in t:
@@ -598,28 +578,6 @@ def sub_array_sum(nums, k):
     return ans
 
 
-def length_of_lis(nums):
-    """
-    最长上升子序列
-    :param nums:
-    :return:
-    """
-    # dp[i] 表示以 nums[i] 这个数结尾的最长递增子序列的长度
-    dp = [1 for _ in range(len(nums))]
-    for i in range(len(nums)):
-        for j in list(range(0, i)):
-            if nums[i] > nums[j]:
-                dp[i] = max(dp[i], dp[j] + 1)
-    res = 0
-    for i in range(len(nums)):
-        res = max(res, dp[i])
-    return res
-
-
-# dp == [1, 2, 2, 3, 2, 3]
-print(length_of_lis([1, 4, 3, 4, 2, 3]))
-
-
 class Solution:
     def jump(self, nums) -> int:
         # jumps = 0
@@ -671,7 +629,7 @@ print(Solution().jump([2, 3, 1, 1, 4]))
 #             return 1 if x < _i else 0
 #         while True:
 #             part_1 = pow(10, len_str)
-# https://www.cnblogs.com/duanxz/p/9662862.html
+# https://www.cnblogs.com/cyjb/p/digitOccurrenceInRegion.html
 def count(n, x):
     cnt, k, i = 0, n, 1
     while True:

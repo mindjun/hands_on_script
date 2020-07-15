@@ -292,3 +292,218 @@ def jump(nums):
 
 
 print(jump([2, 3, 1, 1, 4]))
+
+# https://leetcode-cn.com/problems/jump-game-ii/
+# 从后往前，每次都找到能到达当前位置的点，并跳到改点
+# 贪心算法
+def jump_ii(nums):
+    size, step = len(nums), 0
+    position = size - 1
+
+    while position > 0:
+        # 我们可以从左到右遍历数组，选择第一个满足要求的位置
+        for i in range(position):
+            if i + nums[i] >= position:
+                position = i
+                step += 1
+                break
+    return step
+
+
+print(jump_ii([2, 3, 1, 1, 4]))
+
+
+# 贪心算法
+# 从前往后，每次都取当前节点能到达的最大位置
+# 我们维护当前能够到达的最大下标位置，记为边界。我们从左到右遍历数组，到达边界时，更新边界并将跳跃次数增加 1
+def jump_ii_(nums):
+    step = end = max_position = 0
+    size = len(nums)
+    for i in range(size - 1):
+        if max_position >= i:
+            max_position = max(max_position, i + nums[i])
+
+            if i == end:
+                end = max_position
+                step += 1
+    return step
+
+
+# https://leetcode-cn.com/problems/palindrome-partitioning-ii/
+# https://leetcode-cn.com/problems/palindrome-partitioning-ii/solution/dong-tai-gui-hua-hui-su-zhu-xing-jie-shi-python3-b/
+def min_cut(s):
+    size = len(s)
+    # 长度为 n 的字符串最少分割的次数为 min_list[n]
+    min_list = list(range(size))
+
+    # dp[i][j] 代表 s[i..j] 是否为回文
+    dp = [[False] * size for _ in range(size)]
+    # 循环 i [0..size] 和 j [i..size+1]
+    for j in range(size):
+        for i in range(j + 1):
+            # i..j 为回文的条件为 s[i] == s[j] 并且 (i+1 ... j-1 是回文 或者 i..j 的长度为 1)
+            if s[i] == s[j] and (j - i < 2 or dp[i + 1][j - 1]):
+                dp[i][j] = True
+                # 若 i==0，开始位置为 0，说明s[0...j] s[0...j]为回文串，
+                # 则此时 min_cut[j]=0，表示到 j 位置的子串不需要进行切割，自身就是回文子串
+                if i == 0:
+                    min_list[j] = 0
+                else:
+                    # 始终为到上一回文串位置的切割次数加1中的最小值
+                    min_list[j] = min(min_list[j], min_list[i - 1] + 1)
+    return min_list[-1]
+
+
+# https://leetcode-cn.com/problems/longest-increasing-subsequence/
+def length_of_lis(nums):
+    """
+    最长上升子序列
+    :param nums:
+    :return:
+    """
+    # dp[i] 表示以 nums[i] 这个数结尾的最长递增子序列的长度
+    dp = [1 for _ in range(len(nums))]
+    for i in range(len(nums)):
+        for j in list(range(0, i)):
+            if nums[i] > nums[j]:
+                dp[i] = max(dp[i], dp[j] + 1)
+    res = 0
+    for i in range(len(nums)):
+        res = max(res, dp[i])
+    return res
+
+
+# dp == [1, 2, 2, 3, 2, 3]
+print(length_of_lis([1, 4, 3, 4, 2, 3]))
+
+
+# https://leetcode-cn.com/problems/word-break/
+class Solution:
+    def wordBreak(self, s: str, wordDict: List[str]) -> bool:
+        # 带缓存的回溯方法
+        # import functools
+        # @functools.lru_cache(None)
+        # def back_track(s):
+        #     if not s:
+        #         return True
+        #     res = False
+        #     for i in range(1, len(s) + 1):
+        #         if s[:i] in wordDict:
+        #             res = back_track(s[i:]) or res
+        #     return res
+        #
+        # return back_track(s)
+
+        n = len(s)
+        # 初始化为 False
+        dp = [False] * (n + 1)
+        # 空字符串可以被表示
+        dp[0] = True
+        for i in range(n):
+            for j in range(i + 1, n + 1):
+                # 如果前 i 个字符可以被 wordDict 表示，并且 [i...j] 可以被 wordDict 表示，那么前 j 个字符也可以被表示
+                if dp[i] and (s[i:j] in wordDict):
+                    dp[j] = True
+        return dp[-1]
+
+
+def word_break(s, word_dict):
+    import functools
+
+    @functools.lru_cache(None)
+    def back_track(_s):
+        if not _s:
+            return True
+        res = False
+        for i in range(1, len(_s) + 1):
+            if _s[:i] in word_dict:
+                res = back_track(_s[i:]) or res
+        return res
+
+    return back_track(s)
+
+
+# https://leetcode-cn.com/problems/longest-common-subsequence/
+def longest_common_sub_sequence(text1: str, text2: str) -> int:
+    len1, len2 = len(text1), len(text2)
+    # 需要考虑字符串为空的时候，所以 dp 的长度都需要为 size + 1, 并且 dp[i][0] = 0
+    dp = [[0 for _ in range(len2 + 1)] for _ in range(len1 + 1)]
+    # dp[i][j] 为 text1[:i] 与 text2[:j] 的最长公共子序列
+    for i in range(1, len1 + 1):
+        for j in range(1, len2 + 1):
+            if text1[i - 1] == text2[j - 1]:
+                dp[i][j] = dp[i - 1][j - 1] + 1
+            else:
+                dp[i][j] = max(dp[i - 1][j], dp[i][j - 1])
+    return dp[-1][-1]
+
+
+# https://leetcode-cn.com/problems/edit-distance/
+# dp[i][j] = min(dp[i-1][j-1], dp[i-1][j] + 1, dp[i][j-1] + 1)
+def min_distance(str1, str2):
+    size1, size2 = len(str1), len(str2)
+    # 需要考虑字符串为空，所以 dp 的长度需要 size + 1
+    dp = [[(size1 + size2) for _ in range(size2 + 1)] for _ in range(size1 + 1)]
+
+    # 初始化 dp[i][0] = 0
+    for i in range(size1 + 1):
+        dp[i][0] = i
+    # 初始化 dp[0][j] = 0
+    for j in range(size2 + 1):
+        dp[0][j] = j
+
+    # print(dp)
+
+    for i in range(1, size1 + 1):
+        for j in range(1, size2 + 1):
+            if str1[i - 1] == str2[j - 1]:
+                dp[i][j] = dp[i - 1][j - 1]
+            else:
+                dp[i][j] = min(dp[i - 1][j], dp[i][j - 1], dp[i - 1][j - 1]) + 1
+
+    # print(dp)
+    return dp[-1][-1]
+
+
+# abcd->eebcc
+print(min_distance('abcd', 'eebcc'))
+
+
+# https://leetcode-cn.com/problems/coin-change/
+def coin_change(coins, amount):
+    dp = [amount + 1 for _ in range(amount + 1)]
+    # 一定要初始化 dp[0] = 0
+    dp[0] = 0
+    result = defaultdict(list)
+    for n in range(0, amount + 1):
+        for coin in coins:
+            # coin
+            if n - coin < 0:
+                continue
+            # dp[n] = min(dp[n], 1 + dp[n - coin])
+            if dp[n] < 1 + dp[n - coin]:
+                continue
+            else:
+                dp[n] = 1 + dp[n - coin]
+                result[n].append(coin)
+    return dp[-1], result
+
+
+print('coin_change ', coin_change([1, 2, 5], 11))
+
+
+def coin_change_(coins, amount):
+    dp = [amount + 1] * (amount + 1)
+    # 一定要初始化 dp[0] = 0
+    dp[0] = 0
+
+    for i in range(0, amount + 1):
+        for coin in coins:
+            if i - coin < 0:
+                continue
+            dp[i] = min(dp[i], 1 + dp[i - coin])
+
+    return -1 if dp[-1] == amount + 1 else dp[-1]
+
+
+print('coin_change ', coin_change_([2], 3))
