@@ -180,11 +180,11 @@ def unique_paths_dfs(m, n):
             return
 
         path.append((x, y))
-        dfs(x+1, y, path)
+        dfs(x + 1, y, path)
         path.pop()
 
         path.append((x, y))
-        dfs(x, y+1, path)
+        dfs(x, y + 1, path)
         path.pop()
 
     dfs(0, 0, [])
@@ -192,10 +192,45 @@ def unique_paths_dfs(m, n):
         path_str = ''
         for sub_path in _path:
             path_str += f'{sub_path} ==> '
-        path_str = path_str + f'{(m-1, n-1)}'
+        path_str = path_str + f'{(m - 1, n - 1)}'
         print(path_str)
     return path_count
 
 
 print(unique_paths_dfs(3, 7))
 
+
+# https://leetcode-cn.com/problems/jump-game-ii/
+# 从后往前，每次都找到能到达当前位置的点，并跳到改点
+# 贪心算法
+def jump_ii(nums):
+    size, step = len(nums), 0
+    position = size - 1
+
+    while position > 0:
+        # 因为是从前往后，所以每次能跳到 position 位置的点一定是跳次数最少的点
+        for i in range(position):
+            if i + nums[i] >= position:
+                position = i
+                step += 1
+                break
+    return step
+
+
+print(jump_ii([2, 3, 1, 1, 4]))
+
+
+# 贪心算法
+# 从前往后，每次都取当前节点能到达的最大位置
+def jump_ii_(nums):
+    step = end = max_position = 0
+    size = len(nums)
+    # 不需要访问最后一个元素 ?
+    for i in range(size - 1):
+        if max_position >= i:
+            max_position = max(max_position, i + nums[i])
+
+            if i == end:
+                end = max_position
+                step += 1
+    return step
