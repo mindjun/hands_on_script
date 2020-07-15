@@ -1,3 +1,7 @@
+from typing import List
+from collections import defaultdict
+
+
 # https://leetcode-cn.com/problems/triangle/
 # dfs 解法，leetcode 超过时间限制
 # 给定一个三角形，找出自顶向下的最小路径和。每一步只能移动到下一行中相邻的结点上。
@@ -292,6 +296,7 @@ def jump(nums):
 
 
 print(jump([2, 3, 1, 1, 4]))
+
 
 # https://leetcode-cn.com/problems/jump-game-ii/
 # 从后往前，每次都找到能到达当前位置的点，并跳到改点
