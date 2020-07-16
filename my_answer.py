@@ -18,6 +18,7 @@ def reverse_string(s):
 # 4
 def timeout(max_time):
     def decorated(func):
+        
         @wraps(func)
         def wrapper(*args, **kwargs):
             start = int(time.time())

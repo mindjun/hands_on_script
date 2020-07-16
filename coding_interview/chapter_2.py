@@ -109,9 +109,9 @@ def max_product_area_after_cutting(length):
     if length == 3:
         return 2
 
-    # todo dp 初始化的时候为啥是 ？？
+    # dp 初始化的时候为另外的长度乘以 1, 2, 3 的值，所以 dp 初始化为以下值
     # 长度为 1 面积为 1
-    # 长度为 2 面积为 1 * 2
+    # 长度为 2 面积为 2
     # 长度为 3 面积为 3
     dp = [0 for _ in range(length + 1)]
     dp[0] = 0
@@ -121,7 +121,7 @@ def max_product_area_after_cutting(length):
 
     for i in range(4, length + 1):
         temp_max = 0
-        for j in range(1, i):
+        for j in range(1, i//2 + 1):
             product_area = dp[j] * dp[i - j]
             temp_max = max(temp_max, product_area)
         dp[i] = temp_max
