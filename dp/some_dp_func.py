@@ -525,20 +525,3 @@ def coin_change__(coins, amount):
     if dp[-1] == amount + 1:
         return -1
     return dp[-1]
-
-
-# 背包问题
-# https://zhuanlan.zhihu.com/p/152166707
-# dp[i][j] 定义为前 i 个物品放入空间大小为 j 时候占用的最大体积
-# dp[i][j] = max(dp[i-1][j], dp[i-1][j-nums[i]] + nums[i])
-def back_pack(m, weights, values):
-    size = len(weights)
-    dp = [[0] * (m + 1) for _ in range(size + 1)]
-
-    for i in range(1, size + 1):
-        for j in range(1, m + 1):
-            if weights[i-1] <= j:
-                dp[i][j] = max(dp[i-1][j], dp[i-1][j-weights[i-1]] + values[i-1])
-            else:
-                dp[i][j] = dp[i-1][j]
-    return dp[-1][-1]
