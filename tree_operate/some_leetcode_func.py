@@ -667,3 +667,22 @@ def layer_travel(root):
 
 
 print(layer_travel(_root))
+
+
+# https://leetcode-cn.com/problems/unique-binary-search-trees-ii/
+def generate_tree(n):
+    def generate_tree_rec(i, j):
+        if i > j:
+            return [None]
+
+        result = list()
+        for m in range(i, j+1):
+            left = generate_tree_rec(i, m-1)
+            right = generate_tree_rec(m+1, j)
+
+            for l in left:
+                for r in right:
+                    result.append(TreeNode(m, l, r))
+        return result
+
+    return generate_tree_rec(1, n) if n > 0 else []
