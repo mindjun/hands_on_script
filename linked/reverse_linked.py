@@ -132,7 +132,7 @@ def every_two_reverse(head):
     :return:
     """
     if head is None or head.next is None:
-        return
+        return head
     new_head = head.next
     while head is not None and head.next is not None:
         next = head.next

@@ -583,8 +583,8 @@ def is_balance_tree(root):
             return 0
 
         # 计算树深度的同时判断是否是平衡树
-        left_depth = is_balance_helper(root.left) + 1
-        right_depth = is_balance_helper(root.right) + 1
+        left_depth = is_balance_helper(node.left) + 1
+        right_depth = is_balance_helper(node.right) + 1
 
         if abs(left_depth - right_depth) > 1:
             flag = False
@@ -667,3 +667,22 @@ def layer_travel(root):
 
 
 print(layer_travel(_root))
+
+
+# https://leetcode-cn.com/problems/unique-binary-search-trees-ii/
+def generate_tree(n):
+    def generate_tree_rec(i, j):
+        if i > j:
+            return [None]
+
+        result = list()
+        for m in range(i, j+1):
+            left = generate_tree_rec(i, m-1)
+            right = generate_tree_rec(m+1, j)
+
+            for l in left:
+                for r in right:
+                    result.append(TreeNode(m, l, r))
+        return result
+
+    return generate_tree_rec(1, n) if n > 0 else []

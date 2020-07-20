@@ -527,18 +527,77 @@ def coin_change__(coins, amount):
     return dp[-1]
 
 
-# 背包问题
-# https://zhuanlan.zhihu.com/p/152166707
-# dp[i][j] 定义为前 i 个物品放入空间大小为 j 时候占用的最大体积
-# dp[i][j] = max(dp[i-1][j], dp[i-1][j-nums[i]] + nums[i])
-def back_pack(m, weights, values):
-    size = len(weights)
-    dp = [[0] * (m + 1) for _ in range(size + 1)]
+# https://leetcode-cn.com/problems/maximum-product-subarray/
+def max_product(nums):
+    dp_max = [float('-inf')] * (len(nums) + 1)
+    dp_min = [float('inf')] * (len(nums) + 1)
+    dp_max[0] = 1
+    dp_min[0] = 1
 
-    for i in range(1, size + 1):
-        for j in range(1, m + 1):
-            if weights[i-1] <= j:
-                dp[i][j] = max(dp[i-1][j], dp[i-1][j-weights[i-1]] + values[i-1])
-            else:
-                dp[i][j] = dp[i-1][j]
-    return dp[-1][-1]
+    for index, item in enumerate(nums, 1):
+        dp_max[index] = max(item, dp_max[index - 1] * item, dp_min[index - 1] * item)
+        dp_min[index] = min(item, dp_max[index - 1] * item, dp_min[index - 1] * item)
+    return max(dp_max[1:])
+
+
+print(max_product([-2, 3, -4]))
+
+
+# 滚动数组的空间优化
+# 第 i、个状态只和第 i-1 个状态有关
+def max_product_ii(nums):
+    max_f, min_f, res = nums[0], nums[0], nums[0]
+    for item in nums[1:]:
+        # 使用临时变量保存上一次的计算结果
+        temp_max, temp_min = max_f, min_f
+        max_f = max(temp_max * item, temp_min * item, item)
+        min_f = min(temp_max * item, temp_min * item, item)
+        res = max(max_f, res)
+    return res
+
+
+print(max_product_ii([-4, -3, -2]))
+
+
+# https://leetcode-cn.com/problems/decode-ways/solution/dong-tai-gui-hua-by-chuan-12/
+# 设数字串S的前i个数字解密成字母串有dp[i]种方式：那么就有dp[i] = dp[i-1] + dp[i-2]
+def num_decoding(s):
+    if not s:
+        return 0
+
+    dp = [0] * (len(s) + 1)
+    dp[0] = 1
+
+    for i in range(1, len(s) + 1):
+        t = int(s[i-1])
+        if 1 <= t <= 9:
+            dp[i] += dp[i-1]
+        if i >= 2:
+            t = int(s[i-2]) * 10 + int(s[i-1])
+            if 9 < t < 27:
+                dp[i] += dp[i-2]
+    return dp[-1]
+
+
+print(num_decoding('226'))
+
+
+# 空间优化，因为 dp[i] 的状态只与 i-1 和 i-2 有关，所以只需要保存前面的两个状态
+def num_decoding_ii(s):
+    if not s:
+        return 0
+
+    def valid_2(index):
+        if index < 1:
+            return 0
+        num = int(s[index-1:index+1])
+        return int(9 < num < 27)
+
+    dp_1, dp_2 = 1, 0
+    for i in range(len(s)):
+        dp_1, dp_2 = dp_1 * int(s[i] != '0') + dp_2 * valid_2(i), dp_1
+
+    return dp_1
+
+
+print(num_decoding_ii('226'))
