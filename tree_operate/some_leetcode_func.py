@@ -583,8 +583,8 @@ def is_balance_tree(root):
             return 0
 
         # 计算树深度的同时判断是否是平衡树
-        left_depth = is_balance_helper(root.left) + 1
-        right_depth = is_balance_helper(root.right) + 1
+        left_depth = is_balance_helper(node.left) + 1
+        right_depth = is_balance_helper(node.right) + 1
 
         if abs(left_depth - right_depth) > 1:
             flag = False
