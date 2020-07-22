@@ -400,6 +400,48 @@ class IsPalindrome(object):
         return check()
 
 
+# 剑指 offer， 面试题 13，在 O(1) 的时间复杂度内删除一个链表的节点
+# 将 node.next 的值替换 node 的值达到效果
+def delete_node_in_o1(head, node):
+    # 只有一个节点
+    if node == head:
+        del head
+    # node 是尾节点，这时候只能循环
+    if node.next is None:
+        while head:
+            if head.next == node:
+                head.next = None
+            head = head.next
+    else:
+        # 替换值并删除
+        node.val = node.next.val
+        n_node = node.next
+        node.next = n_node.next
+        del n_node
+
+
+# 链表中倒数第 k 个节点
+# 需要考虑 k < 0 以及 链表长度小于 k 的情况
+def last_kth(head, k):
+    if not head or k < 0:
+        return None
+
+    fast = head
+    while fast and k >= 1:
+        fast = fast.next
+        k -= 1
+
+    # 链表的长度大于 k
+    if k != 0:
+        return None
+
+    slow = head
+    while fast:
+        slow = slow.next
+        fast = fast.next
+    return slow
+
+
 if __name__ == '__main__':
     _h = ListNode(1, ListNode(2, ListNode(2, ListNode(1))))
     IsPalindrome().is_palindrome(_h)
