@@ -24,6 +24,7 @@ from copy import deepcopy
 # // 路径：记录在 track 中
 # // 选择列表：nums 中不存在于 track 的那些元素
 # // 结束条件：nums 中的元素全都在 track 中出现
+# 没有重复的情况
 def permute(list1):
     _track, res = list(), list()
 
@@ -49,6 +50,7 @@ print(f'permute for [1, 2, 3], A(3, 2) is {permute([1, 2, 3])}')
 
 # https://leetcode-cn.com/problems/permutations-ii/submissions/
 # https://leetcode-cn.com/problems/permutations-ii/solution/hui-su-suan-fa-by-powcai-3/
+# 存在重复字符的情况下，需要先排序，并且在回溯的时候需要判断该字符是否与前一个字符相等，避免重复处理
 def permute_ii(nums):
     if not nums:
         return []
@@ -64,11 +66,53 @@ def permute_ii(nums):
         for i in range(len(_nums)):
             helper(_nums[:i] + _nums[i+1:], track + [_nums[i]], length + 1)
 
-    helper(nums, _track, 0)
+    def back_track(_nums, track):
+        if not _nums:
+            res.append(track.copy())
+            return
+        for idx, num in enumerate(_nums):
+            if idx > 0 and _nums[idx] == _nums[idx - 1]:
+                continue
+            track.append(num)
+            back_track(_nums[:idx] + _nums[idx + 1:], track)
+            track.pop()
+
+    # helper(nums, _track, 0)
+    back_track(nums, [])
     return res
 
 
 print(permute_ii([1, 1, 2]))
+
+
+# 使用回溯的时候会遇到一些重复字符的错误
+# 需要先进行排序
+def permutation(s):
+    if not s:
+        return []
+
+    result_list = list()
+
+    def back_pack(s_, track):
+        if not s_:
+            result_list.append(''.join(track))
+            return
+
+        for idx, ch in enumerate(s_):
+            # 有可能回出现重复的字符，如果当前的字符已经处理过，就跳过
+            if idx > 0 and s_[idx] == s_[idx - 1]:
+                continue
+            track.append(ch)
+            back_pack(s_[:idx] + s_[idx + 1:], track)
+            track.pop()
+
+    # 先进行排序
+    s = list(sorted(s))
+    back_pack(s, [])
+    return result_list
+
+
+print(permutation('aab'))
 
 
 # 组合
@@ -143,27 +187,36 @@ def combine_sum(candidates, target):
 print(combine_sum([8, 7, 4, 3], 11))
 
 
-# https://github.com/dashidhy/algorithm-pattern-python/blob/master/advanced_algorithm/backtrack.md
+# https://leetcode-cn.com/problems/combination-sum-ii/submissions/
+# 以下链接解释了为什么能避免重复
+# https://leetcode-cn.com/problems/combination-sum-ii/solution/hui-su-suan-fa-jian-zhi-python-dai-ma-java-dai-m-3/
 def combine_sum_ii(candidates, target):
     size = len(candidates)
+    if size == 0:
+        return []
+
+    # 会出现重复元素的情况下都先排序
+    candidates.sort()
     res = list()
 
-    def back_track(route, first=0, route_sum=0):
-        if route_sum == target:
-            res.append(route.copy())
-            return
-        if route_sum > target:
+    def back_track(start, track, _target):
+        if _target == 0:
+            res.append(track.copy())
             return
 
-        for i in range(first, size):
-            route.append(candidates[i])
-            route_sum += candidates[i]
-            back_track(route, i, route_sum)
-            route_sum -= route.pop()
+        for i in range(start, size):
+            # 当前处理的值已经大于 target，跳过不做处理
+            if candidates[i] > _target:
+                break
 
-        return
+            # 避免重复处理
+            if i > start and candidates[i] == candidates[i - 1]:
+                continue
+            track.append(candidates[i])
+            back_track(i + 1, track, _target - candidates[i])
+            track.pop()
 
-    back_track([])
+    back_track(0, [], target)
     return res
 
 

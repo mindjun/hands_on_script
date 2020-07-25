@@ -262,9 +262,10 @@ def path_sum_ii(root, target):
         if not node.left and not node.right and node.val - _sum == 0:
             result.append(path + [node.val])
             return
-        dfs(node.left, path+[node.val], _sum-node.val)
-        dfs(node.right, path+[node.val], _sum-node.val)
+        dfs(node.left, path + [node.val], _sum - node.val)
+        dfs(node.right, path + [node.val], _sum - node.val)
         return
+
     dfs(root, [], target)
     return result
 
@@ -299,3 +300,53 @@ def bst_to_double_linked(root):
     dfs(root)
     _head.left, pre.right = pre, _head
     return _head
+
+
+# https://leetcode-cn.com/problems/zi-fu-chuan-de-pai-lie-lcof/solution/hui-su-fa-by-ai-wu-jin-xin-fei-xiang/
+class Solution:
+    def permutation(self, s: str) -> List[str]:
+        if not s:
+            return []
+        s = list(sorted(s))
+        res = []
+
+        def helper(_s, tmp):
+            if not _s:
+                res.append(''.join(tmp))
+            for i, char in enumerate(_s):
+                if i > 0 and _s[i] == _s[i - 1]:
+                    continue
+                helper(_s[:i] + _s[i + 1:], tmp + [char])
+
+        helper(s, [])
+        return res
+
+
+# # 使用回溯的时候会遇到一些重复字符的错误
+# # 需要先进行排序 ？
+# def permutation(s):
+#     if not s:
+#         return []
+#
+#     result_list = list()
+#
+#     def back_pack(s_, track):
+#         if not s_:
+#             result_list.append(''.join(track))
+#             return
+#
+#         for idx, ch in enumerate(s_):
+#             # 有可能回出现重复的字符，如果当前的字符已经处理过，就跳过
+#             if idx > 0 and s_[idx] == s_[idx - 1]:
+#                 continue
+#             track.append(ch)
+#             back_pack(s_[:idx] + s_[idx + 1:], track)
+#             track.pop()
+#
+#     # 先进行排序
+#     s = list(sorted(s))
+#     back_pack(s, [])
+#     return result_list
+#
+#
+# print(permutation('aab'))

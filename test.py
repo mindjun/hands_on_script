@@ -19,9 +19,3 @@ def combine(str1, n):
 
 # a ==> a  aa, ab, ac  [] b ==> ba bb bc
 print(combine('abc', 3))
-
-
-# 0 1 2 3
-# 1
-# 2
-# 3
