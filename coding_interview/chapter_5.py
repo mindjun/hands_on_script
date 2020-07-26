@@ -53,6 +53,29 @@ def max_sub_array(nums: List[int]) -> int:
 print(max_sub_array([-1]))
 
 
+# 计算 1 至 n 中数字 x 出现的次数 x in range[1, 10)
+# https://www.cnblogs.com/cyjb/p/digitOccurrenceInRegion.html
+def count(n, x):
+    cnt, k, i = 0, n, 1
+    while True:
+        cnt += int(k / 10) * i
+        cur = k % 10
+        if cur > x:
+            cnt += i
+        elif cur == x:
+            # 2500 -- 2593 ==> 94
+            cnt += n % i + 1
+        i *= 10
+        k = int(n / i)
+        if k == 0:
+            break
+    return cnt
+
+
+print(count(12, 1))
+print(f'2593 中 5 出现 {count(2593, 5)} 次')
+
+
 # 计算 1 至 n 中数字 x 出现的次数 x in range[0, 10)
 # 统计包括 0 出现次数的情况
 # https://www.cnblogs.com/cyjb/p/digitOccurrenceInRegion.html
@@ -117,3 +140,28 @@ def count_digit_one(n):
 
 
 print(count_digit_one(12))
+
+
+# https://leetcode-cn.com/problems/nth-digit/
+def find_nth_digit(n: int) -> int:
+    if n < 10:
+        return n
+
+    n -= 10
+    start, index = 10, 2
+    while True:
+        now_count = 9 * start * index
+        if n <= now_count:
+            break
+
+        n -= now_count
+        index += 1
+        start *= 10
+    # num_index 代表 index 位数的 num_index 个
+    num_index = n // index
+    # num_location 代表 index 位数的 num_location 位
+    num_location = n % index
+    return int(str(start + num_index)[num_location])
+
+
+print(find_nth_digit(1001))
