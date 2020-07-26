@@ -168,19 +168,19 @@ def combine_sum(candidates, target):
     size = len(candidates)
 
     # 使用 start 来标记，避免一些组合的重复遍历
-    def backtrack(start, track):
-        if sum(track) == target:
+    def backtrack(start, track, _target):
+        if _target == 0:
             res.append(track.copy())
             return
-        if sum(track) > target:
-            return
         for i in range(start, size):
+            if candidates[i] > _target:
+                continue
             track.append(candidates[i])
-            backtrack(i, track)
+            backtrack(i, track, _target - candidates[i])
             track.pop()
 
     # back_track(_track)
-    backtrack(0, _track)
+    backtrack(0, _track, target)
     return res
 
 
