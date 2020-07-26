@@ -283,6 +283,7 @@ def partition(_left, _right, nums):
 
 
 # 使用最小堆来求解，维护以为长度为 k 的最小堆，取堆顶的元素即可
+# 只有大于该堆顶的元素才会加入堆，所以堆中维护的时前 k 大的元素
 def find_kth_largest_with_heap(nums, k):
     temp_list = nums[:k]
     # heapq 默认是小顶堆
