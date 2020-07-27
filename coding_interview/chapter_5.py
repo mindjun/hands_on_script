@@ -165,3 +165,62 @@ def find_nth_digit(n: int) -> int:
 
 
 print(find_nth_digit(1001))
+
+
+# https://leetcode-cn.com/problems/ba-shu-zi-fan-yi-cheng-zi-fu-chuan-lcof/
+# 回溯的方法解决
+def translate_num(num):
+    _num = str(num)
+    size = len(_num)
+    result = list()
+
+    def is_valid(i, j):
+        if i < j <= size and 0 <= int(_num[i:j]) < 26:
+            if len(_num[i:j]) >= 2 and _num[i:j].startswith('0'):
+                return False
+            return True
+
+    def back_track(start, track):
+        if start == size:
+            result.append(track.copy())
+            return
+
+        for i in range(start, size):
+            if is_valid(start, i+1):
+                track.append(_num[start:i+1])
+                back_track(i+1, track)
+                track.pop()
+        return
+    back_track(0, [])
+    return result
+
+
+print(translate_num(12258))
+print(translate_num(648006092))
+
+
+# https://leetcode-cn.com/problems/ba-shu-zi-fan-yi-cheng-zi-fu-chuan-lcof/solution/mian-shi-ti-46-ba-shu-zi-fan-yi-cheng-zi-fu-chua-6/
+# dp[i] 代表以 num[i] 为结尾的数字的翻译方案数量，即 num[i] 结尾的字符的翻译方案数量
+# 若 num[i] 和 num[i-1] 组成的两位数字可以被翻译，dp[i] = dp[i-1] + dp[i-2]，否则 dp[i] = dp[i-1]
+def translate_num_dp(num):
+    s = str(num)
+
+    # dp = [0] * (len(s) + 1)
+    # dp[0] = dp[1] = 1
+    #
+    # for i in range(2, len(s) + 1):
+    #     if '10' <= s[i-2:i] <= '25':
+    #         dp[i] = dp[i-1] + dp[i-2]
+    #     else:
+    #         dp[i] = dp[i-1]
+    # return dp[-1]
+
+    # 因为 do[i] 的值只与 i-2 和 i-1 相关，所以只需要保存两个变量即可，类似于 fib
+    a = b = 1
+    for i in range(2, len(s) + 1):
+        a, b = (a+b if '10' <= s[i-2:i] <= '25' else a), a
+    return a
+
+
+print(translate_num_dp(12258))
+print(translate_num_dp(648006092))
