@@ -165,3 +165,189 @@ def find_nth_digit(n: int) -> int:
 
 
 print(find_nth_digit(1001))
+
+
+# https://leetcode-cn.com/problems/ba-shu-zi-fan-yi-cheng-zi-fu-chuan-lcof/
+# 回溯的方法解决
+def translate_num(num):
+    _num = str(num)
+    size = len(_num)
+    result = list()
+
+    def is_valid(i, j):
+        if i < j <= size and 0 <= int(_num[i:j]) < 26:
+            if len(_num[i:j]) >= 2 and _num[i:j].startswith('0'):
+                return False
+            return True
+
+    def back_track(start, track):
+        if start == size:
+            result.append(track.copy())
+            return
+
+        for i in range(start, size):
+            if is_valid(start, i+1):
+                track.append(_num[start:i+1])
+                back_track(i+1, track)
+                track.pop()
+        return
+    back_track(0, [])
+    return result
+
+
+print(translate_num(12258))
+print(translate_num(648006092))
+
+
+# https://leetcode-cn.com/problems/ba-shu-zi-fan-yi-cheng-zi-fu-chuan-lcof/solution/mian-shi-ti-46-ba-shu-zi-fan-yi-cheng-zi-fu-chua-6/
+# dp[i] 代表以 num[i] 为结尾的数字的翻译方案数量，即 num[i] 结尾的字符的翻译方案数量
+# 若 num[i] 和 num[i-1] 组成的两位数字可以被翻译，dp[i] = dp[i-1] + dp[i-2]，否则 dp[i] = dp[i-1]
+def translate_num_dp(num):
+    s = str(num)
+
+    # dp = [0] * (len(s) + 1)
+    # dp[0] = dp[1] = 1
+    #
+    # for i in range(2, len(s) + 1):
+    #     if '10' <= s[i-2:i] <= '25':
+    #         dp[i] = dp[i-1] + dp[i-2]
+    #     else:
+    #         dp[i] = dp[i-1]
+    # return dp[-1]
+
+    # 因为 do[i] 的值只与 i-2 和 i-1 相关，所以只需要保存两个变量即可，类似于 fib
+    a = b = 1
+    for i in range(2, len(s) + 1):
+        a, b = (a+b if '10' <= s[i-2:i] <= '25' else a), a
+    return a
+
+
+print(translate_num_dp(12258))
+print(translate_num_dp(648006092))
+
+
+# https://leetcode-cn.com/problems/li-wu-de-zui-da-jie-zhi-lcof/solution/mian-shi-ti-47-li-wu-de-zui-da-jie-zhi-dong-tai-gu/
+# 空间优化，直接在 grid 上进行修改
+def max_value(grid):
+    # 初始化第一行和第一列
+    for j in range(1, len(grid)):
+        grid[0][j] += grid[0][j-1]
+
+    for i in range(1, len(grid[0])):
+        grid[i][0] += grid[i-1][0]
+
+    for i in range(1, len(grid)):
+        for j in range(1, len(grid[0])):
+            grid[i][j] += max(grid[i-1][j], grid[i][j-1])
+    return grid[-1][-1]
+
+
+# https://leetcode-cn.com/problems/zui-chang-bu-han-zhong-fu-zi-fu-de-zi-zi-fu-chuan-lcof/
+def length_of_longest_substring(s):
+    if not s:
+        return 0
+    from collections import defaultdict
+    windows = defaultdict(int)
+    max_len, left, right = 0, 0, 0
+
+    while right < len(s):
+        ch = s[right]
+        right += 1
+        windows[ch] += 1
+
+        while windows[ch] > 1:
+            ch2 = s[left]
+            windows[ch2] -= 1
+            left += 1
+
+        if windows[ch] == 1:
+            max_len = max(max_len, right-left)
+    return max_len
+
+
+# https://leetcode-cn.com/problems/zui-chang-bu-han-zhong-fu-zi-fu-de-zi-zi-fu-chuan-lcof/solution/mian-shi-ti-48-zui-chang-bu-han-zhong-fu-zi-fu-d-9/
+def length_of_longest_substring_ii(s):
+    dic = dict()
+    res = tmp = 0
+    for j in range(len(s)):
+        i = dic.get(s[j], -1)
+        dic[s[j]] = j
+
+        if tmp < j - i:
+            tmp += 1
+        else:
+            tmp = j - i
+        res = max(res, tmp)
+    return res
+
+
+# https://leetcode-cn.com/problems/chou-shu-lcof/solution/mian-shi-ti-49-chou-shu-dong-tai-gui-hua-qing-xi-t/
+def nth_ugly_number(n):
+    dp = [1] * n
+    a, b, c = 0, 0, 0
+    for i in range(1, n):
+        n2, n3, n5 = dp[a] * 2, dp[b] * 3, dp[c] * 5
+        dp[i] = min(n2, n3, n5)
+        if dp[i] == n2:
+            a += 1
+        if dp[i] == n3:
+            b += 1
+        if dp[i] == n5:
+            c += 1
+    return dp[-1]
+
+
+print(nth_ugly_number(10))
+
+
+# https://leetcode-cn.com/problems/shu-zu-zhong-de-ni-xu-dui-lcof/
+def reverse_pairs(nums):
+    _count = 0
+
+    def merge_sort(_nums):
+        if len(_nums) <= 1:
+            return _nums
+        mid = len(_nums) // 2
+        left = merge_sort(_nums[:mid])
+        right = merge_sort(_nums[mid:])
+        return merge(left, right)
+
+    def merge(left, right):
+        size_left, size_right = len(left), len(right)
+        result = [-1] * (size_left + size_right)
+        result_index = len(result) - 1
+        nonlocal _count
+        while left and right:
+            if left[-1] > right[-1]:
+                _count += len(right)
+                result[result_index] = left.pop()
+            else:
+                result[result_index] = right.pop()
+            result_index -= 1
+
+        index = 0
+        for x, _ in zip(left or right, result):
+            result[index] = x
+            index += 1
+        return result
+
+    print(merge_sort(nums))
+    return _count
+
+
+print(reverse_pairs([7, 5, 6, 4]))
+
+
+# https://leetcode-cn.com/problems/que-shi-de-shu-zi-lcof/solution/mian-shi-ti-53-ii-0n-1zhong-que-shi-de-shu-zi-er-f/
+def missing_number(nums):
+    i, j = 0, len(nums) - 1
+    while i <= j:
+        m = (i + j) >> 1
+        if nums[m] == m:
+            i = m + 1
+        else:
+            j = m - 1
+    return i
+
+
+print(missing_number([0, 1, 3]))
