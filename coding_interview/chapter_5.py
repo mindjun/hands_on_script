@@ -224,3 +224,77 @@ def translate_num_dp(num):
 
 print(translate_num_dp(12258))
 print(translate_num_dp(648006092))
+
+
+# https://leetcode-cn.com/problems/li-wu-de-zui-da-jie-zhi-lcof/solution/mian-shi-ti-47-li-wu-de-zui-da-jie-zhi-dong-tai-gu/
+# 空间优化，直接在 grid 上进行修改
+def max_value(grid):
+    # 初始化第一行和第一列
+    for j in range(1, len(grid)):
+        grid[0][j] += grid[0][j-1]
+
+    for i in range(1, len(grid[0])):
+        grid[i][0] += grid[i-1][0]
+
+    for i in range(1, len(grid)):
+        for j in range(1, len(grid[0])):
+            grid[i][j] += max(grid[i-1][j], grid[i][j-1])
+    return grid[-1][-1]
+
+
+# https://leetcode-cn.com/problems/zui-chang-bu-han-zhong-fu-zi-fu-de-zi-zi-fu-chuan-lcof/
+def length_of_longest_substring(s):
+    if not s:
+        return 0
+    from collections import defaultdict
+    windows = defaultdict(int)
+    max_len, left, right = 0, 0, 0
+
+    while right < len(s):
+        ch = s[right]
+        right += 1
+        windows[ch] += 1
+
+        while windows[ch] > 1:
+            ch2 = s[left]
+            windows[ch2] -= 1
+            left += 1
+
+        if windows[ch] == 1:
+            max_len = max(max_len, right-left)
+    return max_len
+
+
+# https://leetcode-cn.com/problems/zui-chang-bu-han-zhong-fu-zi-fu-de-zi-zi-fu-chuan-lcof/solution/mian-shi-ti-48-zui-chang-bu-han-zhong-fu-zi-fu-d-9/
+def length_of_longest_substring_ii(s):
+    dic = dict()
+    res = tmp = 0
+    for j in range(len(s)):
+        i = dic.get(s[j], -1)
+        dic[s[j]] = j
+
+        if tmp < j - i:
+            tmp += 1
+        else:
+            tmp = j - i
+        res = max(res, tmp)
+    return res
+
+
+# https://leetcode-cn.com/problems/chou-shu-lcof/solution/mian-shi-ti-49-chou-shu-dong-tai-gui-hua-qing-xi-t/
+def nth_ugly_number(n):
+    dp = [1] * n
+    a, b, c = 0, 0, 0
+    for i in range(1, n):
+        n2, n3, n5 = dp[a] * 2, dp[b] * 3, dp[c] * 5
+        dp[i] = min(n2, n3, n5)
+        if dp[i] == n2:
+            a += 1
+        if dp[i] == n3:
+            b += 1
+        if dp[i] == n5:
+            c += 1
+    return dp[-1]
+
+
+print(nth_ugly_number(10))
