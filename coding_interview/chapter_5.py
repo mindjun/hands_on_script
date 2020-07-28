@@ -298,3 +298,56 @@ def nth_ugly_number(n):
 
 
 print(nth_ugly_number(10))
+
+
+# https://leetcode-cn.com/problems/shu-zu-zhong-de-ni-xu-dui-lcof/
+def reverse_pairs(nums):
+    _count = 0
+
+    def merge_sort(_nums):
+        if len(_nums) <= 1:
+            return _nums
+        mid = len(_nums) // 2
+        left = merge_sort(_nums[:mid])
+        right = merge_sort(_nums[mid:])
+        return merge(left, right)
+
+    def merge(left, right):
+        size_left, size_right = len(left), len(right)
+        result = [-1] * (size_left + size_right)
+        result_index = len(result) - 1
+        nonlocal _count
+        while left and right:
+            if left[-1] > right[-1]:
+                _count += len(right)
+                result[result_index] = left.pop()
+            else:
+                result[result_index] = right.pop()
+            result_index -= 1
+
+        index = 0
+        for x, _ in zip(left or right, result):
+            result[index] = x
+            index += 1
+        return result
+
+    print(merge_sort(nums))
+    return _count
+
+
+print(reverse_pairs([7, 5, 6, 4]))
+
+
+# https://leetcode-cn.com/problems/que-shi-de-shu-zi-lcof/solution/mian-shi-ti-53-ii-0n-1zhong-que-shi-de-shu-zi-er-f/
+def missing_number(nums):
+    i, j = 0, len(nums) - 1
+    while i <= j:
+        m = (i + j) >> 1
+        if nums[m] == m:
+            i = m + 1
+        else:
+            j = m - 1
+    return i
+
+
+print(missing_number([0, 1, 3]))

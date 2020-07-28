@@ -442,6 +442,15 @@ def last_kth(head, k):
     return slow
 
 
+# 求两个单链表的交点
+def get_intersection_node(head_a: ListNode, head_b: ListNode) -> ListNode:
+    head1, head2 = head_a, head_b
+    while head1 != head2:
+        head1 = head1.next if head1 else head_a
+        head2 = head2.next if head2 else head_b
+    return head1
+
+
 if __name__ == '__main__':
     _h = ListNode(1, ListNode(2, ListNode(2, ListNode(1))))
     IsPalindrome().is_palindrome(_h)
