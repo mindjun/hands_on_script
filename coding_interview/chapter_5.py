@@ -351,3 +351,140 @@ def missing_number(nums):
 
 
 print(missing_number([0, 1, 3]))
+
+
+# https://leetcode-cn.com/problems/shu-zu-zhong-shu-zi-chu-xian-de-ci-shu-lcof/solution/shu-zu-zhong-shu-zi-chu-xian-de-ci-shu-by-leetcode/
+# 只出现一次的数字
+def single_numbers(nums):
+    ret = 0
+    for num in nums:
+        ret ^= num
+
+    div = 1
+    while div & ret == 0:
+        div <<= 1
+    a, b = 0, 0
+    for num in nums:
+        if num & div:
+            a ^= num
+        else:
+            b ^= num
+    return [a, b]
+
+
+print(single_numbers([2, 4, 3, 6, 3, 2, 5, 5]))
+
+
+# https://leetcode-cn.com/problems/he-wei-sde-lian-xu-zheng-shu-xu-lie-lcof/
+def find_continuous_sequence(target):
+    if target < 3:
+        return []
+
+    small, big, result = 1, 2, list()
+    middle = (1 + target) >> 1
+    cur_sum = small + big
+    while small < middle:
+        if cur_sum == target:
+            result.append(list(range(small, big + 1)))
+        while cur_sum > target and small < middle:
+            cur_sum -= small
+            small += 1
+            if cur_sum == target:
+                result.append(list(range(small, big + 1)))
+        big += 1
+        cur_sum += big
+    return result
+
+
+print(find_continuous_sequence(9))
+
+
+# https://leetcode-cn.com/problems/fan-zhuan-dan-ci-shun-xu-lcof/
+def reverse_words(s):
+    temp_list = s.split(' ')[::-1]
+    return ' '.join(temp_list)
+
+
+print(reverse_words("the sky is blue"))
+
+
+# https://leetcode-cn.com/problems/bu-ke-pai-zhong-de-shun-zi-lcof/solution/mian-shi-ti-61-bu-ke-pai-zhong-de-shun-zi-ji-he-se/
+def is_straight(nums):
+    joker = 0
+    nums.sort()
+
+    for i in range(4):
+        if nums[i] == 0:
+            joker += 1
+        elif nums[i] == nums[i+1]:
+            return False
+    return nums[-1] - nums[joker] < 5
+
+
+class LinkedNode(object):
+    def __init__(self, val, next=None):
+        self.val = val
+        self.next = next
+
+    def set_next(self, node):
+        self.next = node
+
+    def __repr__(self):
+        return f'{self.val}'
+
+
+# https://leetcode-cn.com/problems/yuan-quan-zhong-zui-hou-sheng-xia-de-shu-zi-lcof/
+def last_remaining(n, m):
+    if n == 1:
+        return 0
+    # 生成一个唤醒链表
+    node_list = [LinkedNode(v) for v in range(n)]
+    for index, node in enumerate(node_list):
+        if index == n - 1:
+            node.set_next(node_list[0])
+        else:
+            node.set_next(node_list[index+1])
+
+    result = list()
+    head = node_list[0]
+    while len(result) < n - 1:
+        k = 1
+        # k 设置为 m-1 的位置，方便链表删除下一个节点
+        while k < m-1:
+            head = head.next
+            k += 1
+        result.append(head.next.val)
+        head.next = head.next.next
+        head = head.next
+    print(result)
+    return head.val
+
+
+print(last_remaining(10, 17))
+
+
+# 约瑟夫环解决
+# 设 f(n, m) = x 表示长度为 n，数 m 个元素之后留下的元素为 x
+# f(n, m) = (f(n-1, m) + m) % n
+def last_remaining_ii(n, m):
+    if n < 1 or m < 1:
+        return -1
+
+    last = 0
+    for i in range(2, n+1):
+        last = (last + m) % i
+    return last
+
+
+print(last_remaining_ii(10, 17))
+
+
+def max_profit(prices):
+    cost, profit = float('inf'), 0
+    for price in prices:
+        cost = min(cost, price)
+        profit = max(profit, price - cost)
+    return profit
+
+
+print(max_profit([7,1,5,3,6,4]))
