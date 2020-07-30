@@ -288,6 +288,7 @@ def sliding_windows(s, t):
         return s[start: start + length]
 
 
+# https://leetcode-cn.com/submissions/detail/66886106/
 class MaxSlideQueue(object):
     def __init__(self):
         self.queue = list()
@@ -306,6 +307,7 @@ class MaxSlideQueue(object):
             self.queue = self.queue[1:]
 
 
+# https://leetcode-cn.com/submissions/detail/66886106/
 # max slide windows
 def max_slide_windows(list1, size):
     result = list()

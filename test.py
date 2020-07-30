@@ -19,3 +19,13 @@ def combine(str1, n):
 
 # a ==> a  aa, ab, ac  [] b ==> ba bb bc
 print(combine('abc', 3))
+
+
+def my_func(num):
+    if num < 10:
+        return str(num)
+    return str(num % 10) + my_func(num // 10)
+
+
+print(my_func(1234))
+print(type(my_func(1234)))
