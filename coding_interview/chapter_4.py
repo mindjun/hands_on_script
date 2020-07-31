@@ -171,7 +171,7 @@ print(level_order(t))
 # 直接返回 False，该序列一定不是后序遍历的序列
 def verify_post_order(nums):
     def verify_helper(_nums):
-        print(_nums)
+        # print(_nums)
         if not _nums:
             return False
 
@@ -218,6 +218,9 @@ def verify_post_order_ii(nums):
             root = stack.pop()
         stack.append(num)
     return True
+
+
+print(verify_post_order_ii([5, 7, 6, 9, 11, 10, 8]))
 
 
 # https://leetcode-cn.com/problems/er-cha-shu-zhong-he-wei-mou-yi-zhi-de-lu-jing-lcof/submissions/

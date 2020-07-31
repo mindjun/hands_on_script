@@ -560,6 +560,23 @@ def path_sum(root, sum_):
     return result
 
 
+# def path_sum_ii(root, target):
+#     result = list()
+#
+#     def dfs(node, path, _sum):
+#         if not node:
+#             return
+#         if not node.left and not node.right and node.val - _sum == 0:
+#             result.append(path + [node.val])
+#             return
+#         dfs(node.left, path + [node.val], _sum - node.val)
+#         dfs(node.right, path + [node.val], _sum - node.val)
+#         return
+#
+#     dfs(root, [], target)
+#     return result
+
+
 _root = TreeNode(10, left=TreeNode(6, left=TreeNode(5, right=TreeNode(9)), right=TreeNode(2)),
                  right=TreeNode(7, left=TreeNode(1), right=TreeNode(8)))
 _res = path_sum(_root, 18)
