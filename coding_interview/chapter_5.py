@@ -112,7 +112,7 @@ print(f'1-2593 中 5 出现 {count_include_0(2593, 5)} 次')
 def test_n(num, k):
     # 常规方法用来比较
     ret = 0
-    for n in range(1, num+1):
+    for n in range(1, num + 1):
         for s in str(n):
             if s == str(k):
                 ret += 1
@@ -186,11 +186,12 @@ def translate_num(num):
             return
 
         for i in range(start, size):
-            if is_valid(start, i+1):
-                track.append(_num[start:i+1])
-                back_track(i+1, track)
+            if is_valid(start, i + 1):
+                track.append(_num[start:i + 1])
+                back_track(i + 1, track)
                 track.pop()
         return
+
     back_track(0, [])
     return result
 
@@ -218,7 +219,7 @@ def translate_num_dp(num):
     # 因为 do[i] 的值只与 i-2 和 i-1 相关，所以只需要保存两个变量即可，类似于 fib
     a = b = 1
     for i in range(2, len(s) + 1):
-        a, b = (a+b if '10' <= s[i-2:i] <= '25' else a), a
+        a, b = (a + b if '10' <= s[i - 2:i] <= '25' else a), a
     return a
 
 
@@ -231,14 +232,14 @@ print(translate_num_dp(648006092))
 def max_value(grid):
     # 初始化第一行和第一列
     for j in range(1, len(grid)):
-        grid[0][j] += grid[0][j-1]
+        grid[0][j] += grid[0][j - 1]
 
     for i in range(1, len(grid[0])):
-        grid[i][0] += grid[i-1][0]
+        grid[i][0] += grid[i - 1][0]
 
     for i in range(1, len(grid)):
         for j in range(1, len(grid[0])):
-            grid[i][j] += max(grid[i-1][j], grid[i][j-1])
+            grid[i][j] += max(grid[i - 1][j], grid[i][j - 1])
     return grid[-1][-1]
 
 
@@ -261,7 +262,7 @@ def length_of_longest_substring(s):
             left += 1
 
         if windows[ch] == 1:
-            max_len = max(max_len, right-left)
+            max_len = max(max_len, right - left)
     return max_len
 
 
@@ -416,7 +417,7 @@ def is_straight(nums):
     for i in range(4):
         if nums[i] == 0:
             joker += 1
-        elif nums[i] == nums[i+1]:
+        elif nums[i] == nums[i + 1]:
             return False
     return nums[-1] - nums[joker] < 5
 
@@ -443,14 +444,14 @@ def last_remaining(n, m):
         if index == n - 1:
             node.set_next(node_list[0])
         else:
-            node.set_next(node_list[index+1])
+            node.set_next(node_list[index + 1])
 
     result = list()
     head = node_list[0]
     while len(result) < n - 1:
         k = 1
         # k 设置为 m-1 的位置，方便链表删除下一个节点
-        while k < m-1:
+        while k < m - 1:
             head = head.next
             k += 1
         result.append(head.next.val)
@@ -471,7 +472,7 @@ def last_remaining_ii(n, m):
         return -1
 
     last = 0
-    for i in range(2, n+1):
+    for i in range(2, n + 1):
         last = (last + m) % i
     return last
 
@@ -487,4 +488,4 @@ def max_profit(prices):
     return profit
 
 
-print(max_profit([7,1,5,3,6,4]))
+print(max_profit([7, 1, 5, 3, 6, 4]))
