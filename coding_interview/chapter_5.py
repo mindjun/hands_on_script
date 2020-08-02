@@ -216,7 +216,7 @@ def translate_num_dp(num):
     #         dp[i] = dp[i-1]
     # return dp[-1]
 
-    # 因为 do[i] 的值只与 i-2 和 i-1 相关，所以只需要保存两个变量即可，类似于 fib
+    # 因为 dp[i] 的值只与 i-2 和 i-1 相关，所以只需要保存两个变量即可，类似于 fib
     a = b = 1
     for i in range(2, len(s) + 1):
         a, b = (a + b if '10' <= s[i - 2:i] <= '25' else a), a
@@ -348,6 +348,7 @@ def missing_number(nums):
             i = m + 1
         else:
             j = m - 1
+    # 变量 i 和 j 分别指向 “右子数组的首位元素” 和 “左子数组的末位元素”
     return i
 
 

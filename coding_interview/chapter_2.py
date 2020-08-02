@@ -1,3 +1,6 @@
+from typing import List
+
+
 def duplication_in_array(nums):
     """
     3_1
@@ -65,7 +68,11 @@ def find_path(matrix, target_str):
     :param target_str:
     :return:
     """
+
     def helper(x, y, index):
+        if not 0 <= x < size_x or not 0 <= y < size_y:
+            return False
+
         has_path = False
         # 当 index 到达最后一位的时候，直接返回
         if index == len(target_str) - 1 and matrix[x][y] == target_str[index]:
@@ -75,7 +82,8 @@ def find_path(matrix, target_str):
         if 0 <= x < size_x and 0 <= y < size_y and matrix[x][y] == target_str[index] and not visited[x][y]:
             index += 1
             visited[x][y] = 1
-            has_path = helper(x-1, y, index) or helper(x+1, y, index) or helper(x, y-1, index) or helper(x, y+1, index)
+            has_path = helper(x - 1, y, index) or helper(x + 1, y, index) or helper(x, y - 1, index) or helper(x, y + 1,
+                                                                                                               index)
             if not has_path:
                 index -= 1
                 visited[x][y] = 0
@@ -94,10 +102,30 @@ def find_path(matrix, target_str):
     return False, result
 
 
+# https://leetcode-cn.com/problems/ju-zhen-zhong-de-lu-jing-lcof/solution/mian-shi-ti-12-ju-zhen-zhong-de-lu-jing-shen-du-yo/
+class Solution:
+    def exist(self, board: List[List[str]], word: str) -> bool:
+        def dfs(i, j, k):
+            if not 0 <= i < len(board) or not 0 <= j < len(board[0]) or board[i][j] != word[k]:
+                return False
+            if k == len(word) - 1:
+                return True
+            tmp, board[i][j] = board[i][j], '/'
+            res = dfs(i + 1, j, k + 1) or dfs(i - 1, j, k + 1) or dfs(i, j + 1, k + 1) or dfs(i, j - 1, k + 1)
+            board[i][j] = tmp
+            return res
+
+        for x in range(len(board)):
+            for y in range(len(board[0])):
+                if dfs(x, y, 0):
+                    return True
+        return False
+
+
 _matrix = [['a', 'b', 't', 'g'],
            ['c', 'f', 'c', 's'],
            ['j', 'd', 'e', 'h']]
-print(find_path(_matrix, 'bfce'))
+print(find_path([["A", "B", "C", "E"], ["S", "F", "C", "S"], ["A", "D", "E", "E"]], 'ABCCED'))
 
 
 # 剪绳子
@@ -121,7 +149,7 @@ def max_product_area_after_cutting(length):
 
     for i in range(4, length + 1):
         temp_max = 0
-        for j in range(1, i//2 + 1):
+        for j in range(1, i // 2 + 1):
             product_area = dp[j] * dp[i - j]
             temp_max = max(temp_max, product_area)
         dp[i] = temp_max
