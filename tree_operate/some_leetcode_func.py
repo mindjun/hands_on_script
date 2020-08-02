@@ -355,6 +355,7 @@ def convert_pre_order(s):
 print(convert_pre_order('1-2--3--4-5--6--7'))
 
 
+# https://leetcode-cn.com/problems/zhong-jian-er-cha-shu-lcof/
 def build_tree_from_pre_in_order(pre_nums, in_nums):
     """
     根据前序遍历和中序遍历结果，重建二叉树
@@ -385,6 +386,30 @@ _pre_nums = [1, 2, 4, 7, 3, 5, 6, 8]
 _in_nums = [4, 7, 2, 1, 5, 3, 8, 6]
 _root = build_tree_from_pre_in_order(_pre_nums, _in_nums)
 print(_root)
+
+
+# https://leetcode-cn.com/problems/zhong-jian-er-cha-shu-lcof/solution/mian-shi-ti-07-zhong-jian-er-cha-shu-di-gui-fa-qin/
+# 前序遍历特点： 节点按照 [ 根节点 | 左子树 | 右子树 ] 排序，以题目示例为例：[ 3 | 9 | 20 15 7 ]
+# 中序遍历特点： 节点按照 [ 左子树 | 根节点 | 右子树 ] 排序，以题目示例为例：[ 9 | 3 | 15 20 7 ]
+class Solution:
+    def buildTree(self, preorder: List[int], inorder: List[int]) -> TreeNode:
+        self.dic, self.po = {}, preorder
+        # 将 inorder 的值与下标 hash，以便能根据 preorder 的值快速获得 inorder 的下标，并区分左子树和右子树
+        for i in range(len(inorder)):
+            self.dic[inorder[i]] = i
+        return self.recur(0, 0, len(inorder) - 1)
+
+    def recur(self, pre_root, in_left, in_right):
+        if in_left > in_right:
+            return None  # 终止条件：中序遍历为空
+        root = TreeNode(self.po[pre_root])  # 建立当前子树的根节点
+        i = self.dic[self.po[pre_root]]    # 搜索根节点在中序遍历中的索引，从而可对根节点、左子树、右子树完成划分。
+        # 开启左子树的下层递归，下一个 pre_order 就是 pre_root+1,
+        # 中序子树依然遵循 [ 左子树 | 根节点 | 右子树 ] 的规则
+        root.left = self.recur(pre_root + 1, in_left, i - 1)
+        # 右子树的 pre_root 下标为 根节点索引 + 左子树长度 + 1
+        root.right = self.recur(i - in_left + pre_root + 1, i + 1, in_right) # 开启右子树的下层递归
+        return root  # 返回根节点，作为上层递归的左（右）子节点
 
 
 # https://leetcode-cn.com/problems/symmetric-tree/
@@ -533,6 +558,23 @@ def path_sum(root, sum_):
 
     dfs(root, [])
     return result
+
+
+# def path_sum_ii(root, target):
+#     result = list()
+#
+#     def dfs(node, path, _sum):
+#         if not node:
+#             return
+#         if not node.left and not node.right and node.val - _sum == 0:
+#             result.append(path + [node.val])
+#             return
+#         dfs(node.left, path + [node.val], _sum - node.val)
+#         dfs(node.right, path + [node.val], _sum - node.val)
+#         return
+#
+#     dfs(root, [], target)
+#     return result
 
 
 _root = TreeNode(10, left=TreeNode(6, left=TreeNode(5, right=TreeNode(9)), right=TreeNode(2)),
