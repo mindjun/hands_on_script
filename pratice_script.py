@@ -288,44 +288,6 @@ def sliding_windows(s, t):
         return s[start: start + length]
 
 
-# https://leetcode-cn.com/submissions/detail/66886106/
-class MaxSlideQueue(object):
-    def __init__(self):
-        self.queue = list()
-
-    def push(self, item):
-        while self.queue and self.queue[-1] < item:
-            self.queue.pop()
-        self.queue.append(item)
-
-    def max(self):
-        return self.queue[0]
-
-    def pop(self, item):
-        # 只有当 item 是最大的值时才删除
-        if self.queue[0] == item:
-            self.queue = self.queue[1:]
-
-
-# https://leetcode-cn.com/submissions/detail/66886106/
-# max slide windows
-def max_slide_windows(list1, size):
-    result = list()
-    slide_windows = MaxSlideQueue()
-    for index, item in enumerate(list1, 1):
-        if index < size:
-            slide_windows.push(item)
-        else:
-            slide_windows.push(item)
-            result.append(slide_windows.max())
-            # pop 的 item 应该是 index - k
-            slide_windows.pop(list1[index - size])
-    return result
-
-
-print(f'max_slide_windows ', max_slide_windows(list1=[1, 3, -1, -3, 5, 3, 6, 7], size=3))
-
-
 # 烧饼排序
 # https://labuladong.gitbook.io/algo/suan-fa-si-wei-xi-lie/shao-bing-pai-xu
 def shao_bing_sort(nums):
