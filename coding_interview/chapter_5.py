@@ -175,29 +175,27 @@ def translate_num(num):
     result = list()
 
     def is_valid(i, j):
-        if i < j <= size and 0 <= int(_num[i:j]) < 26:
-            if len(_num[i:j]) >= 2 and _num[i:j].startswith('0'):
-                return False
-            return True
+        return i < j <= size and 0 <= int(_num[i:j]) < 26
 
     def back_track(start, track):
         if start == size:
             result.append(track.copy())
-            return
 
         for i in range(start, size):
             if is_valid(start, i + 1):
+                if len(_num[start:i + 1]) >= 2 and _num[start:i + 1].startswith('0'):
+                    continue
                 track.append(_num[start:i + 1])
                 back_track(i + 1, track)
                 track.pop()
         return
 
     back_track(0, [])
-    return result
+    return len(result)
 
 
-print(translate_num(12258))
-print(translate_num(648006092))
+print(f'translate_num 12258 is {translate_num(12258)}')
+print(f'translate_num 648006092 is {translate_num(648006092)}')
 
 
 # https://leetcode-cn.com/problems/ba-shu-zi-fan-yi-cheng-zi-fu-chuan-lcof/solution/mian-shi-ti-46-ba-shu-zi-fan-yi-cheng-zi-fu-chua-6/
@@ -223,8 +221,8 @@ def translate_num_dp(num):
     return a
 
 
-print(translate_num_dp(12258))
-print(translate_num_dp(648006092))
+print(f'translate_num_dp 12258 is {translate_num_dp(12258)}')
+print(f'translate_num_dp 648006092 is {translate_num_dp(648006092)}')
 
 
 # https://leetcode-cn.com/problems/li-wu-de-zui-da-jie-zhi-lcof/solution/mian-shi-ti-47-li-wu-de-zui-da-jie-zhi-dong-tai-gu/

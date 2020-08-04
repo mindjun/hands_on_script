@@ -281,10 +281,11 @@ def partition(s):
     return res
 
 
-print(partition('aab'))
+print(f'partition of aab is {partition("aab")}')
 
 
 # 计算子集
+# 仅适用于没有重复的情况
 # A = subset([1,2])
 # subset([1,2,3]) = A + [A[i].add(3) for i = 1..len(A)]
 def subset(_nums):
@@ -334,10 +335,13 @@ def subsets_with_dup(nums: List[int]) -> List[List[int]]:
     nums.sort()
 
     def back_track(start, track):
-        if list(track) not in res:
-            res.append(list(track))
+        # if list(track) not in res:
+        res.append(list(track))
 
         for i in range(start, len(nums)):
+            # 去重
+            if i > start and nums[i] == nums[i-1]:
+                continue
             track.append(nums[i])
             back_track(i + 1, track)
             track.pop()
