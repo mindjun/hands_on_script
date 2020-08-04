@@ -236,58 +236,6 @@ def is_sub_sequence(s, t):
     return i == len(s)
 
 
-# def sliding_windows(s, t):
-#     need, windows = defaultdict(int), defaultdict(int)
-#     for c in t:
-#         need[c] += 1
-#     left, right = 0, 0
-#     valid = 0
-#     while right < len(s):
-#         char = s[right]
-#         right += 1
-#         # 进行窗口的更新
-#
-#         # 判断左侧窗口是否需要收缩
-#         while left:
-#             d = s[left]
-#             left += 1
-#             # 进行窗口内数据的更新
-
-
-def sliding_windows(s, t):
-    need, windows = defaultdict(int), defaultdict(int)
-    for c in t:
-        need[c] += 1
-    left, right = 0, 0
-    valid = 0
-    start, length = 0, len(s) + 1
-    while right < len(s):
-        c = s[right]
-        right += 1
-        # 进行窗口的更新
-        if c in need:
-            windows[c] += 1
-            if windows[c] == need[c]:
-                valid += 1
-
-        # 判断左侧窗口是否需要收缩
-        while valid == len(need):
-            if right - left < length:
-                start = left
-                length = right - start
-            d = s[left]
-            left += 1
-            # 进行窗口内数据的更新
-            if d in need:
-                if need[d] == windows[d]:
-                    valid -= 1
-                windows[d] -= 1
-    if length == len(s) + 1:
-        return ""
-    else:
-        return s[start: start + length]
-
-
 # 烧饼排序
 # https://labuladong.gitbook.io/algo/suan-fa-si-wei-xi-lie/shao-bing-pai-xu
 def shao_bing_sort(nums):
