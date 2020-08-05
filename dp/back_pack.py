@@ -1,3 +1,4 @@
+from typing import List
 
 
 # https://www.lintcode.com/problem/backpack/description
@@ -14,9 +15,9 @@ def _back_pack(m, weights):
             elif i == 0:
                 dp[i][j] = 0
             else:
-                dp[i][j] = dp[i-1][j]
-                if j - weights[i-1] >= 0:
-                    dp[i][j] = dp[i][j] or dp[i-1][j-weights[i-1]]
+                dp[i][j] = dp[i - 1][j]
+                if j - weights[i - 1] >= 0:
+                    dp[i][j] = dp[i][j] or dp[i - 1][j - weights[i - 1]]
     # 找到能装满 size 的最大 j
     for j in range(m + 1)[::-1]:
         if dp[size][j]:
@@ -36,7 +37,7 @@ def _back_pack_ii(m, weights):
 
     for i in range(size):
         for j in range(1, m + 1):
-            use_ai = 0 if j - weights[i] < 0 else dp[j-weights[i]] + weights[i]
+            use_ai = 0 if j - weights[i] < 0 else dp[j - weights[i]] + weights[i]
             dp[j] = max(dp[j], use_ai)
         dp, dp_new = dp_new, dp
     return dp[-1]
@@ -91,3 +92,38 @@ def full_back_pack(m, weights, values):
             f[j] = max(f[j], f[j - weights[i]] + values[i])
 
     return f[m]
+
+
+# https://leetcode-cn.com/problems/partition-equal-subset-sum/
+def can_partition(nums: List[int]) -> bool:
+    sum_ = sum(nums)
+
+    if sum_ & 1:
+        return False
+
+    target = sum_ >> 1
+    # dp = [[False] * (target + 1) for _ in range(len(nums))]
+    #
+    # # 没有空间的收都为 True，即都能装满
+    # for i in range(len(nums)):
+    #     dp[i][0] = True
+    #
+    # for i in range(1, len(nums)):
+    #     for j in range(target + 1):
+    #         if j - nums[i] < 0:
+    #             dp[i][j] = dp[i - 1][j]
+    #         else:
+    #             dp[i][j] = dp[i - 1][j] or dp[i - 1][j - nums[i]]
+    # return dp[-1][-1]
+
+    # 压缩空间
+    dp = [False] * (target + 1)
+    dp[0] = True
+    for i in range(len(nums)):
+        # 因为每个数字只能用一次，倒序避免之前的结果影响其他结果
+        for j in range(nums[i], target + 1)[::-1]:
+            dp[j] = dp[j] or dp[j - nums[i]]
+    return dp[-1]
+
+
+print(can_partition([1, 2, 5]))

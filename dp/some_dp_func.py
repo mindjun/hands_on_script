@@ -382,6 +382,39 @@ def length_of_lis(nums):
 print(length_of_lis([1, 4, 3, 4, 2, 3]))
 
 
+# https://leetcode-cn.com/problems/russian-doll-envelopes/
+# 俄罗斯套娃信封问题
+# 本质上就是在 envelopes 按照 w 升序，h 降序之后的 h 所在的序列查找最长上升子序列
+def max_envelopes(envelopes: List[List[int]]) -> int:
+    if not envelopes:
+        return 0
+
+    # 动态规划查找最长上升子序列
+    # nums = sorted(envelopes, key=lambda x: (x[0], -x[1]))
+    # heights = [i[1] for i in nums]
+    #
+    # dp = [1] * len(heights)
+    # for i in range(len(heights)):
+    #     for j in range(0, i):
+    #         if heights[i] > heights[j]:
+    #             dp[i] = max(dp[i], dp[j] + 1)
+    # return max(dp)
+
+    import bisect
+    subset = []
+    # 二分查找的方式查找最长上升子序列
+    for env in sorted(envelopes, key=lambda x: (x[0], -x[1])):
+        pos = bisect.bisect_left(subset, env[1])
+        if pos == len(subset):
+            subset.append(env[1])
+        elif env[1] < subset[pos]:
+            subset[pos] = env[1]
+    return len(subset)
+
+
+print(f'max_envelopes is {max_envelopes([[5, 4], [6, 4], [6, 7], [2, 3]])}')
+
+
 # https://leetcode-cn.com/problems/word-break/
 class Solution:
     def wordBreak(self, s: str, wordDict: List[str]) -> bool:
@@ -527,6 +560,19 @@ def coin_change__(coins, amount):
     return dp[-1]
 
 
+# https://leetcode-cn.com/problems/coin-change-2/
+# 零钱兑换 II, 求能凑足目标金额的方案次数
+# 可以理解为完全背包问题
+def coin_change_ii(amount, coins):
+    dp = [0] * (amount + 1)
+    dp[0] = 1
+
+    for coin in coins:
+        for i in range(coin, amount+1):
+            dp[i] = dp[i] + dp[i-coin]
+    return dp[-1]
+
+
 # https://leetcode-cn.com/problems/maximum-product-subarray/
 def max_product(nums):
     dp_max = [float('-inf')] * (len(nums) + 1)
@@ -569,13 +615,13 @@ def num_decoding(s):
     dp[0] = 1
 
     for i in range(1, len(s) + 1):
-        t = int(s[i-1])
+        t = int(s[i - 1])
         if 1 <= t <= 9:
-            dp[i] += dp[i-1]
+            dp[i] += dp[i - 1]
         if i >= 2:
-            t = int(s[i-2]) * 10 + int(s[i-1])
+            t = int(s[i - 2]) * 10 + int(s[i - 1])
             if 9 < t < 27:
-                dp[i] += dp[i-2]
+                dp[i] += dp[i - 2]
     return dp[-1]
 
 
@@ -590,7 +636,7 @@ def num_decoding_ii(s):
     def valid_2(index):
         if index < 1:
             return 0
-        num = int(s[index-1:index+1])
+        num = int(s[index - 1:index + 1])
         return int(9 < num < 27)
 
     dp_1, dp_2 = 1, 0
