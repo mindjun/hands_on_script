@@ -43,5 +43,27 @@ my_prime_divide(12345678)
 print(prime_list)
 
 
-from collections import Counter
-print(dict(Counter([1,2,3,4,5,8,9,0,12,3,5])))
+# 高效计算质数数量的方法
+# https://leetcode-cn.com/problems/count-primes/
+def count_primes_py(n):
+    """
+    求n以内的所有质数个数（纯python代码）
+    """
+    # 最小的质数是 2
+    if n < 2:
+        return 0
+
+    _is_prime = [1] * n
+    _is_prime[0] = _is_prime[1] = 0   # 0和1不是质数，先排除掉
+
+    # 埃式筛，把不大于根号n的所有质数的倍数剔除
+    for i in range(2, int(n ** 0.5) + 1):
+        if _is_prime[i]:
+            for j in range(i*i, n, i):
+                _is_prime[j] = False
+            # _is_prime[i * i:n:i] = [0] * ((n - 1 - i * i) // i + 1)
+
+    return sum(_is_prime)
+
+
+print(count_primes_py(10))

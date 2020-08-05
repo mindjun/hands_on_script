@@ -647,6 +647,7 @@ def longest_consecutive_sequence(nums):
     return longest
 
 
+# 接雨水问题
 # https://leetcode-cn.com/problems/trapping-rain-water/
 # https://labuladong.gitbook.io/algo/gao-pin-mian-shi-xi-lie/jie-yu-shui
 def trap(height: List[int]) -> int:
