@@ -384,20 +384,21 @@ def reorder_linked(head):
         head = temp
 
 
+# 判断回文链表
 # https://leetcode-cn.com/problems/palindrome-linked-list/
-class IsPalindrome(object):
-    def is_palindrome(self, head):
-        self.front_pointer = head
+def is_palindrome(head):
+    front_pointer = head
 
-        def check(current_node=head):
-            if current_node is not None:
-                if not check(current_node.next):
-                    return False
-                if self.front_pointer.val != current_node.val:
-                    return False
-                self.front_pointer = self.front_pointer.next
-            return True
-        return check()
+    def check(current_node=head):
+        if current_node is not None:
+            if not check(current_node.next):
+                return False
+            nonlocal front_pointer
+            if front_pointer.val != current_node.val:
+                return False
+            front_pointer = front_pointer.next
+        return True
+    return check()
 
 
 # 剑指 offer， 面试题 13，在 O(1) 的时间复杂度内删除一个链表的节点

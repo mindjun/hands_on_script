@@ -461,6 +461,7 @@ def word_break(s, word_dict):
     return back_track(s)
 
 
+# 最长公共子序列
 # https://leetcode-cn.com/problems/longest-common-subsequence/
 def longest_common_sub_sequence(text1: str, text2: str) -> int:
     len1, len2 = len(text1), len(text2)
@@ -476,6 +477,7 @@ def longest_common_sub_sequence(text1: str, text2: str) -> int:
     return dp[-1][-1]
 
 
+# 最短编辑距离
 # https://leetcode-cn.com/problems/edit-distance/
 # dp[i][j] = min(dp[i-1][j-1], dp[i-1][j] + 1, dp[i][j-1] + 1)
 def min_distance(str1, str2):
@@ -647,3 +649,29 @@ def num_decoding_ii(s):
 
 
 print(num_decoding_ii('226'))
+
+
+# https://leetcode-cn.com/problems/longest-palindromic-substring/
+# 最长回文子串
+def longest_palindrome(s: str) -> str:
+    n = len(s)
+    # dp[i][j] 代表字符串 i...j 为回文
+    # 递推公式为: dp[i][i] = True, dp[i][j] = (dp[i + 1][j - 1] and s[i] == s[j])
+    dp = [[False] * n for _ in range(n)]
+    ans = ""
+    # 枚举子串的长度 l+1
+    for l in range(n):
+        # 枚举子串的起始位置 i，这样可以通过 j=i+l 得到子串的结束位置
+        for i in range(n):
+            j = i + l
+            if j >= len(s):
+                break
+            if l == 0:
+                dp[i][j] = True
+            elif l == 1:
+                dp[i][j] = (s[i] == s[j])
+            else:
+                dp[i][j] = (dp[i + 1][j - 1] and s[i] == s[j])
+            if dp[i][j] and l + 1 > len(ans):
+                ans = s[i:j+1]
+    return ans
