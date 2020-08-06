@@ -32,6 +32,19 @@ def get_least_numbers(arr: List[int], k: int) -> List[int]:
     return [-x for x in hp]
 
 
+# https://leetcode-cn.com/problems/maximum-subarray/
+def max_sub_array_dp(nums: List[int]) -> int:
+    dp = [nums[0] for _ in nums]
+    length = len(nums)
+    result = dp[0]
+
+    for i in range(1, length):
+        dp[i] = max(dp[i - 1] + nums[i], nums[i])
+        result = max(result, dp[i])
+
+        return result
+
+
 def max_sub_array(nums: List[int]) -> int:
     if not nums:
         return 0
