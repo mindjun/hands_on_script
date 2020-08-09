@@ -480,7 +480,7 @@ def longest_common_sub_sequence(text1: str, text2: str) -> int:
 # 最短编辑距离
 # https://leetcode-cn.com/problems/edit-distance/
 # dp[i][j] = min(dp[i-1][j-1], dp[i-1][j] + 1, dp[i][j-1] + 1)
-def min_distance(str1, str2):
+def edit_distance(str1, str2):
     size1, size2 = len(str1), len(str2)
     # 需要考虑字符串为空，所以 dp 的长度需要 size + 1
     dp = [[(size1 + size2) for _ in range(size2 + 1)] for _ in range(size1 + 1)]
@@ -506,7 +506,7 @@ def min_distance(str1, str2):
 
 
 # abcd->eebcc
-print(min_distance('abcd', 'eebcc'))
+print(edit_distance('abcd', 'eebcc'))
 
 
 # https://leetcode-cn.com/problems/coin-change/
