@@ -301,6 +301,7 @@ def remove_duplicate_(head):
     while fast:
         if fast.val != slow.val:
             slow.next = fast
+            # slow ++
             slow = slow.next
         fast = fast.next
     # 将 slow 之后的节点断掉
