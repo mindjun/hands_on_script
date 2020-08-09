@@ -290,6 +290,24 @@ def remove_duplicate(head):
     return node
 
 
+# https://labuladong.gitbook.io/algo/gao-pin-mian-shi-xi-lie/ru-he-qu-chu-you-xu-shu-zu-de-zhong-fu-yuan-su
+def remove_duplicate_(head):
+    """
+    删除重复的节点，节点已经生序排列
+    """
+    if not head:
+        return head
+    slow, fast = head, head
+    while fast:
+        if fast.val != slow.val:
+            slow.next = fast
+            slow = slow.next
+        fast = fast.next
+    # 将 slow 之后的节点断掉
+    slow.next = None
+    return head
+
+
 # https://leetcode-cn.com/problems/remove-duplicates-from-sorted-list-ii/
 def delete_duplicate(head):
     """
