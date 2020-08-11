@@ -29,3 +29,18 @@ def my_func(num):
 
 print(my_func(1234))
 print(type(my_func(1234)))
+
+
+def is_valid(s):
+    stack = list()
+    for ch in s:
+        if ch == '(':
+            stack.append(ch)
+        else:
+            if not stack or stack[-1] != '(':
+                return False
+            stack.pop()
+    return True if not stack else False
+
+
+print(is_valid('(())'))
