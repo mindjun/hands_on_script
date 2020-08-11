@@ -473,7 +473,7 @@ def get_intersection_node(head_a: ListNode, head_b: ListNode) -> ListNode:
 
 if __name__ == '__main__':
     _h = ListNode(1, ListNode(2, ListNode(2, ListNode(1))))
-    IsPalindrome().is_palindrome(_h)
+    is_palindrome(_h)
 
     _h = ListNode(1, ListNode(2, ListNode(3, ListNode(4))))
     reorder_linked(_h)
