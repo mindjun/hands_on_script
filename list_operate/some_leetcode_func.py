@@ -520,6 +520,7 @@ Solution().numIslands([["1", "1", "0", "0", "0"],
                        ["0", "0", "0", "1", "1"]])
 
 
+# https://leetcode-cn.com/problems/largest-rectangle-in-histogram/
 # [2,1,5,6,2,3] ==> 10
 def largest_rectangle_area(heights):
     if not heights:

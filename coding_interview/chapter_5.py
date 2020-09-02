@@ -313,6 +313,7 @@ print(nth_ugly_number(10))
 
 
 # https://leetcode-cn.com/problems/shu-zu-zhong-de-ni-xu-dui-lcof/
+
 def reverse_pairs(nums):
     _count = 0
 
