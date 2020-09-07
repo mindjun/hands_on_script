@@ -1,5 +1,6 @@
 from collections import deque
 
+
 class linehistory:
     def __init__(self, lines, histlen=3):
         self.lines = lines
@@ -15,8 +16,8 @@ class linehistory:
 
 
 with open('./somefile.txt') as f:
-    lines = linehistory(f)
-    for line in lines:
+    _lines = linehistory(f)
+    for line in _lines:
         if 'python' in line:
-            for lineno, hline in lines.history:
-                print('{}:{}'.format(lineno, hline), end='')
+            for _lineno, _hline in _lines.history:
+                print('{}:{}'.format(_lineno, _hline), end='')
