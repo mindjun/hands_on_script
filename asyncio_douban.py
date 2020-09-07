@@ -1,8 +1,9 @@
 # -*- coding:utf-8 -*-
-from lxml import etree
-from time import time
 import asyncio
+from time import time
+
 import aiohttp
+from lxml import etree
 
 url_ = 'https://movie.douban.com/top250'
 
@@ -19,30 +20,30 @@ async def fetch_content(url):
 async def parse(url):
     page = await fetch_content(url)
     html = etree.HTML(page)
-    
+
     xpath_movie = '//*[@id="content"]/div/div[1]/ol/li'
     xpath_title = './/span[@class="title"]'
     xpath_pages = '//*[@id="content"]/div/div[1]/div[2]/a'
-    
+
     pages = html.xpath(xpath_pages)
 
     fetch_list = []
     result = []
-    
+
     for element_movie in html.xpath(xpath_movie):
         result.append(element_movie)
-    
+
     for p in pages:
         fetch_list.append(url + p.get('href'))
     print(fetch_list)
     tasks = [fetch_content(url) for url in fetch_list]
     pages = await asyncio.gather(*tasks)
-    
+
     for page in pages:
         html = etree.HTML(page)
         for element_movie in html.xpath(xpath_movie):
             result.append(element_movie)
-    
+
     title_list = list()
     for i, movie in enumerate(result, 1):
         title = movie.find(xpath_title).text
@@ -68,4 +69,3 @@ def main():
 
 
 main()
-
