@@ -4,10 +4,9 @@
 计时器装饰器的用法
 """
 
-import signal
 import functools
+import signal
 import time
-from heapq import heappush
 
 
 class TimeoutExcept(Exception):

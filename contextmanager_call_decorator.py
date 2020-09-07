@@ -12,7 +12,7 @@ def get_last4_mobile_number_sha256(mobile_number):
     :return:
     """
     time.sleep(1)
-    return mobile_number[:4] 
+    return mobile_number[:4]
 
 
 class Timer(object):
@@ -34,14 +34,13 @@ with Timer() as ti:
 
 print(ti.cost)
 
-
 from contextlib import contextmanager
 
 
 class Timer1(object):
     def __init__(self, start=None):
         self.start = start if start else time.time()
-    
+
     @contextmanager
     def __call__(self, *args, **kwargs):
         print('Timer1')
@@ -68,7 +67,6 @@ with timer() as t1:
     get_last4_mobile_number_sha256('15312341234')
     get_last4_mobile_number_sha256('15312341234')
 
-
 from functools import wraps
 
 
@@ -79,14 +77,15 @@ def dec_test(info):
             print('start')
             print('dec args is {}'.format(info))
             func(*args, **kwargs)
+
         return wrapper
+
     return decorator
 
 
 @dec_test('dec_test')
 def func_1(a, b):
     print('here is func, args is {}, {}'.format(a, b))
-    
+
 
 func_1(1, 2)
-
