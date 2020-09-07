@@ -4,6 +4,7 @@
 
 class Node(object):
     """docstring for Node"""
+
     def __init__(self, data):
         self.data = data
         self.lchild = None
@@ -19,24 +20,25 @@ class Node(object):
     def getLeft(self):
         return self.lchild
 
-    def setLeft(self,ldata):
+    def setLeft(self, ldata):
         self.lchild = Node(ldata)
         return self.lchild
 
     def getRight(self):
-        return self.rchild  
+        return self.rchild
 
-    def setRight(self,rdata):
+    def setRight(self, rdata):
         self.rchild = Node(rdata)
         return self.rchild
 
 
 class BST(object):
     """docstring for BST"""
+
     def __init__(self):
         self.root = None
 
-    def insert(self,val):
+    def insert(self, val):
         rt = self.root
         if rt is None:
             self.root = Node(val)
