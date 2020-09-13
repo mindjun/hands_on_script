@@ -12,6 +12,7 @@ class DataFetch(object):
         self.stations_dict = dict()
         self.get_all_station()
         self.station_no_mapping = defaultdict(list)
+        self.get_station_no_mapping()
 
     @staticmethod
     def _requests(url, method):
