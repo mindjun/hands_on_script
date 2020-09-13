@@ -3,16 +3,23 @@
 """
 import re
 import requests
+from collections import defaultdict
 
 
 class DataFetch(object):
     def __init__(self):
         self.lines_dict = dict()
         self.stations_dict = dict()
+        self.get_all_station()
+        self.station_no_mapping = defaultdict(list)
 
     @staticmethod
     def _requests(url, method):
         return requests.request(method, url)
+
+    def get_station_no_mapping(self):
+        for no, station in self.stations_dict.items():
+            self.station_no_mapping[station].append(no)
 
     def get_all_station(self):
         response = self._requests('http://service.shmetro.com/skin/js/pca.js', 'GET')
@@ -24,9 +31,3 @@ class DataFetch(object):
         for station in stations[0].split(','):
             line_no, station_name = station.split(':')
             self.stations_dict[line_no.replace('"', '')] = station_name.replace('"', '')
-
-
-data_fetch = DataFetch()
-data_fetch.get_all_station()
-print(data_fetch.stations_dict)
-print(data_fetch.lines_dict)
