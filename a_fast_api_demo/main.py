@@ -1,21 +1,34 @@
 import uvicorn
-from fastapi import FastAPI
+from starlette.responses import StreamingResponse
+from fastapi import FastAPI, Query
+from starlette.middleware.cors import CORSMiddleware
 
 app = FastAPI()
-
+app.add_middleware(
+        CORSMiddleware,
+        allow_origins=["*"],
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
 
 @app.get("/")
 def read_root():
     return {"Hello": "World"}
 
 
-@app.post("/items")
-def read_item(result: dict):
-    print(f'get result is {result}')
-    import time
-    time.sleep(5)
-    return {"item_id": "item_id"}
+async def slow_numbers():
+    with open('./index.html', 'r', encoding='utf-8') as f:
+        yield f.read()
+
+
+@app.get("/items")
+def read_item(bvid: str = Query(None), cid: str = Query(None)):
+    print(f'{bvid}, {cid}')
+    generator = slow_numbers()
+    response = StreamingResponse(generator, media_type='text/html')
+    return response
 
 
 if __name__ == '__main__':
-    uvicorn.run(app, host='0.0.0.0', port=8000)
+    uvicorn.run(app, host='127.0.0.1', port=8080)
