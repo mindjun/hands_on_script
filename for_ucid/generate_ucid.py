@@ -41,7 +41,7 @@ class UCIDGenerator(object):
     def contact_by_license_code(self, unified_code_group, result, nan_flag):
         license_codes = unified_code_group.groupby(by='license_code')
         # 社会信用代码不是空，但是有多组的营业执照，冲突
-        if nan_flag is False and len(license_codes) > 1:
+        if nan_flag is False and len(license_codes) > 2:
             self.fill_ucid(unified_code_group, conflict=True)
             result = pd.concat([result, unified_code_group])
             return result
