@@ -14,7 +14,7 @@ def petal(t, r, angle):
     """
     for i in range(2):
         arc(t, r, angle)
-        t.lt(180-angle)
+        t.lt(180 - angle)
 
 
 def flower(t, n, r, angle):
@@ -27,7 +27,7 @@ def flower(t, n, r, angle):
     """
     for i in range(n):
         petal(t, r, angle)
-        t.lt(360.0/n)
+        t.lt(360.0 / n)
 
 
 def move(t, length):
@@ -39,17 +39,18 @@ def move(t, length):
     t.pd()
 
 
-bob = turtle.Turtle()
+if __name__ == '__main__':
+    bob = turtle.Turtle()
 
-# draw a sequence of three flowers, as shown in the book.
-move(bob, -100)
-flower(bob, 7, 60.0, 60.0)
+    # draw a sequence of three flowers, as shown in the book.
+    move(bob, -100)
+    flower(bob, 7, 60.0, 60.0)
 
-move(bob, 100)
-flower(bob, 10, 40.0, 80.0)
+    move(bob, 100)
+    flower(bob, 10, 40.0, 80.0)
 
-move(bob, 100)
-flower(bob, 20, 140.0, 20.0)
+    move(bob, 100)
+    flower(bob, 20, 140.0, 20.0)
 
-bob.hideturtle()
-turtle.mainloop()
+    bob.hideturtle()
+    turtle.mainloop()
