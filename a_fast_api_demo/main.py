@@ -12,7 +12,6 @@ app.add_middleware(
         allow_headers=["*"],
     )
 
-
 @app.get("/")
 def read_root():
     return {"Hello": "World"}
@@ -31,20 +30,5 @@ def read_item(bvid: str = Query(None), cid: str = Query(None)):
     return response
 
 
-@app.get('/instances/{instance_id}')
-def instances(instance_id: str = Query(None)):
-    from a_fast_api_demo.utils import api_host_settings, api_auth_request
-    url = f'{api_host_settings["prod"]}/results/vod/'
-    return api_auth_request(url, parm={'instance_id': instance_id})
-
-
-@app.get('/instances/coverage/{instance_id}')
-def coverage_instances(instance_id: str = Query(None)):
-    from a_fast_api_demo.utils import api_host_settings, api_auth_request
-    url = f'{api_host_settings["prod"]}/results/general/'
-    resp = api_auth_request(url, parm={'instance_id': instance_id, 'type': 'coverage'})
-    return resp
-
-
 if __name__ == '__main__':
-    uvicorn.run(app, host='0.0.0.0', port=8081)
+    uvicorn.run(app, host='127.0.0.1', port=8080)
