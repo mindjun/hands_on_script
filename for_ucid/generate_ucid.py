@@ -36,18 +36,17 @@ class UCIDGenerator(object):
         company_df['contact'] = company_df['unified_code'].str.cat([company_df['license_code'],
                                                                     company_df['tax_code']], sep='_')
         company_df.sort_values('contact', inplace=True)
-        print(company_df)
+        for index, row in company_df['contact'].iteritems():
+            print(index, row)
+        # df.loc[candidate_idx, 'UCID'] = id_generator.get_id(member_type, True)
+        print(company_df.iloc[0])
+        # print(company_df)
         person_df = groups.get_group('个人')
         person_df.sort_values('legal_cert_no_mask', inplace=True)
-        print(person_df)
-
-    def contact_columns(self, member_type):
-        if member_type == '个人':
-            return ''
+        # print(person_df)
 
     def generate_ucid(self):
-        result = self.data_from_xlsx()
-        result.to_excel('./out.xlsx', index=False, header=True)
+        self.data_from_xlsx()
 
 
 if __name__ == '__main__':
