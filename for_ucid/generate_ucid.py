@@ -36,10 +36,24 @@ class UCIDGenerator(object):
         company_df['contact'] = company_df['unified_code'].str.cat([company_df['license_code'],
                                                                     company_df['tax_code']], sep='_')
         company_df.sort_values('contact', inplace=True)
+        candidate_idx = list()
+        temp_unified_code = None
+        license_code_set = set()
+        tax_code_set = set()
         for index, row in company_df['contact'].iteritems():
+            if temp_unified_code is None:
+                temp_unified_code = company_df.iloc[index]['unified_code']
+                candidate_idx.append(index)
+                continue
+            if company_df.iloc[index]['unified_code'] == temp_unified_code:
+                license_code_set.add(company_df.iloc[index]['license_code'])
+                tax_code_set.add(company_df.iloc[index]['tax_code'])
+                candidate_idx.append(index)
+                continue
+            #
             print(index, row)
         # df.loc[candidate_idx, 'UCID'] = id_generator.get_id(member_type, True)
-        print(company_df.iloc[0])
+        print(company_df.iloc[0]['unified_code'])
         # print(company_df)
         person_df = groups.get_group('个人')
         person_df.sort_values('legal_cert_no_mask', inplace=True)
