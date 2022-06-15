@@ -1,4 +1,6 @@
 import time
+from collections import defaultdict
+
 import pandas as pd
 
 # data_source
@@ -81,7 +83,7 @@ class UCIDGenerator(object):
                 self.update_person_container(legal_cert_no_mask_set, candidate_idx, name)
             else:
                 self.person_group_ucid(legal_cert_no_mask_set, candidate_idx)
-                last_prefix = person_df['legal_cert_no_mask'][index]
+                last_prefix = row
                 self.update_person_container(legal_cert_no_mask_set, candidate_idx, name)
             # 最后一组
             if index == len(person_df) - 1:
@@ -111,7 +113,7 @@ class UCIDGenerator(object):
         print('company sorting start at: {}'.format(start))
         company_df.sort_values('contact', inplace=True)
         print('company sorting cost: {}'.format(int(time.time()) - start))
-        candidate_idx, license_code_set, tax_code_set = list(), set(), set()
+        candidate_idx, license_code_set, tax_code_set, only_tax_code = list(), set(), set(), defaultdict(list)
         last_prefix = self.set_last_prefix(company_df, 0)
         index = -1
 
@@ -120,7 +122,7 @@ class UCIDGenerator(object):
             # 信用代码，营业执照，税号全部为空的情况
             if row == '__':
                 if len(license_code_set) != 0:
-                    self.fill_ucid(last_prefix, license_code_set, tax_code_set, candidate_idx)
+                    self.company_group_ucid(license_code_set, tax_code_set, candidate_idx)
                 self.excel_data.loc[name, "UCID"] = self.get_id('企业', False)
                 last_prefix = '___'
                 continue
@@ -129,16 +131,32 @@ class UCIDGenerator(object):
                 self.update_container(name, license_code_set, tax_code_set, candidate_idx, last_prefix)
                 continue
 
-            if row.startswith(last_prefix):
-                self.update_container(name, license_code_set, tax_code_set, candidate_idx, last_prefix)
-            else:
-                self.fill_ucid(last_prefix, license_code_set, tax_code_set, candidate_idx)
+            # 只有税号的情况
+            if row.startswith('__'):
+                last_prefix = '__'
+                only_tax_code[self.excel_data.iloc[name]['tax_code']].append(name)
+            elif len(only_tax_code) > 0:
+                self.handle_only_tax_code(only_tax_code)
                 last_prefix = self.set_last_prefix(company_df, index)
-                self.update_container(name, license_code_set, tax_code_set, candidate_idx, last_prefix)
+
+            if last_prefix != '__':
+                if row.startswith(last_prefix):
+                    self.update_container(name, license_code_set, tax_code_set, candidate_idx, last_prefix)
+                else:
+                    self.company_group_ucid(license_code_set, tax_code_set, candidate_idx)
+                    last_prefix = self.set_last_prefix(company_df, index)
+                    self.update_container(name, license_code_set, tax_code_set, candidate_idx, last_prefix)
 
             # 最后一组数据
             if index == len(company_df) - 1:
-                self.fill_ucid(last_prefix, license_code_set, tax_code_set, candidate_idx)
+                self.company_group_ucid(license_code_set, tax_code_set, candidate_idx)
+                self.handle_only_tax_code(only_tax_code)
+
+    def handle_only_tax_code(self, only_tax_code):
+        # 每一个 value 都设置相同的 ucid
+        for tax_code, names in only_tax_code.items():
+            self.excel_data.loc[names, 'UCID'] = self.get_id('企业', True)
+        only_tax_code.clear()
 
     def update_container(self, name, license_code_set, tax_code_set, candidate_idx, last_prefix):
         tax_code_set.add(self.excel_data.iloc[name]['tax_code'])
@@ -148,36 +166,10 @@ class UCIDGenerator(object):
 
     @staticmethod
     def set_last_prefix(company_df, index):
-        if company_df.iloc[index]['contact'].startswith('__'):
-            last_prefix = '__'
-        else:
-            last_prefix = '{}_'.format(company_df.iloc[index]['unified_code'])
+        last_prefix = '{}_'.format(company_df.iloc[index]['unified_code'])
         return last_prefix
 
-    def fill_ucid(self, last_prefix, license_code_set, tax_code_set, candidate_idx):
-        if last_prefix == '__':
-            self.handle_only_tax_code(tax_code_set, candidate_idx)
-        else:
-            self.handle_full_condition(license_code_set, tax_code_set, candidate_idx)
-        # 清空
-        candidate_idx.clear()
-        license_code_set.clear()
-        tax_code_set.clear()
-
-    # 处理只有税号的情况
-    # todo 只有税号的情况需要特别讨论
-    def handle_only_tax_code(self, tax_code_set, candidate_idx):
-        if len(tax_code_set) > 2 or (len(tax_code_set) == 2 and '' not in tax_code_set):
-            self.set_conflict_ucid_by_candidate_idx(candidate_idx, '企业')
-        else:
-            self.excel_data.loc[candidate_idx, "UCID"] = self.get_id('企业', True)
-
-    # 多个冲突的 ucid，需要一个一个设置
-    def set_conflict_ucid_by_candidate_idx(self, candidate_idx, member_type):
-        for idx in candidate_idx:
-            self.excel_data.loc[idx, 'UCID'] = self.get_id(member_type, False)
-
-    def handle_full_condition(self, license_code_set, tax_code_set, candidate_idx):
+    def company_group_ucid(self, license_code_set, tax_code_set, candidate_idx):
         if len(license_code_set) > 2 or (len(license_code_set) == 2 and '' not in license_code_set):
             self.set_conflict_ucid_by_candidate_idx(candidate_idx, '企业')
         elif len(tax_code_set) > 2 or (len(tax_code_set) == 2 and '' not in tax_code_set):
@@ -185,6 +177,15 @@ class UCIDGenerator(object):
         else:
             # 不冲突
             self.excel_data.loc[candidate_idx, 'UCID'] = self.get_id('企业', True)
+        # 清空
+        candidate_idx.clear()
+        license_code_set.clear()
+        tax_code_set.clear()
+
+    # 多个冲突的 ucid，需要一个一个设置
+    def set_conflict_ucid_by_candidate_idx(self, candidate_idx, member_type):
+        for idx in candidate_idx:
+            self.excel_data.loc[idx, 'UCID'] = self.get_id(member_type, False)
 
     def generate_ucid(self):
         self.data_from_xlsx()
