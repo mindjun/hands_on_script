@@ -19,21 +19,21 @@ class DoublyLink(object):
     def __init__(self):
         self.tail = None
         self.head = None
-        self.size = 0
+        self.capacity = 0
 
     def insert(self, data):
         if isinstance(data, Node):
             tmp_node = data
         else:
             tmp_node = Node(data)
-        if self.size == 0:
+        if self.capacity == 0:
             self.tail = tmp_node
             self.head = self.tail
         else:
             self.head.pre = tmp_node
             tmp_node.next = self.head
             self.head = tmp_node
-        self.size += 1
+        self.capacity += 1
         return tmp_node
 
     def remove(self, node):
@@ -46,7 +46,7 @@ class DoublyLink(object):
         else:
             node.pre.next = node.next
             node.next.pre = node.pre
-        self.size -= 1
+        self.capacity -= 1
 
     def __str__(self):
         str_text = ""
@@ -58,8 +58,8 @@ class DoublyLink(object):
 
 
 class LRU(object):
-    def __init__(self, size):
-        self.size = size
+    def __init__(self, capacity):
+        self.capacity = capacity
         self.cache = dict()
         self.link = DoublyLink()
 
@@ -70,8 +70,8 @@ class LRU(object):
         return tmp_node.data
 
     def set(self, key, value):
-        # 只有当 key 不存在 cache 中并且 size 达到上限才进行删除
-        if key not in self.cache and self.size == self.link.size:
+        # 只有当 key 不存在 cache 中并且 capacity 达到上限才进行删除
+        if key not in self.cache and self.capacity == self.link.capacity:
             self.link.remove(self.link.tail)
 
         # key 存在 cache 中的时候只需要更新 update，即是先删除再添加到链表头部
@@ -83,14 +83,14 @@ class LRU(object):
 
 
 class LRUCache(object):
-    def __init__(self, size):
-        self.size = size
+    def __init__(self, capacity):
+        self.capacity = capacity
         self.cache = OrderedDict()
 
     def set(self, key, value):
         if key in self.cache:
             self.cache.pop(key)
-        if self.size == len(self.cache):
+        if self.capacity == len(self.cache):
             self.cache.popitem(last=False)
         self.cache.update({key: value})
 
