@@ -14,6 +14,7 @@ def calculate(_s):
 
             if c == '(':
                 num = helper(s)
+                print("helper func res: {}".format(num))
 
             if (not c.isdigit() and c != ' ') or len(s) == 0:
                 if sign == '+':
@@ -34,4 +35,4 @@ def calculate(_s):
     return helper(list(_s))
 
 
-print(calculate('3*(4-5/2)-6'))
+print(calculate('35*(10-4/2)-6'))

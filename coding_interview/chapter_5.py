@@ -79,7 +79,7 @@ def count(n, x):
             # 2500 -- 2593 ==> 94
             cnt += n % i + 1
         i *= 10
-        k = int(n / i)
+        k = int(k / 10)
         if k == 0:
             break
     return cnt

@@ -38,6 +38,7 @@ def reverse_linked(head):
     return pre
 
 
+# todo 递归的调用逻辑
 def reverse_linked_1(head):
     """
     递归实现
@@ -557,7 +558,7 @@ if __name__ == '__main__':
     print(reverse_list)
     assert reverse_list == [7, 6, 5, 4, 3, 2, 1]
 
-    h = Node(1, Node(2, Node(3, Node(4, Node(5, Node(6, Node(7)))))))
+    h = Node(1, Node(2, Node(3, Node(4, None))))
     reverse_list2 = list()
     new_h_2 = reverse_linked_1(h)
     while new_h_2:
