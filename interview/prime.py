@@ -2,9 +2,24 @@ import math
 from functools import lru_cache
 
 
+def prime_divide_(num):
+    res = list()
+    while num != 1:
+        for i in range(2, num+1):
+            if num % i == 0:
+                res.append(i)
+                num = int(num / i)
+                break
+    return res
+
+
+print('prime_divide_ {}'.format(prime_divide_(212955649)))
+print('prime_divide_ {}'.format(prime_divide_(90)))
+
+
 @lru_cache(maxsize=10)
 def is_prime(n):
-    print('cal num : {}'.format(n))
+    # print('cal num : {}'.format(n))
     for i in range(2, int(math.ceil(n/2))):
         if n % i == 0:
             return False, i
@@ -13,14 +28,17 @@ def is_prime(n):
 
 def prime_divide(num):
     result = list()
-    while not is_prime(num)[0]:
-        result.append(is_prime(num)[1])
-        num = int(num/is_prime(num)[1])
-    result.append(num)
-    print(result)
+    # flag = False
+    # while not flag:
+    while num != 1:
+        _, divided = is_prime(num)
+        result.append(divided)
+        num = int(num/divided)
+    return result
 
 
-prime_divide(212955649)
+print(f'prime_divide {prime_divide(212955649)}')
+print(f'prime_divide {prime_divide(90)}')
 
 
 @lru_cache(maxsize=10)

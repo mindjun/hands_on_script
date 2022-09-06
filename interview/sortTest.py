@@ -59,16 +59,16 @@ def quick_sort(list1, l, u):
         while i < j and list1[i] <= target:
             i += 1
         list1[i], list1[j] = list1[j], list1[i]
-    list1[l], list1[i] = list1[i], list1[j]
+    list1[j] = target
     quick_sort(list1, 0, i - 1)
     quick_sort(list1, i + 1, u)
 
 
 list1 = [random.randint(-100, 100) for i in range(10)]
 
+quick_sort(list1, 0, len(list1) - 1)
+print(f'here quick sort{list1}')
 
-# quickSort(list1,0,len(list1)-1)
-# print list1
 
 # ========================================================
 
@@ -346,7 +346,6 @@ def swapSelect(m, n):
 
 
 # ========================================================
-import numpy as np
 # a = np.arange(24).reshape((2, 3, 4))
 # print a
 # b = a[1][1][1]
@@ -447,12 +446,12 @@ class SingleTon(object):
 obj1 = SingleTon()
 obj2 = SingleTon()
 
+
 # obj1.attr1 = 'test'
 # print obj1.attr1, obj2.attr1
 # print obj1 is obj2
 
 # ========================================================
-import math
 
 
 # print math.pi

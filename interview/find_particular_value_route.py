@@ -31,6 +31,7 @@ def find_xiaoming(root, stack, name='xiaoming'):
 
 def find_xiaoming1(_root, _stack, _name='xiaoming'):
     _res = list()
+    _stack.append(_root)
 
     def helper(root, stack, name='xiaoming'):
         if root.val == name:
