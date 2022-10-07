@@ -1,0 +1,317 @@
+{
+    "status": "confirmed",
+    "monitorId": "Geth_1_F_PROD",
+    "monitorVersion": "0.117.1",
+    "timePending": "6117",
+    "blocksPending": 1,
+    "pendingTimeStamp": "2022-09-30T03:21:41.634Z",
+    "pendingBlockNumber": 15643433,
+    "hash": "0x690532037f5d10651e6db8cba1ce44267144c511861eb9b37d33c8fd44cc0821",
+    "from": "0x29cB73E47CDFeB284e37876DD3C131b922B31C51",
+    "to": "0x1111111254fb6c44bAC0beD2854e76F90643097d",
+    "value": "0",
+    "gas": 217574,
+    "nonce": 44,
+    "blockHash": "0xbce519f1d688a70dfabf32a0d50df81595d6784e9c8893266749fae917fda8f3",
+    "blockNumber": 15643434,
+    "v": "0x1",
+    "r": "0xb917a8d224b9d75f4804d972034382d261df753e8fd3a7a4e5bf886f335ad881",
+    "s": "0xe3c17a3926c62a8d887d6dcfb61c49ec0555fdfbf6e90ee4ce0a11ce7597f86",
+    "input": "0x2e95b6c8000000000000000000000000dac17f958d2ee523a2206206994597c13d831ec700000000000000000000000000000000000000000000000000000000b2d05e0000000000000000000000000000000000000000000000031f45f779fd2613774a0000000000000000000000000000000000000000000000000000000000000080000000000000000000000000000000000000000000000000000000000000000280000000000000003b6d034006da0fd433c1a5d7a4faa01111c044910a18455380000000000000003b6d0340ec7a1a2896d4b9d7014fa7be2aa936c8a76a8072e26b9977",
+    "type": 2,
+    "maxFeePerGas": "150000000000",
+    "maxFeePerGasGwei": 150,
+    "maxPriorityFeePerGas": "50000000000",
+    "maxPriorityFeePerGasGwei": 50,
+    "baseFeePerGas": "38870357489",
+    "baseFeePerGasGwei": 38.9,
+    "transactionIndex": 0,
+    "gasUsed": 178881,
+    "asset": "",
+    "watchedAddress": "0xdac17f958d2ee523a2206206994597c13d831ec7",
+    "direction": "",
+    "counterparty": "",
+    "internalTransactions": [
+        {
+            "type": "CALL",
+            "from": "0x1111111254fb6c44bac0bed2854e76f90643097d",
+            "to": "0xdac17f958d2ee523a2206206994597c13d831ec7",
+            "input": "0x23b872dd00000000000000000000000029cb73e47cdfeb284e37876dd3c131b922b31c5100000000000000000000000006da0fd433c1a5d7a4faa01111c044910a18455300000000000000000000000000000000000000000000000000000000b2d05e00",
+            "gas": 188118,
+            "gasUsed": 26530,
+            "value": "0",
+            "contractCall": {
+                "contractType": "erc20",
+                "contractAddress": "0xdac17f958d2ee523a2206206994597c13d831ec7",
+                "methodName": "transferFrom",
+                "params": {
+                    "_from": "0x29cB73E47CDFeB284e37876DD3C131b922B31C51",
+                    "_to": "0x06da0fd433C1A5d7a4faa01111c044910A184553",
+                    "_value": "3000000000"
+                },
+                "contractAlias": "USDT",
+                "contractDecimals": 6,
+                "contractName": "Tether USD",
+                "decimalValue": "3000"
+            }
+        },
+        {
+            "type": "CALL",
+            "from": "0x1111111254fb6c44bac0bed2854e76f90643097d",
+            "to": "0x06da0fd433c1a5d7a4faa01111c044910a184553",
+            "input": "0x022c0d9f0000000000000000000000000000000000000000000000001f551dc8b168bb050000000000000000000000000000000000000000000000000000000000000000000000000000000000000000ec7a1a2896d4b9d7014fa7be2aa936c8a76a807200000000000000000000000000000000000000000000000000000000000000800000000000000000000000000000000000000000000000000000000000000000",
+            "gas": 156430,
+            "gasUsed": 48623,
+            "value": "0"
+        },
+        {
+            "type": "CALL",
+            "from": "0x06da0fd433c1a5d7a4faa01111c044910a184553",
+            "to": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+            "input": "0xa9059cbb000000000000000000000000ec7a1a2896d4b9d7014fa7be2aa936c8a76a80720000000000000000000000000000000000000000000000001f551dc8b168bb05",
+            "gas": 140713,
+            "gasUsed": 12862,
+            "value": "0",
+            "contractCall": {
+                "contractType": "erc20",
+                "contractAddress": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+                "methodName": "transfer",
+                "params": {
+                    "_to": "0xec7a1a2896D4B9d7014FA7be2aA936C8A76A8072",
+                    "_value": "2257743536003267333"
+                },
+                "contractAlias": "WETH",
+                "contractDecimals": 18,
+                "contractName": "Wrapped Ether",
+                "decimalValue": "2.257743536003267333"
+            }
+        },
+        {
+            "type": "CALL",
+            "from": "0x1111111254fb6c44bac0bed2854e76f90643097d",
+            "to": "0xec7a1a2896d4b9d7014fa7be2aa936c8a76a8072",
+            "input": "0x022c0d9f00000000000000000000000000000000000000000000032cf5ed744eded5cf42000000000000000000000000000000000000000000000000000000000000000000000000000000000000000029cb73e47cdfeb284e37876dd3c131b922b31c5100000000000000000000000000000000000000000000000000000000000000800000000000000000000000000000000000000000000000000000000000000000",
+            "gas": 102972,
+            "gasUsed": 71330,
+            "value": "0"
+        },
+        {
+            "type": "CALL",
+            "from": "0xec7a1a2896d4b9d7014fa7be2aa936c8a76a8072",
+            "to": "0x9b99cca871be05119b2012fd4474731dd653febe",
+            "input": "0xa9059cbb00000000000000000000000029cb73e47cdfeb284e37876dd3c131b922b31c5100000000000000000000000000000000000000000000032cf5ed744eded5cf42",
+            "gas": 88198,
+            "gasUsed": 35531,
+            "value": "0",
+            "contractCall": {
+                "contractType": "erc20",
+                "contractAddress": "0x9b99cca871be05119b2012fd4474731dd653febe",
+                "methodName": "transfer",
+                "params": {
+                    "_to": "0x29cB73E47CDFeB284e37876DD3C131b922B31C51",
+                    "_value": "14996477135843023507266"
+                },
+                "contractAlias": "MATTER",
+                "contractDecimals": 18,
+                "contractName": "Antimatter.Finance Governance Token",
+                "decimalValue": "14996.477135843023507266"
+            }
+        },
+        {
+            "type": "DELEGATECALL",
+            "from": "0x9b99cca871be05119b2012fd4474731dd653febe",
+            "to": "0x08d59467e8fbee7575ed0905bba03903654cfbfd",
+            "input": "0xa9059cbb00000000000000000000000029cb73e47cdfeb284e37876dd3c131b922b31c5100000000000000000000000000000000000000000000032cf5ed744eded5cf42",
+            "gas": 81619,
+            "gasUsed": 30206,
+            "value": "0",
+            "contractCall": {
+                "contractType": "erc20",
+                "contractAddress": "0x08d59467e8fbee7575ed0905bba03903654cfbfd",
+                "methodName": "transfer",
+                "params": {
+                    "_to": "0x29cB73E47CDFeB284e37876DD3C131b922B31C51",
+                    "_value": "14996477135843023507266"
+                },
+                "contractAlias": "MATTER",
+                "contractDecimals": 18,
+                "contractName": "Antimatter.Finance Governance Token",
+                "decimalValue": "14996.477135843023507266"
+            }
+        },
+        {
+            "type": "DELEGATECALL",
+            "from": "0x9b99cca871be05119b2012fd4474731dd653febe",
+            "to": "0x08d59467e8fbee7575ed0905bba03903654cfbfd",
+            "input": "0x70a08231000000000000000000000000ec7a1a2896d4b9d7014fa7be2aa936c8a76a8072",
+            "gas": 51011,
+            "gasUsed": 620,
+            "value": "0",
+            "contractCall": {
+                "contractType": "erc20",
+                "contractAddress": "0x08d59467e8fbee7575ed0905bba03903654cfbfd",
+                "methodName": "balanceOf",
+                "params": {
+                    "_owner": "0xec7a1a2896D4B9d7014FA7be2aA936C8A76A8072"
+                },
+                "contractAlias": "MATTER",
+                "contractDecimals": 18,
+                "contractName": "Antimatter.Finance Governance Token"
+            }
+        }
+    ],
+    "netBalanceChanges": [
+        {
+            "address": "0x29cB73E47CDFeB284e37876DD3C131b922B31C51",
+            "balanceChanges": [
+                {
+                    "delta": "-3000000000",
+                    "asset": {
+                        "type": "erc20",
+                        "symbol": "USDT",
+                        "contractAddress": "0xdac17f958d2ee523a2206206994597c13d831ec7"
+                    },
+                    "breakdown": [
+                        {
+                            "counterparty": "0x06da0fd433C1A5d7a4faa01111c044910A184553",
+                            "amount": "-3000000000"
+                        }
+                    ]
+                },
+                {
+                    "delta": "14996477135843023507266",
+                    "asset": {
+                        "type": "erc20",
+                        "symbol": "MATTER",
+                        "contractAddress": "0x9b99cca871be05119b2012fd4474731dd653febe"
+                    },
+                    "breakdown": [
+                        {
+                            "counterparty": "0xec7a1a2896d4b9d7014fa7be2aa936c8a76a8072",
+                            "amount": "14996477135843023507266"
+                        }
+                    ]
+                },
+                {
+                    "delta": "14996477135843023507266",
+                    "asset": {
+                        "type": "erc20",
+                        "symbol": "MATTER",
+                        "contractAddress": "0x08d59467e8fbee7575ed0905bba03903654cfbfd"
+                    },
+                    "breakdown": [
+                        {
+                            "counterparty": "0x9b99cca871be05119b2012fd4474731dd653febe",
+                            "amount": "14996477135843023507266"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "address": "0x06da0fd433C1A5d7a4faa01111c044910A184553",
+            "balanceChanges": [
+                {
+                    "delta": "3000000000",
+                    "asset": {
+                        "type": "erc20",
+                        "symbol": "USDT",
+                        "contractAddress": "0xdac17f958d2ee523a2206206994597c13d831ec7"
+                    },
+                    "breakdown": [
+                        {
+                            "counterparty": "0x29cB73E47CDFeB284e37876DD3C131b922B31C51",
+                            "amount": "3000000000"
+                        }
+                    ]
+                },
+                {
+                    "delta": "-2257743536003267333",
+                    "asset": {
+                        "type": "erc20",
+                        "symbol": "WETH",
+                        "contractAddress": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2"
+                    },
+                    "breakdown": [
+                        {
+                            "counterparty": "0xec7a1a2896D4B9d7014FA7be2aA936C8A76A8072",
+                            "amount": "-2257743536003267333"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "address": "0xec7a1a2896D4B9d7014FA7be2aA936C8A76A8072",
+            "balanceChanges": [
+                {
+                    "delta": "2257743536003267333",
+                    "asset": {
+                        "type": "erc20",
+                        "symbol": "WETH",
+                        "contractAddress": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2"
+                    },
+                    "breakdown": [
+                        {
+                            "counterparty": "0x06da0fd433c1a5d7a4faa01111c044910a184553",
+                            "amount": "2257743536003267333"
+                        }
+                    ]
+                },
+                {
+                    "delta": "-14996477135843023507266",
+                    "asset": {
+                        "type": "erc20",
+                        "symbol": "MATTER",
+                        "contractAddress": "0x9b99cca871be05119b2012fd4474731dd653febe"
+                    },
+                    "breakdown": [
+                        {
+                            "counterparty": "0x29cB73E47CDFeB284e37876DD3C131b922B31C51",
+                            "amount": "-14996477135843023507266"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "address": "0x9b99cca871be05119b2012fd4474731dd653febe",
+            "balanceChanges": [
+                {
+                    "delta": "-14996477135843023507266",
+                    "asset": {
+                        "type": "erc20",
+                        "symbol": "MATTER",
+                        "contractAddress": "0x08d59467e8fbee7575ed0905bba03903654cfbfd"
+                    },
+                    "breakdown": [
+                        {
+                            "counterparty": "0x29cB73E47CDFeB284e37876DD3C131b922B31C51",
+                            "amount": "-14996477135843023507266"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "system": "ethereum",
+    "network": "main",
+    "contractCall": {
+        "contractType": "AggregationRouterV4",
+        "contractAddress": "0x1111111254fb6c44bAC0beD2854e76F90643097d",
+        "methodName": "unoswap",
+        "params": {
+            "srcToken": "0xdAC17F958D2ee523a2206206994597C13D831ec7",
+            "amount": "3000000000",
+            "minReturn": "14743990147329968797514",
+            "pools": [
+                "0x80000000000000003b6d034006da0fd433c1a5d7a4faa01111c044910a184553",
+                "0x80000000000000003b6d0340ec7a1a2896d4b9d7014fa7be2aa936c8a76a8072"
+            ]
+        },
+        "contractName": "1inch V4 Router"
+    },
+    "timeStamp": "2022-09-30T03:21:47.751Z",
+    "categoryCode": "activeAddress",
+    "eventCode": "txConfirmed"
+}
