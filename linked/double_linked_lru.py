@@ -15,7 +15,7 @@ class Node(object):
         return str(self.data)
 
 
-class DoublyLink(object):
+class DoubleLink(object):
     def __init__(self):
         self.tail = None
         self.head = None
@@ -61,7 +61,7 @@ class LRU(object):
     def __init__(self, capacity):
         self.capacity = capacity
         self.cache = dict()
-        self.link = DoublyLink()
+        self.link = DoubleLink()
 
     def get(self, key):
         tmp_node = self.cache.get(key)

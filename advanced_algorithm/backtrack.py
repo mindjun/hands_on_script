@@ -112,7 +112,7 @@ def permutation(s):
     return result_list
 
 
-print(permutation('aab'))
+print(permutation('aabc'))
 
 
 # 组合
@@ -169,8 +169,11 @@ def combine_sum(candidates, target):
 
     # 使用 start 来标记，避免一些组合的重复遍历
     def backtrack(start, track, _target):
-        if _target == 0:
-            res.append(track.copy())
+        # if _target == 0:
+        #     res.append(track.copy())
+        #     return
+        if sum(track) == target:
+            res.append(list(track))
             return
         for i in range(start, size):
             if candidates[i] > _target:
@@ -184,7 +187,7 @@ def combine_sum(candidates, target):
     return res
 
 
-print(combine_sum([8, 7, 4, 3], 11))
+print('combine_sum is ', combine_sum([8, 7, 4, 3], 11))
 
 
 # https://leetcode-cn.com/problems/combination-sum-ii/submissions/
@@ -326,7 +329,7 @@ def subset_backtrack(nums):
     return res
 
 
-print(subset_backtrack([1, 2, 3]))
+print('subset_backtrack is ', subset_backtrack([1, 2, 3]))
 
 
 # [4,4,4,1,4]
