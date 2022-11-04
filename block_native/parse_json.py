@@ -12,8 +12,8 @@ both_tx = {'0x690532037f5d10651e6db8cba1ce44267144c511861eb9b37d33c8fd44cc0821',
            '0xb836d6cee91c76f8bf444849cf2fb8695cf09828a8aa05c91e002dacd9696c6d'}
 
 for tx in txs:
-    if tx['hash'] not in both_tx:
-        continue
+    # if tx['hash'] not in both_tx:
+    #     continue
 
     if tx['status'] == "pending-simulation":
         internal_transactions = tx['internalTransactions']
