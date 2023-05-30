@@ -430,7 +430,7 @@ def get_res(a, b):
     return res
 
 
-print(get_res(a="11", b="1"))
+print(get_res(a="1010", b="1011"))
 
 
 def add_binary(a, b) -> str:
@@ -464,7 +464,7 @@ print(str_str('hello', 'll'))
 def coin_change(coins, amount):
     dp = [amount + 1] * (amount + 1)
     dp[0] = 0
-    for n in range(amount + 1):
+    for n in range(1, amount + 1):
         for coin in coins:
             if n - coin < 0:
                 continue
@@ -473,3 +473,29 @@ def coin_change(coins, amount):
 
 
 print(coin_change([1, 2, 5], 11))
+
+
+def coin_change1(coins, amount):
+    memo = dict()
+
+    def dp(n):
+        res = float("INF")
+        if n == 0:
+            return 0
+        if n < 0:
+            return -1
+        if n in memo:
+            return memo[n]
+
+        for coin in coins:
+            sub_problem = dp(n-coin)
+            if sub_problem == -1:
+                continue
+            res = min(res, 1 + sub_problem)
+        memo[n] = res if res != float("INF") else -1
+        return memo[n]
+
+    return dp(amount)
+
+
+print(coin_change1([1, 2, 5], 11))

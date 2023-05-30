@@ -25,12 +25,13 @@ from copy import deepcopy
 # // 选择列表：nums 中不存在于 track 的那些元素
 # // 结束条件：nums 中的元素全都在 track 中出现
 # 没有重复的情况
-def permute(list1):
+def permute(board):
     _track, res = list(), list()
+    # target_length 表示从 board 中选出 target_length 个元素进行排列
+    target_length = len(board)
 
     def back_track(choice_list, track):
-        # len(choice_list) - 1 表示从 choice_list 中选出 (len(choice_list) - 1) 个元素进行排列
-        if len(track) == len(choice_list) - 1:
+        if len(track) == target_length:
             res.append(list(track))
             return
 
@@ -41,11 +42,32 @@ def permute(list1):
             back_track(choice_list, track)
             track.pop()
 
-    back_track(list1, _track)
+    back_track(board, _track)
     return res
 
 
 print(f'permute for [1, 2, 3], A(3, 2) is {permute([1, 2, 3])}')
+
+
+# https://www.bilibili.com/video/BV1mY411D7f6/?vd_source=e0c4806c7843b66260ba282654cd8eba
+def new_permute(nums):
+    n = len(nums)
+    res = []
+    path = [0] * n
+
+    def dfs(i, s):
+        if i == n:
+            res.append(list(path))
+
+        for x in s:
+            path[i] = x
+            dfs(i+1, s-{x})
+
+    dfs(0, set(nums))
+    return res
+
+
+print(f'new_permute for [1, 2, 3], A(3, 2) is {new_permute([1, 2, 3])}')
 
 
 # https://leetcode-cn.com/problems/permutations-ii/submissions/

@@ -5,12 +5,25 @@ from functools import lru_cache
 def prime_divide_(num):
     res = list()
     while num != 1:
-        for i in range(2, num+1):
+        ceil_num = int(math.ceil(num/2))
+        for i in range(2, ceil_num):
             if num % i == 0:
                 res.append(i)
                 num = int(num / i)
                 break
+            if ceil_num - 1 == i:
+                res.append(num)
+                num = 1
+                break
     return res
+    # res = list()
+    # while num != 1:
+    #     for i in range(2, num+1):
+    #         if num % i == 0:
+    #             res.append(i)
+    #             num = int(num / i)
+    #             break
+    # return res
 
 
 print('prime_divide_ {}'.format(prime_divide_(212955649)))

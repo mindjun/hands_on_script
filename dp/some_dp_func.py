@@ -485,10 +485,10 @@ def edit_distance(str1, str2):
     # 需要考虑字符串为空，所以 dp 的长度需要 size + 1
     dp = [[(size1 + size2) for _ in range(size2 + 1)] for _ in range(size1 + 1)]
 
-    # 初始化 dp[i][0] = 0
+    # 初始化 dp[i][0] = i
     for i in range(size1 + 1):
         dp[i][0] = i
-    # 初始化 dp[0][j] = 0
+    # 初始化 dp[0][j] = j
     for j in range(size2 + 1):
         dp[0][j] = j
 

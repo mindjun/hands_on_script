@@ -53,6 +53,19 @@ def reverse_linked_1(head):
     return last
 
 
+def reverse_pre_n_(head, n):
+    if head is None or head.next is None:
+        return head
+    current, pre = head, None
+    while current and n > 0:
+        temp = current.next
+        current.next = pre
+        current, pre = temp, current
+        n -= 1
+    head.next = current
+    return pre
+
+
 def reverse_pre_n(head, n):
     """
     翻转链表前 n 个节点
@@ -580,7 +593,13 @@ if __name__ == '__main__':
 
     print(check_is_loop_in_linked_and_find_entry(h))
 
-
+    h4 = Node(1, Node(2, Node(3, Node(4, Node(5, Node(6, Node(7)))))))
+    res = reverse_pre_n_(h4, 4)
+    print_res = list()
+    while res:
+        print_res.append(res.data)
+        res = res.next
+    print(print_res)
 # ListNode reverse(ListNode head) {
 #     if (head.next == null) return head;
 #     ListNode last = reverse(head.next);

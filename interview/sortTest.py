@@ -196,13 +196,15 @@ def minHeapSort():
 
 def merge(left, right):
     result = []
+    left.reverse()
+    right.reverse()
     while len(left) > 0 and len(right) > 0:
-        if left[0] <= right[0]:
-            result.append(left[0])
-            del left[0]
+        if left[-1] <= right[-1]:
+            result.append(left[-1])
+            del left[-1]
         else:
-            result.append(right[0])
-            del right[0]
+            result.append(right[-1])
+            del right[-1]
     result.extend(left)
     result.extend(right)
     return result
@@ -214,9 +216,9 @@ list1 = [random.randint(10, 100) for i in range(10)]
 def mergeSort(list1):
     if len(list1) <= 1:
         return list1
-    midd = len(list1) / 2
-    left = mergeSort(list1[:midd])
-    right = mergeSort(list1[midd:])
+    mid = len(list1) / 2
+    left = mergeSort(list1[:mid])
+    right = mergeSort(list1[mid:])
     return merge(left, right)
 
 

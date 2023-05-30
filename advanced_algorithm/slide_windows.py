@@ -73,6 +73,9 @@ def min_window(s: str, t: str) -> str:
         return s[start: start + length]
 
 
+min_window('adbecfebanc', 'abc')
+
+
 # https://leetcode-cn.com/problems/permutation-in-string/
 # 字符串的排列
 def check_inclusion(s1: str, s2: str) -> bool:
