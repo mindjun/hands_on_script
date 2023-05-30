@@ -1,8 +1,9 @@
-import random
 import bisect
-import heapq
-from typing import List
 import collections
+import heapq
+import random
+from typing import List
+# from functools import cmp_to_key
 
 
 # https://leetcode-cn.com/problems/container-with-most-water/
@@ -420,13 +421,13 @@ class Solution(object):
 
 
 _matrix = [
-   [1,  5,  9],
-   [10, 11, 13],
-   [12, 13, 15]
+    [1, 5, 9],
+    [10, 11, 13],
+    [12, 13, 15]
 ]
 _matrix1 = [
-   [1, 2],
-   [1, 3]
+    [1, 2],
+    [1, 3]
 ]
 print(Solution().kthSmallest(_matrix1, 2))
 
@@ -506,7 +507,9 @@ class Solution:
         if grid[i][j] == '1':
             # 标示为 0 已经访问过的点
             grid[i][j] = 0
-            return 1 + self.dfs(i-1, j, grid) + self.dfs(i+1, j, grid) + self.dfs(i, j-1, grid) + self.dfs(i, j+1, grid)
+            return 1 + self.dfs(i - 1, j, grid) + self.dfs(i + 1, j, grid) + self.dfs(i, j - 1, grid) + self.dfs(i,
+                                                                                                                 j + 1,
+                                                                                                                 grid)
         else:
             return 0
 
@@ -517,6 +520,7 @@ Solution().numIslands([["1", "1", "0", "0", "0"],
                        ["0", "0", "0", "1", "1"]])
 
 
+# https://leetcode-cn.com/problems/largest-rectangle-in-histogram/
 # [2,1,5,6,2,3] ==> 10
 def largest_rectangle_area(heights):
     if not heights:
@@ -642,3 +646,22 @@ def longest_consecutive_sequence(nums):
                 current_longest += 1
             longest = max(longest, current_longest)
     return longest
+
+
+# 接雨水问题
+# https://leetcode-cn.com/problems/trapping-rain-water/
+# https://labuladong.gitbook.io/algo/gao-pin-mian-shi-xi-lie/jie-yu-shui
+def trap(height: List[int]) -> int:
+    left_max = [height[0]] * len(height)
+    for i in range(1, len(height)):
+        left_max[i] = max(left_max[i - 1], height[i])
+    right_max = [height[-1]] * len(height)
+    for i in range(0, len(height) - 1)[::-1]:
+        right_max[i] = max(right_max[i + 1], height[i])
+    res = 0
+    for i in range(len(height) - 1):
+        res += min(left_max[i], right_max[i]) - height[i]
+    return res
+
+
+print(trap([0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1]))

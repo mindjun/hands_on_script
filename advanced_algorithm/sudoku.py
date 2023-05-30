@@ -20,7 +20,6 @@ def sudoku():
 
         if board[i][j] != '.':
             back_track(i, j + 1)
-            return
 
         for ch in '123456789':
             if not is_valid(i, j, ch):
@@ -28,8 +27,8 @@ def sudoku():
 
             board[i][j] = ch
             if back_track(i, j + 1):
+                # 找到一个可行解就推出
                 return True
-
             board[i][j] = '.'
 
         # 遍历结束，找不到可行解
@@ -39,8 +38,6 @@ def sudoku():
         """
         判断是否能在 row， col 这个位置放入 ch 字符
         """
-        if row == 3 and col == 4:
-            print(f'index is {(row, col)}')
         for i in range(9):
             # 判断行是否存在重复
             if board[row][i] == ch:
@@ -48,8 +45,6 @@ def sudoku():
             # 判断列是否存在重复
             if board[i][col] == ch:
                 return False
-            if row == 3 and col == 4:
-                print(f'-- ceil is {(row // 3 * 3 + i // 3, col // 3 * 3 + i % 3)}')
             # 判断 3 x 3 方框是否存在重复
             if board[row // 3 * 3 + i // 3][col // 3 * 3 + i % 3] == ch:
                 return False

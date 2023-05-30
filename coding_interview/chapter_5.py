@@ -32,6 +32,19 @@ def get_least_numbers(arr: List[int], k: int) -> List[int]:
     return [-x for x in hp]
 
 
+# https://leetcode-cn.com/problems/maximum-subarray/
+def max_sub_array_dp(nums: List[int]) -> int:
+    dp = [nums[0] for _ in nums]
+    length = len(nums)
+    result = dp[0]
+
+    for i in range(1, length):
+        dp[i] = max(dp[i - 1] + nums[i], nums[i])
+        result = max(result, dp[i])
+
+        return result
+
+
 def max_sub_array(nums: List[int]) -> int:
     if not nums:
         return 0
@@ -66,7 +79,7 @@ def count(n, x):
             # 2500 -- 2593 ==> 94
             cnt += n % i + 1
         i *= 10
-        k = int(n / i)
+        k = int(k / 10)
         if k == 0:
             break
     return cnt
@@ -175,29 +188,27 @@ def translate_num(num):
     result = list()
 
     def is_valid(i, j):
-        if i < j <= size and 0 <= int(_num[i:j]) < 26:
-            if len(_num[i:j]) >= 2 and _num[i:j].startswith('0'):
-                return False
-            return True
+        return i < j <= size and 0 <= int(_num[i:j]) < 26
 
     def back_track(start, track):
         if start == size:
             result.append(track.copy())
-            return
 
         for i in range(start, size):
             if is_valid(start, i + 1):
+                if len(_num[start:i + 1]) >= 2 and _num[start:i + 1].startswith('0'):
+                    continue
                 track.append(_num[start:i + 1])
                 back_track(i + 1, track)
                 track.pop()
         return
 
     back_track(0, [])
-    return result
+    return len(result)
 
 
-print(translate_num(12258))
-print(translate_num(648006092))
+print(f'translate_num 12258 is {translate_num(12258)}')
+print(f'translate_num 648006092 is {translate_num(648006092)}')
 
 
 # https://leetcode-cn.com/problems/ba-shu-zi-fan-yi-cheng-zi-fu-chuan-lcof/solution/mian-shi-ti-46-ba-shu-zi-fan-yi-cheng-zi-fu-chua-6/
@@ -223,8 +234,8 @@ def translate_num_dp(num):
     return a
 
 
-print(translate_num_dp(12258))
-print(translate_num_dp(648006092))
+print(f'translate_num_dp 12258 is {translate_num_dp(12258)}')
+print(f'translate_num_dp 648006092 is {translate_num_dp(648006092)}')
 
 
 # https://leetcode-cn.com/problems/li-wu-de-zui-da-jie-zhi-lcof/solution/mian-shi-ti-47-li-wu-de-zui-da-jie-zhi-dong-tai-gu/
@@ -302,6 +313,7 @@ print(nth_ugly_number(10))
 
 
 # https://leetcode-cn.com/problems/shu-zu-zhong-de-ni-xu-dui-lcof/
+
 def reverse_pairs(nums):
     _count = 0
 

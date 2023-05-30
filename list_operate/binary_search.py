@@ -36,6 +36,7 @@ def left_bound(nums, target):
         else:
             # 别返回，锁定左侧边界
             right = mid - 1
+    # 因为推出while条件是条件是 left<=right,存在left越界的情况
     # 最后需要检查左边界的越界情况，并且不一定存在相等的情况
     if left >= len(nums) or nums[left] != target:
         return -1

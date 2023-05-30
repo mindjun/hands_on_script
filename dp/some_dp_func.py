@@ -382,6 +382,39 @@ def length_of_lis(nums):
 print(length_of_lis([1, 4, 3, 4, 2, 3]))
 
 
+# https://leetcode-cn.com/problems/russian-doll-envelopes/
+# 俄罗斯套娃信封问题
+# 本质上就是在 envelopes 按照 w 升序，h 降序之后的 h 所在的序列查找最长上升子序列
+def max_envelopes(envelopes: List[List[int]]) -> int:
+    if not envelopes:
+        return 0
+
+    # 动态规划查找最长上升子序列
+    # nums = sorted(envelopes, key=lambda x: (x[0], -x[1]))
+    # heights = [i[1] for i in nums]
+    #
+    # dp = [1] * len(heights)
+    # for i in range(len(heights)):
+    #     for j in range(0, i):
+    #         if heights[i] > heights[j]:
+    #             dp[i] = max(dp[i], dp[j] + 1)
+    # return max(dp)
+
+    import bisect
+    subset = []
+    # 二分查找的方式查找最长上升子序列
+    for env in sorted(envelopes, key=lambda x: (x[0], -x[1])):
+        pos = bisect.bisect_left(subset, env[1])
+        if pos == len(subset):
+            subset.append(env[1])
+        elif env[1] < subset[pos]:
+            subset[pos] = env[1]
+    return len(subset)
+
+
+print(f'max_envelopes is {max_envelopes([[5, 4], [6, 4], [6, 7], [2, 3]])}')
+
+
 # https://leetcode-cn.com/problems/word-break/
 class Solution:
     def wordBreak(self, s: str, wordDict: List[str]) -> bool:
@@ -428,6 +461,7 @@ def word_break(s, word_dict):
     return back_track(s)
 
 
+# 最长公共子序列
 # https://leetcode-cn.com/problems/longest-common-subsequence/
 def longest_common_sub_sequence(text1: str, text2: str) -> int:
     len1, len2 = len(text1), len(text2)
@@ -443,17 +477,18 @@ def longest_common_sub_sequence(text1: str, text2: str) -> int:
     return dp[-1][-1]
 
 
+# 最短编辑距离
 # https://leetcode-cn.com/problems/edit-distance/
 # dp[i][j] = min(dp[i-1][j-1], dp[i-1][j] + 1, dp[i][j-1] + 1)
-def min_distance(str1, str2):
+def edit_distance(str1, str2):
     size1, size2 = len(str1), len(str2)
     # 需要考虑字符串为空，所以 dp 的长度需要 size + 1
     dp = [[(size1 + size2) for _ in range(size2 + 1)] for _ in range(size1 + 1)]
 
-    # 初始化 dp[i][0] = 0
+    # 初始化 dp[i][0] = i
     for i in range(size1 + 1):
         dp[i][0] = i
-    # 初始化 dp[0][j] = 0
+    # 初始化 dp[0][j] = j
     for j in range(size2 + 1):
         dp[0][j] = j
 
@@ -471,7 +506,7 @@ def min_distance(str1, str2):
 
 
 # abcd->eebcc
-print(min_distance('abcd', 'eebcc'))
+print(edit_distance('abcd', 'eebcc'))
 
 
 # https://leetcode-cn.com/problems/coin-change/
@@ -527,6 +562,19 @@ def coin_change__(coins, amount):
     return dp[-1]
 
 
+# https://leetcode-cn.com/problems/coin-change-2/
+# 零钱兑换 II, 求能凑足目标金额的方案次数
+# 可以理解为完全背包问题
+def coin_change_ii(amount, coins):
+    dp = [0] * (amount + 1)
+    dp[0] = 1
+
+    for coin in coins:
+        for i in range(coin, amount+1):
+            dp[i] = dp[i] + dp[i-coin]
+    return dp[-1]
+
+
 # https://leetcode-cn.com/problems/maximum-product-subarray/
 def max_product(nums):
     dp_max = [float('-inf')] * (len(nums) + 1)
@@ -569,13 +617,13 @@ def num_decoding(s):
     dp[0] = 1
 
     for i in range(1, len(s) + 1):
-        t = int(s[i-1])
+        t = int(s[i - 1])
         if 1 <= t <= 9:
-            dp[i] += dp[i-1]
+            dp[i] += dp[i - 1]
         if i >= 2:
-            t = int(s[i-2]) * 10 + int(s[i-1])
+            t = int(s[i - 2]) * 10 + int(s[i - 1])
             if 9 < t < 27:
-                dp[i] += dp[i-2]
+                dp[i] += dp[i - 2]
     return dp[-1]
 
 
@@ -590,7 +638,7 @@ def num_decoding_ii(s):
     def valid_2(index):
         if index < 1:
             return 0
-        num = int(s[index-1:index+1])
+        num = int(s[index - 1:index + 1])
         return int(9 < num < 27)
 
     dp_1, dp_2 = 1, 0
@@ -601,3 +649,65 @@ def num_decoding_ii(s):
 
 
 print(num_decoding_ii('226'))
+
+
+# https://leetcode-cn.com/problems/longest-palindromic-substring/
+# 最长回文子串
+def longest_palindrome(s: str) -> str:
+    n = len(s)
+    # dp[i][j] 代表字符串 i...j 为回文
+    # 递推公式为: dp[i][i] = True, dp[i][j] = (dp[i + 1][j - 1] and s[i] == s[j])
+    dp = [[False] * n for _ in range(n)]
+    ans = ""
+    # 枚举子串的长度 l+1
+    for l in range(n):
+        # 枚举子串的起始位置 i，这样可以通过 j=i+l 得到子串的结束位置
+        for i in range(n):
+            j = i + l
+            if j >= len(s):
+                break
+            if l == 0:
+                dp[i][j] = True
+            elif l == 1:
+                dp[i][j] = (s[i] == s[j])
+            else:
+                dp[i][j] = (dp[i + 1][j - 1] and s[i] == s[j])
+            if dp[i][j] and l + 1 > len(ans):
+                ans = s[i:j+1]
+    return ans
+
+
+# 最长回文子串
+# https://leetcode-cn.com/problems/longest-palindromic-substring/solution/zhong-xin-kuo-san-dong-tai-gui-hua-by-liweiwei1419/
+def longest_palindrome_dp(s: str) -> str:
+    size = len(s)
+    if size < 2:
+        return s
+
+    dp = [[False for _ in range(size)] for _ in range(size)]
+
+    max_len = 1
+    start = 0
+
+    for i in range(size):
+        dp[i][i] = True
+
+    for j in range(1, size):
+        for i in range(0, j):
+            if s[i] == s[j]:
+                if j - i < 3:
+                    dp[i][j] = True
+                else:
+                    dp[i][j] = dp[i + 1][j - 1]
+            else:
+                dp[i][j] = False
+
+            if dp[i][j]:
+                cur_len = j - i + 1
+                if cur_len > max_len:
+                    max_len = cur_len
+                    start = i
+    return s[start:start + max_len]
+
+
+print(longest_palindrome("babad"))

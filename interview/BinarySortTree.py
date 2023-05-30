@@ -41,6 +41,9 @@ class BinarySortTree(object):
             self._root = BSTNode(value)
             return self._root
         rt = rt if rt else self._root
+        # 如果已经存在，直接返回
+        if rt.data == value:
+            return rt
         if value > rt.data:
             rt.right = self.insert_1(value, rt.right)
         if value < rt.data:
@@ -258,7 +261,7 @@ class BinarySortTree(object):
     def delete(self, value, root=None):
         # 先找到该节点，再删除
         if root is None:
-            root = self._root
+            return root
         if root.data == value:
             # do delete
             # 左子数为空，返回右子树
@@ -344,6 +347,18 @@ class BinarySortTree(object):
         if not rt:
             return 0
         return 1 + self.node_count(rt.left) + self.node_count(rt.right)
+
+    @staticmethod
+    def tree_high(root):
+        left_high, right_high = 0, 0
+        left, right = root, root
+        while left:
+            left = left.left
+            left_high += 1
+        while right:
+            right = right.right
+            right_high += 1
+        return left_high, right_high
 
 
 if __name__ == '__main__':

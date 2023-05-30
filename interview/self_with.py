@@ -55,17 +55,17 @@ class LazyConnection:
         self.sock = None
 
 
-conn = LazyConnection(('www.python.org', 80))
-# Connection closed
-with conn as s:
-    # conn.__enter__() executes: connection open
-    s.send(b'GET /index.html HTTP/1.0\r\n')
-    s.send(b'Host: www.python.org\r\n')
-    s.send(b'\r\n')
-    # 在 iter 最后加一个 '' 作为结束标志
-    resp = b''.join(iter(partial(s.recv, 8192), b''))
-    # conn.__exit__() executes: connection closed
-    print(resp)
+# conn = LazyConnection(('www.python.org', 80))
+# # Connection closed
+# with conn as s:
+#     # conn.__enter__() executes: connection open
+#     s.send(b'GET /index.html HTTP/1.0\r\n')
+#     s.send(b'Host: www.python.org\r\n')
+#     s.send(b'\r\n')
+#     # 在 iter 最后加一个 '' 作为结束标志
+#     resp = b''.join(iter(partial(s.recv, 8192), b''))
+#     # conn.__exit__() executes: connection closed
+#     print(resp)
 
 
 @contextmanager
@@ -84,5 +84,5 @@ with timethis('counting'):
     while n > 0:
         n -= 1
 
-# if __name__ == '__main__':
-#     with_test()
+if __name__ == '__main__':
+    with_test()

@@ -89,6 +89,40 @@ print(two_sun([2, 7, 11, 15], 9))
 print(two_sum([2, 7, 11, 15], 7))
 
 
+# https://leetcode-cn.com/problems/3sum/
+def three_sum(nums: List[int]) -> List[List[int]]:
+    nums.sort()
+    res = list()
+
+    for k in range(len(nums) - 2):
+        if nums[k] > 0:
+            break
+        if k > 0 and nums[k] == nums[k - 1]:
+            continue
+
+        i, j = k + 1, len(nums) - 1
+        while i < j:
+            s = nums[k] + nums[i] + nums[j]
+            if s < 0:
+                i += 1
+                while i < j and nums[i] == nums[i - 1]:
+                    i += 1
+            elif s > 0:
+                j -= 1
+                while i < j and nums[j] == nums[j + 1]:
+                    j -= 1
+            else:
+                res.append([nums[k], nums[i], nums[j]])
+                i += 1
+                j -= 1
+                # 避免有重复的值，在循环前进行判断
+                while i < j and nums[i] == nums[i - 1]:
+                    i += 1
+                while i < j and nums[j] == nums[j + 1]:
+                    j -= 1
+    return res
+
+
 def find_second_large_num(list1):
     return heapq.nlargest(2, list1)
 
@@ -234,96 +268,6 @@ def is_sub_sequence(s, t):
             i += 1
         j += 1
     return i == len(s)
-
-
-# def sliding_windows(s, t):
-#     need, windows = defaultdict(int), defaultdict(int)
-#     for c in t:
-#         need[c] += 1
-#     left, right = 0, 0
-#     valid = 0
-#     while right < len(s):
-#         char = s[right]
-#         right += 1
-#         # 进行窗口的更新
-#
-#         # 判断左侧窗口是否需要收缩
-#         while left:
-#             d = s[left]
-#             left += 1
-#             # 进行窗口内数据的更新
-
-
-def sliding_windows(s, t):
-    need, windows = defaultdict(int), defaultdict(int)
-    for c in t:
-        need[c] += 1
-    left, right = 0, 0
-    valid = 0
-    start, length = 0, len(s) + 1
-    while right < len(s):
-        c = s[right]
-        right += 1
-        # 进行窗口的更新
-        if c in need:
-            windows[c] += 1
-            if windows[c] == need[c]:
-                valid += 1
-
-        # 判断左侧窗口是否需要收缩
-        while valid == len(need):
-            if right - left < length:
-                start = left
-                length = right - start
-            d = s[left]
-            left += 1
-            # 进行窗口内数据的更新
-            if d in need:
-                if need[d] == windows[d]:
-                    valid -= 1
-                windows[d] -= 1
-    if length == len(s) + 1:
-        return ""
-    else:
-        return s[start: start + length]
-
-
-# https://leetcode-cn.com/submissions/detail/66886106/
-class MaxSlideQueue(object):
-    def __init__(self):
-        self.queue = list()
-
-    def push(self, item):
-        while self.queue and self.queue[-1] < item:
-            self.queue.pop()
-        self.queue.append(item)
-
-    def max(self):
-        return self.queue[0]
-
-    def pop(self, item):
-        # 只有当 item 是最大的值时才删除
-        if self.queue[0] == item:
-            self.queue = self.queue[1:]
-
-
-# https://leetcode-cn.com/submissions/detail/66886106/
-# max slide windows
-def max_slide_windows(list1, size):
-    result = list()
-    slide_windows = MaxSlideQueue()
-    for index, item in enumerate(list1, 1):
-        if index < size:
-            slide_windows.push(item)
-        else:
-            slide_windows.push(item)
-            result.append(slide_windows.max())
-            # pop 的 item 应该是 index - k
-            slide_windows.pop(list1[index - size])
-    return result
-
-
-print(f'max_slide_windows ', max_slide_windows(list1=[1, 3, -1, -3, 5, 3, 6, 7], size=3))
 
 
 # 烧饼排序
@@ -486,7 +430,7 @@ def get_res(a, b):
     return res
 
 
-print(get_res(a="11", b="1"))
+print(get_res(a="1010", b="1011"))
 
 
 def add_binary(a, b) -> str:
@@ -515,3 +459,43 @@ def str_str(haystack: str, needle: str):
 
 
 print(str_str('hello', 'll'))
+
+
+def coin_change(coins, amount):
+    dp = [amount + 1] * (amount + 1)
+    dp[0] = 0
+    for n in range(1, amount + 1):
+        for coin in coins:
+            if n - coin < 0:
+                continue
+            dp[n] = min(dp[n], 1 + dp[n-coin])
+    return dp
+
+
+print(coin_change([1, 2, 5], 11))
+
+
+def coin_change1(coins, amount):
+    memo = dict()
+
+    def dp(n):
+        res = float("INF")
+        if n == 0:
+            return 0
+        if n < 0:
+            return -1
+        if n in memo:
+            return memo[n]
+
+        for coin in coins:
+            sub_problem = dp(n-coin)
+            if sub_problem == -1:
+                continue
+            res = min(res, 1 + sub_problem)
+        memo[n] = res if res != float("INF") else -1
+        return memo[n]
+
+    return dp(amount)
+
+
+print(coin_change1([1, 2, 5], 11))

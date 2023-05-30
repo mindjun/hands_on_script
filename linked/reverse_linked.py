@@ -38,6 +38,7 @@ def reverse_linked(head):
     return pre
 
 
+# todo 递归的调用逻辑
 def reverse_linked_1(head):
     """
     递归实现
@@ -50,6 +51,19 @@ def reverse_linked_1(head):
     head.next.next = head
     head.next = None
     return last
+
+
+def reverse_pre_n_(head, n):
+    if head is None or head.next is None:
+        return head
+    current, pre = head, None
+    while current and n > 0:
+        temp = current.next
+        current.next = pre
+        current, pre = temp, current
+        n -= 1
+    head.next = current
+    return pre
 
 
 def reverse_pre_n(head, n):
@@ -290,6 +304,25 @@ def remove_duplicate(head):
     return node
 
 
+# https://labuladong.gitbook.io/algo/gao-pin-mian-shi-xi-lie/ru-he-qu-chu-you-xu-shu-zu-de-zhong-fu-yuan-su
+def remove_duplicate_(head):
+    """
+    删除重复的节点，节点已经生序排列
+    """
+    if not head:
+        return head
+    slow, fast = head, head
+    while fast:
+        if fast.val != slow.val:
+            slow.next = fast
+            # slow ++
+            slow = slow.next
+        fast = fast.next
+    # 将 slow 之后的节点断掉
+    slow.next = None
+    return head
+
+
 # https://leetcode-cn.com/problems/remove-duplicates-from-sorted-list-ii/
 def delete_duplicate(head):
     """
@@ -384,20 +417,21 @@ def reorder_linked(head):
         head = temp
 
 
+# 判断回文链表
 # https://leetcode-cn.com/problems/palindrome-linked-list/
-class IsPalindrome(object):
-    def is_palindrome(self, head):
-        self.front_pointer = head
+def is_palindrome(head):
+    front_pointer = head
 
-        def check(current_node=head):
-            if current_node is not None:
-                if not check(current_node.next):
-                    return False
-                if self.front_pointer.val != current_node.val:
-                    return False
-                self.front_pointer = self.front_pointer.next
-            return True
-        return check()
+    def check(current_node=head):
+        if current_node is not None:
+            if not check(current_node.next):
+                return False
+            nonlocal front_pointer
+            if front_pointer.val != current_node.val:
+                return False
+            front_pointer = front_pointer.next
+        return True
+    return check()
 
 
 # 剑指 offer， 面试题 13，在 O(1) 的时间复杂度内删除一个链表的节点
@@ -453,7 +487,7 @@ def get_intersection_node(head_a: ListNode, head_b: ListNode) -> ListNode:
 
 if __name__ == '__main__':
     _h = ListNode(1, ListNode(2, ListNode(2, ListNode(1))))
-    IsPalindrome().is_palindrome(_h)
+    is_palindrome(_h)
 
     _h = ListNode(1, ListNode(2, ListNode(3, ListNode(4))))
     reorder_linked(_h)
@@ -537,7 +571,7 @@ if __name__ == '__main__':
     print(reverse_list)
     assert reverse_list == [7, 6, 5, 4, 3, 2, 1]
 
-    h = Node(1, Node(2, Node(3, Node(4, Node(5, Node(6, Node(7)))))))
+    h = Node(1, Node(2, Node(3, Node(4, None))))
     reverse_list2 = list()
     new_h_2 = reverse_linked_1(h)
     while new_h_2:
@@ -559,7 +593,13 @@ if __name__ == '__main__':
 
     print(check_is_loop_in_linked_and_find_entry(h))
 
-
+    h4 = Node(1, Node(2, Node(3, Node(4, Node(5, Node(6, Node(7)))))))
+    res = reverse_pre_n_(h4, 4)
+    print_res = list()
+    while res:
+        print_res.append(res.data)
+        res = res.next
+    print(print_res)
 # ListNode reverse(ListNode head) {
 #     if (head.next == null) return head;
 #     ListNode last = reverse(head.next);

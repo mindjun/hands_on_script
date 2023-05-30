@@ -25,12 +25,13 @@ from copy import deepcopy
 # // 选择列表：nums 中不存在于 track 的那些元素
 # // 结束条件：nums 中的元素全都在 track 中出现
 # 没有重复的情况
-def permute(list1):
+def permute(board):
     _track, res = list(), list()
+    # target_length 表示从 board 中选出 target_length 个元素进行排列
+    target_length = len(board)
 
     def back_track(choice_list, track):
-        # len(choice_list) - 1 表示从 choice_list 中选出 (len(choice_list) - 1) 个元素进行排列
-        if len(track) == len(choice_list) - 1:
+        if len(track) == target_length:
             res.append(list(track))
             return
 
@@ -41,11 +42,32 @@ def permute(list1):
             back_track(choice_list, track)
             track.pop()
 
-    back_track(list1, _track)
+    back_track(board, _track)
     return res
 
 
 print(f'permute for [1, 2, 3], A(3, 2) is {permute([1, 2, 3])}')
+
+
+# https://www.bilibili.com/video/BV1mY411D7f6/?vd_source=e0c4806c7843b66260ba282654cd8eba
+def new_permute(nums):
+    n = len(nums)
+    res = []
+    path = [0] * n
+
+    def dfs(i, s):
+        if i == n:
+            res.append(list(path))
+
+        for x in s:
+            path[i] = x
+            dfs(i+1, s-{x})
+
+    dfs(0, set(nums))
+    return res
+
+
+print(f'new_permute for [1, 2, 3], A(3, 2) is {new_permute([1, 2, 3])}')
 
 
 # https://leetcode-cn.com/problems/permutations-ii/submissions/
@@ -112,7 +134,7 @@ def permutation(s):
     return result_list
 
 
-print(permutation('aab'))
+print(permutation('aabc'))
 
 
 # 组合
@@ -169,8 +191,11 @@ def combine_sum(candidates, target):
 
     # 使用 start 来标记，避免一些组合的重复遍历
     def backtrack(start, track, _target):
-        if _target == 0:
-            res.append(track.copy())
+        # if _target == 0:
+        #     res.append(track.copy())
+        #     return
+        if sum(track) == target:
+            res.append(list(track))
             return
         for i in range(start, size):
             if candidates[i] > _target:
@@ -184,7 +209,7 @@ def combine_sum(candidates, target):
     return res
 
 
-print(combine_sum([8, 7, 4, 3], 11))
+print('combine_sum is ', combine_sum([8, 7, 4, 3], 11))
 
 
 # https://leetcode-cn.com/problems/combination-sum-ii/submissions/
@@ -281,10 +306,11 @@ def partition(s):
     return res
 
 
-print(partition('aab'))
+print(f'partition of aab is {partition("aab")}')
 
 
 # 计算子集
+# 仅适用于没有重复的情况
 # A = subset([1,2])
 # subset([1,2,3]) = A + [A[i].add(3) for i = 1..len(A)]
 def subset(_nums):
@@ -325,7 +351,7 @@ def subset_backtrack(nums):
     return res
 
 
-print(subset_backtrack([1, 2, 3]))
+print('subset_backtrack is ', subset_backtrack([1, 2, 3]))
 
 
 # [4,4,4,1,4]
@@ -334,10 +360,13 @@ def subsets_with_dup(nums: List[int]) -> List[List[int]]:
     nums.sort()
 
     def back_track(start, track):
-        if list(track) not in res:
-            res.append(list(track))
+        # if list(track) not in res:
+        res.append(list(track))
 
         for i in range(start, len(nums)):
+            # 去重
+            if i > start and nums[i] == nums[i-1]:
+                continue
             track.append(nums[i])
             back_track(i + 1, track)
             track.pop()
