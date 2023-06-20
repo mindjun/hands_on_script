@@ -5,6 +5,9 @@
 #     traverse(root.left);
 #     traverse(root.right);
 # }
+from queue import Queue
+
+from collections import defaultdict
 
 
 class BSTNode(object):
@@ -222,7 +225,6 @@ class BinarySortTree(object):
         # 每次从队列中取出一个元素并访问，并判断其左右子节点是否为空，将子节点推入队列
         # 循环的退出条件为队列为空
         # from my_queue import Queue
-        from queue import Queue
         if rt is None:
             rt = self._root
         qu = Queue()
@@ -236,13 +238,28 @@ class BinarySortTree(object):
             if node.right:
                 qu.put(node.right)
 
+    def layer_travel_with_depth(self, rt=None):
+        travel_road = defaultdict(list)
+        if rt is None:
+            rt = self._root
+        queue = Queue()
+        dep = 0
+        queue.put((rt, dep))
+        while not queue.empty():
+            node, depth = queue.get_nowait()
+            travel_road[depth].append(node.data)
+            if node.left:
+                queue.put((node.left, depth + 1))
+            if node.right:
+                queue.put((node.right, depth + 1))
+        return travel_road
+
     def layer_travel_1(self, rt=None):
         """
         按照每一层，从左到右进行打印
         :param rt:
         :return:
         """
-        from collections import defaultdict
         res = defaultdict(list)
         if rt is None:
             rt = self._root
@@ -370,6 +387,7 @@ if __name__ == '__main__':
     print([i.data for i in bin_sort])
     print(f'节点数为 : {bin_sort.node_count(bin_sort.get_root())}')
     print(f'层序遍历: {bin_sort.layer_travel_1()}')
+    print(f'队列层序遍历: {bin_sort.layer_travel_with_depth()}')
     # bin_sort.reverse_tree_node1(bin_sort._root)
     # print([i.data for i in bin_sort])
     # bin_sort.reverse_tree_node()
