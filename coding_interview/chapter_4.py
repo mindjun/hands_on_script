@@ -2,6 +2,7 @@ from typing import List
 
 
 # 剑指 offer 28
+# 顺时针打印矩阵
 # https://leetcode-cn.com/problems/shun-shi-zhen-da-yin-ju-zhen-lcof/
 def spiral_order(matrix):
     # 从 (0, 0) 开始
@@ -113,6 +114,7 @@ class Solution:
 print(Solution().validateStackSequences([1, 0], [1, 0]))
 
 
+# 栈的压入、弹出序列
 # https://leetcode-cn.com/problems/zhan-de-ya-ru-dan-chu-xu-lie-lcof/solution/mian-shi-ti-31-zhan-de-ya-ru-dan-chu-xu-lie-mo-n-2/
 def validate_stack_sequences(pushed: List[int], popped: List[int]) -> bool:
     stack, i = [], 0
@@ -135,6 +137,7 @@ class TreeNode(object):
         return f'TreeNode < {self.val} >'
 
 
+# 从上到下打印二叉树（层序遍历）
 # https://leetcode-cn.com/problems/cong-shang-dao-xia-da-yin-er-cha-shu-iii-lcof/
 def level_order(root: TreeNode) -> List[List[int]]:
     node_list = list()
@@ -157,13 +160,13 @@ def level_order(root: TreeNode) -> List[List[int]]:
                 q.append(node.left)
             if node.right:
                 q.append(node.right)
-        node_list.append(tmp[::-1] if len(node_list) & 1 else tmp)
+        node_list.append(tmp[::-1] if len(node_list) % 2 == 1 else tmp)
 
     return node_list
 
 
 t = TreeNode(1, TreeNode(2, left=TreeNode(4)), TreeNode(3, right=TreeNode(5)))
-print(level_order(t))
+print("层序遍历 : {}".format(level_order(t)))
 
 
 # https://leetcode-cn.com/problems/er-cha-sou-suo-shu-de-hou-xu-bian-li-xu-lie-lcof/

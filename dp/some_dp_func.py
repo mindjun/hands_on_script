@@ -1,7 +1,20 @@
 from typing import List
 from collections import defaultdict
 
+triangle_ = [
+    [2],
+    [3, 4],
+    [6, 5, 7],
+    [4, 1, 8, 3]
+]
+triangle__ = [
+    [1],
+    [-2, -5],
+    [3, 6, 9],
+    [-1, 2, 4, -3]]
 
+
+# 三角形最小路径和
 # https://leetcode-cn.com/problems/triangle/
 # dfs 解法，leetcode 超过时间限制
 # 给定一个三角形，找出自顶向下的最小路径和。每一步只能移动到下一行中相邻的结点上。
@@ -27,19 +40,23 @@ def minimum_total(triangle):
         path.pop()
 
     dfs(0, 0, 0)
-    print(result)
+    # print(result)
     for path_ in result:
         _temp_res = triangle[0][0]
         _path = f'{_temp_res}'
         for item in path_:
             _temp_res += triangle[item[0]][item[1]]
             _path += f' ==> {triangle[item[0]][item[1]]}'
-        print(f'path {_path} sum is {_temp_res}')
+        # print(f'path {_path} sum is {_temp_res}')
     return min_sum
+
+
+print(minimum_total(triangle__))
 
 
 # 自顶向下
 # 结果为 dp 最后一列中的最小值
+# dp[i][j] = min(dp[i - 1][j], dp[i - 1][j - 1]) + triangle[i][j]
 def minimum_total_dp_top_down(triangle):
     dp = [[0] * len(triangle[i]) for i in range(len(triangle))]
     dp[0][0] = triangle[0][0]
@@ -58,6 +75,9 @@ def minimum_total_dp_top_down(triangle):
     return min(dp[-1])
 
 
+print(minimum_total_dp_top_down(triangle__))
+
+
 # 自底向上
 def minimum_total_with_cache(triangle):
     cache = [[-1] * len(triangle[i]) for i in range(len(triangle))]
@@ -72,8 +92,11 @@ def minimum_total_with_cache(triangle):
         return cache[x][y]
 
     res = dfs(0, 0)
-    print(cache)
+    print("minimum_total_with_cache: {}".format(cache))
     return res
+
+
+print(minimum_total_with_cache(triangle__))
 
 
 # 自底向上，与 cache 版本一致，先将 dp[-1] 这一行初始化为 triangle 的最后一行，我们要求的结果就在 dp[0][0]
@@ -90,23 +113,10 @@ def minimum_total_dp(triangle):
     return dp[0][0]
 
 
-triangle_ = [
-    [2],
-    [3, 4],
-    [6, 5, 7],
-    [4, 1, 8, 3]
-]
-triangle__ = [
-    [1],
-    [-2, -5],
-    [3, 6, 9],
-    [-1, 2, 4, -3]]
-print(minimum_total(triangle__))
-print(minimum_total_with_cache(triangle__))
 print(minimum_total_dp(triangle__))
-print(minimum_total_dp_top_down(triangle__))
 
 
+# 最小路径和
 # https://leetcode-cn.com/problems/minimum-path-sum/
 # 自底向上
 def min_path_sum_cache(nums):
@@ -133,11 +143,16 @@ def min_path_sum_cache(nums):
 
     # 从 (0, 0) 的位置开始遍历
     res = dfs(0, 0)
-    print(cache)
+    # print(cache)
     return res
 
 
-print(min_path_sum_cache([[1, 3, 1], [1, 5, 1], [4, 2, 1]]))
+path_ = [
+    [1, 3, 1],
+    [1, 5, 1],
+    [4, 2, 1]
+]
+print("最小路径和(min_path_sum_cache): {}".format(min_path_sum_cache(path_)))
 
 
 # 自顶向下，需要考虑下标越界的情况
@@ -159,14 +174,10 @@ def min_path_sum_dp(nums):
     return dp[-1][-1]
 
 
-path_ = [
-    [1, 3, 1],
-    [1, 5, 1],
-    [4, 2, 1]
-]
-print(min_path_sum_dp(path_))
+print("最小路径和(min_path_sum_dp): {}".format(min_path_sum_dp(path_)))
 
 
+# 不同的路径
 # https://leetcode-cn.com/problems/unique-paths/
 # 回溯的方法，顺便能拿到路径
 def unique_paths_dfs(m, n):
@@ -204,6 +215,7 @@ def unique_paths_dfs(m, n):
 print(unique_paths_dfs(3, 7))
 
 
+# 不同的路径
 def unique_paths_dp(m, n):
     dp = [[1] * m for _ in range(n)]
 
@@ -221,7 +233,7 @@ def unique_paths_dp(m, n):
     return dp[-1][-1]
 
 
-print(unique_paths_dp(3, 7))
+print("unique_paths_dp: {}".format(unique_paths_dp(3, 7)))
 
 
 # 这里涉及到滚动数组的概念
@@ -237,7 +249,7 @@ def unique_paths_dp_(m, n):
     return dp[-1]
 
 
-print(unique_paths_dp_(3, 7))
+print("unique_paths_dp_: {}".format(unique_paths_dp_(3, 7)))
 
 
 # https://leetcode-cn.com/problems/unique-paths-ii/
@@ -334,6 +346,7 @@ def jump_ii_(nums):
     return step
 
 
+# 分割回文串
 # https://leetcode-cn.com/problems/palindrome-partitioning-ii/
 # https://leetcode-cn.com/problems/palindrome-partitioning-ii/solution/dong-tai-gui-hua-hui-su-zhu-xing-jie-shi-python3-b/
 def min_cut(s):
@@ -379,7 +392,7 @@ def length_of_lis(nums):
 
 
 # dp == [1, 2, 2, 3, 2, 3]
-print(length_of_lis([1, 4, 3, 4, 2, 3]))
+print("最长上升子序列: {}".format(length_of_lis([1, 4, 3, 4, 2, 3])))
 
 
 # https://leetcode-cn.com/problems/russian-doll-envelopes/
@@ -509,6 +522,7 @@ def edit_distance(str1, str2):
 print(edit_distance('abcd', 'eebcc'))
 
 
+# 找零钱
 # https://leetcode-cn.com/problems/coin-change/
 def coin_change(coins, amount):
     dp = [amount + 1 for _ in range(amount + 1)]
@@ -532,6 +546,7 @@ def coin_change(coins, amount):
 print('coin_change ', coin_change([1, 2, 5], 11))
 
 
+# 找零钱
 def coin_change_(coins, amount):
     dp = [amount + 1] * (amount + 1)
     # 一定要初始化 dp[0] = 0

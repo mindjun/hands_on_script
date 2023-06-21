@@ -89,6 +89,17 @@ print(count(12, 1))
 print(f'2593 中 5 出现 {count(2593, 5)} 次')
 
 
+def my_count(n, x):
+    cnt = 0
+    for i in range(1, n+1):
+        cnt += str(i).count(str(x))
+    return cnt
+
+
+print(f'2593 中 5 ___出现___ {my_count(2593, 5)} 次')
+print(f'12 中 0 ___出现___ {my_count(12, 0)} 次')
+
+
 # 计算 1 至 n 中数字 x 出现的次数 x in range[0, 10)
 # 统计包括 0 出现次数的情况
 # https://www.cnblogs.com/cyjb/p/digitOccurrenceInRegion.html
@@ -181,6 +192,7 @@ print(find_nth_digit(1001))
 
 
 # https://leetcode-cn.com/problems/ba-shu-zi-fan-yi-cheng-zi-fu-chuan-lcof/
+# 把数字翻译成字符串
 # 回溯的方法解决
 def translate_num(num):
     _num = str(num)
@@ -254,6 +266,7 @@ def max_value(grid):
     return grid[-1][-1]
 
 
+# 最长不含重复字符的字串
 # https://leetcode-cn.com/problems/zui-chang-bu-han-zhong-fu-zi-fu-de-zi-zi-fu-chuan-lcof/
 def length_of_longest_substring(s):
     if not s:
@@ -293,6 +306,7 @@ def length_of_longest_substring_ii(s):
     return res
 
 
+# 丑数
 # https://leetcode-cn.com/problems/chou-shu-lcof/solution/mian-shi-ti-49-chou-shu-dong-tai-gui-hua-qing-xi-t/
 def nth_ugly_number(n):
     dp = [1] * n
@@ -309,7 +323,7 @@ def nth_ugly_number(n):
     return dp[-1]
 
 
-print(nth_ugly_number(10))
+print("nth_ugly_number: {}".format(nth_ugly_number(10)))
 
 
 # https://leetcode-cn.com/problems/shu-zu-zhong-de-ni-xu-dui-lcof/
@@ -351,6 +365,7 @@ def reverse_pairs(nums):
 print(reverse_pairs([7, 5, 6, 4]))
 
 
+# 0～n-1中缺失的数字
 # https://leetcode-cn.com/problems/que-shi-de-shu-zi-lcof/solution/mian-shi-ti-53-ii-0n-1zhong-que-shi-de-shu-zi-er-f/
 def missing_number(nums):
     i, j = 0, len(nums) - 1
@@ -361,6 +376,20 @@ def missing_number(nums):
         else:
             j = m - 1
     # 变量 i 和 j 分别指向 “右子数组的首位元素” 和 “左子数组的末位元素”
+    return i
+
+
+print(missing_number([0, 1, 3]))
+
+
+def missing_number_by_binary(nums):
+    i, j = 0, len(nums) - 1
+    while i <= j:
+        m = (i + j) // 2
+        if nums[m] == m:
+            i = m + 1
+        else:
+            j = m - 1
     return i
 
 
