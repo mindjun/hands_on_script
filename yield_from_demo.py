@@ -10,7 +10,7 @@ def path_travel(path):
             yield os.path.join(path, item)
 
 
-iter_travel = path_travel('/Users/jun.hu/PycharmProjects/hands_on_script/interview')
+iter_travel = path_travel(os.path.curdir)
 for item in iter_travel:
     print(item)
 
