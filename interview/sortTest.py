@@ -129,7 +129,7 @@ def adjustHeap(list1, i, size):
 
 
 def buildHeap(list1, size):
-    for i in range(0, size / 2)[::-1]:
+    for i in range(0, size // 2)[::-1]:
         adjustHeap(list1, i, size)
 
 
@@ -200,29 +200,24 @@ def merge(left, right):
     right.reverse()
     while len(left) > 0 and len(right) > 0:
         if left[-1] <= right[-1]:
-            result.append(left[-1])
-            del left[-1]
+            result.append(left.pop())
         else:
-            result.append(right[-1])
-            del right[-1]
+            result.append(right.pop())
     result.extend(left)
     result.extend(right)
     return result
 
 
-list1 = [random.randint(10, 100) for i in range(10)]
-
-
-def mergeSort(list1):
-    if len(list1) <= 1:
-        return list1
-    mid = len(list1) / 2
-    left = mergeSort(list1[:mid])
-    right = mergeSort(list1[mid:])
+def merge_sort(temp_list):
+    if len(temp_list) <= 1:
+        return temp_list
+    mid = len(temp_list) // 2
+    left = merge_sort(temp_list[:mid])
+    right = merge_sort(temp_list[mid:])
     return merge(left, right)
 
 
-# print mergeSort(list1)
+print(merge_sort([4, 1, 7, 6, 5, 3, 8, 2]))
 
 # ========================================================
 
@@ -543,4 +538,4 @@ def naiva_topsort(G, S=None):
     return seq
 
 
-print(naiva_topsort(G))
+# print(naiva_topsort(G))

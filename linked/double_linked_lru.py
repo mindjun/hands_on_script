@@ -95,10 +95,13 @@ class LRUCache(object):
         self.cache.update({key: value})
 
     def get(self, key):
+        find = True if key in self.cache else False
+        if not find:
+            return False, None
         value = self.cache.get(key)
         self.cache.pop(key)
         self.cache.update({key: value})
-        return value
+        return True, value
 
 
 if __name__ == '__main__':
@@ -121,3 +124,5 @@ if __name__ == '__main__':
     print(r.get("1"))
     r.set("4", "4")
     print(r.cache)
+    print(r.get("a"))
+

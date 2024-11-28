@@ -7,6 +7,19 @@
 from typing import List
 
 
+# 递归
+def hanoi(n, f, a, t):
+    if n == 1:
+        print(f'move {n} from {f} to {t}')
+        return
+    hanoi(n - 1, f, t, a)
+    print(f'move {n} from {f} to {a}')
+    hanoi(n - 1, a, f, t)
+
+
+hanoi(3, 'F', 'A', 'T')
+
+
 # N 叉树的前序遍历
 # https://leetcode-cn.com/problems/n-ary-tree-preorder-traversal/
 def pre_order(root):

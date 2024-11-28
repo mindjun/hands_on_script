@@ -25,6 +25,7 @@ def max_area(height):
 print(f'max_area for [1, 8, 6, 2, 5, 4, 8, 3, 7] is {max_area([1, 8, 6, 2, 5, 4, 8, 3, 7])}')
 
 
+# 删除有序数组中的重复项
 # https://leetcode-cn.com/problems/remove-duplicates-from-sorted-array/
 def remove_duplicates(nums):
     size = len(nums)
@@ -44,7 +45,7 @@ def remove_duplicates(nums):
     return left + 1
 
 
-print(remove_duplicates([1, 2, 2, 3, 4, 5, 5, 6, 6]))
+print("remove_duplicates: {}".format(remove_duplicates([1, 2, 2, 3, 4, 5, 5, 6, 6])))
 
 
 # https://leetcode-cn.com/problems/move-zeroes/
@@ -630,6 +631,7 @@ print(f'update_matrix  {update_matrix(__matrix)}')
 #         return [x, bitmask^x]
 
 
+# 最长连续序列
 # https://leetcode-cn.com/problems/longest-consecutive-sequence/submissions/
 def longest_consecutive_sequence(nums):
     longest = 0
